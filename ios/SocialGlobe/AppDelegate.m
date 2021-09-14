@@ -23,7 +23,21 @@ static void InitializeFlipper(UIApplication *application) {
 }
 #endif
 
+@import UIKit;
+@import Firebase;
+
 @implementation AppDelegate
+
+
+- (BOOL)application:(UIApplication *)application
+
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+  [FIRApp configure];
+
+  return YES;
+
+}
 
 [GMSServices provideAPIKey:@"AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc"];
 {

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1048065763270",
+    "project_id": "socialglobe-325901",
+    "storage_bucket": "socialglobe-325901.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048065763270:android:1a1d09592bfe6089da74c7",
+        "android_client_info": {
+          "package_name": "com.socialglobe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048065763270-92hn4h8ae9eq052mm24pihc1d9vbdjmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMo0_jc3t53q4DWphfBsCx855xocWeKwE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048065763270-92hn4h8ae9eq052mm24pihc1d9vbdjmg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

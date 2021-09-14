@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1048065763270-jr7q3gsgcu1mo25p2gqr0r0gkc2mj12f.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1048065763270-jr7q3gsgcu1mo25p2gqr0r0gkc2mj12f</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBAhPnN9nC4nvqACutd1cUhgc5bzSXPBYs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1048065763270</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.socialglobe</string>
+	<key>PROJECT_ID</key>
+	<string>socialglobe-325901</string>
+	<key>STORAGE_BUCKET</key>
+	<string>socialglobe-325901.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1048065763270:ios:9d921154084cbb34da74c7</string>
+	<key>DATABASE_URL</key>
+	<string>https://socialglobe-325901-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

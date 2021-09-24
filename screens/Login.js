@@ -1,5 +1,7 @@
 import React from 'react';
 import {Component} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   StyleSheet,
   View,
@@ -9,51 +11,32 @@ import {
   Button,
 } from 'react-native';
 import {addName, getName} from '../api/userApi';
-export default class Login extends Component {
-  state = {
-    userName: 'SOCIAL GLOBE TO THE MOON',
-  };
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
-          <TextInput
-            ref="inputName"
-            style={styles.input}
-            placeholder="Name"></TextInput>
-          <View style={styles.fixToText}>
-            <Button
-              onPress={() => {
-                addName({
-                  name: this.state.userName,
-                });
-              }}
-              style={styles.button}
-              title="Save"
-              color="#ffafaf"
-              accessibilityLabel="Save Name"
-            />
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
+export default function ({navigation}) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Button
+          onPress={() => navigation.navigate('Map')}
+          style={styles.button}
+          title="Map"
+          color="#6beb34"
+          accessibilityLabel="Save Name"
+        />
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 34,
   },
-  input: {
+  button: {
     width: 300,
     height: 40,
-    margin: 12,
     borderWidth: 1,
-    padding: 10,
-  },
-  button: {},
-  fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });

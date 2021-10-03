@@ -3,6 +3,18 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PR
 import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import Geolocation from 'react-native-geolocation-service';
+import {PermissionsAndroid, Platform, Button} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {set} from 'react-native-reanimated';
+//import DeviceInfo from 'react-native-device-info';
+
+if (Platform.OS == 'ios') {
+  Geolocation.setRNConfiguration({
+    authorizationLevel: 'always',
+  });
+  Geolocation.requestAuthorization();
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -13,50 +25,94 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  buttons: {
+    borderRadius: 100,
+    position: 'absolute', //use absolute position to show button on top of the map
+    top: '95%', //for center align
+    alignSelf: 'flex-end', //for align to right
+  },
 });
-export async function requestLocationPermission() {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+
+export default class Map extends Component {
+  constructor({props}) {
+    super(props);
+    this.state = {
+      region: {
+        latitude: 30.4077484,
+        longitude: -91.1794054,
+        latitudeDelta: 0.009,
+        longitudeDelta: 0.009,
+      },
+    };
+  }
+  geoSuccess = position => {
+    const lat = position.coords.latitude;
+    const long = position.coords.longitude;
+    this.setState({
+      region: {
+        latitude: lat,
+        longitude: long,
+        latitudeDelta: 0.009,
+        longitudeDelta: 0.0009,
+      },
+    });
+  };
+
+  getUserLocation() {
+    Geolocation.getCurrentPosition(
+      this.geoSuccess,
+      err => {
+        console.log(err);
+      },
       {
-        title: 'Example App',
-        message: 'Example App access to your location ',
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
       },
     );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the location');
-      alert('You can use the location');
-    } else {
-      console.log('location permission denied');
-      alert('Location permission denied');
-    }
-  } catch (err) {
-    console.warn(err);
   }
-}
-export default class Map extends Component {
-  state = {
-    region: {
-      latitude: 51.5078788,
-      longitude: -0.0877321,
-      latitudeDelta: 0.009,
-      longitudeDelta: 0.009,
-    },
-  };
-  async componentWillMount() {
-    await requestLocationPermission();
+  watchUserLocation() {
+    geolocation.watchPosition(info => console.log(info));
+  }
+  async requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'SocialGlobe',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getUserLocation();
+      } else {
+        console.log('Location denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   }
   onRegionChange(region) {
-    this.setState({region});
+    this.setState({region: region});
+  }
+  componentDidMount() {
+    this.requestLocationPermission().then(info => console.log());
   }
   render() {
     return (
-      <MapView
-        style={{flex: 1}}
-        region={this.region}
-        onRegionChange={this.onRegionChange}>
-        <Marker coordinate={{latitude: 51.5078788, longitude: -0.0877321}} />
-      </MapView>
+      <View style={{flex: 1}}>
+        <MapView style={styles.map} region={this.state.region}>
+          <Marker coordinate={this.state.region} />
+        </MapView>
+        <View style={styles.buttons}>
+          <Button
+            onPress={() => {
+              const {navigation} = this.props;
+              navigation.navigate('CreateEvent');
+            }}
+            title="Create Event"
+          />
+        </View>
+      </View>
     );
   }
 }

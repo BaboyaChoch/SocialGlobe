@@ -11,20 +11,24 @@ import {
 } from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import Geolocation from 'react-native-geolocation-service';
-import {Picker} from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
+const BORDER_COLOR = '#000000';
+const TEXT_COLOR = '#142E45';
 const styles = StyleSheet.create({
   rowStyle: {flexDirection: 'row', marginTop: 10},
   inputStyle: {
     height: 50,
     flex: 1,
-    borderColor: '#5bff33',
+    borderColor: BORDER_COLOR,
     borderWidth: 1,
-    borderRadius: 20,
-    paddingRight: 50,
+    borderRadius: 10,
+    marginRight: 10,
+    marginLeft: 10,
   },
   textStyle: {
-    color: '#42efdc',
+    marginLeft: 10,
+    color: TEXT_COLOR,
     fontSize: 25,
     height: 50,
     //borderColor: '#5bff33',
@@ -39,17 +43,43 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#5bff33',
   },
+  pickerStyle: {
+    width: '70%',
+  },
 });
 
 export default class createEventOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fields: ['Address', 'Privacy', 'Description'],
+      open: false,
+      value: null,
+      items: ['Public', 'Private'],
     };
+    this.pickerRef = React.createRef();
+    this.setValue = this.setValue.bind(this);
   }
-  const [selectedLanguage, setSelectedLanguage] = useState();
+
+  setOpen(open) {
+    this.setState({
+      open,
+    });
+  }
+
+  setValue(callback) {
+    this.setState(state => ({
+      value: callback(state.value),
+    }));
+  }
+
+  setItems(callback) {
+    this.setState(state => ({
+      items: callback(state.items),
+    }));
+  }
+
   render() {
+    const {open, value, items} = this.state;
     return (
       <View
         style={{
@@ -58,6 +88,9 @@ export default class createEventOverlay extends Component {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
+        <Text style={{color: TEXT_COLOR, fontSize: 40, marginBottom: 30}}>
+          Create Event
+        </Text>
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Title</Text>
           <TextInput
@@ -84,19 +117,23 @@ export default class createEventOverlay extends Component {
         </View>
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Visibility</Text>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item label="Public" value="Public" />
-            <Picker.Item label="Private" value="Private" />
-          </Picker>
+          <View
+            style={{
+              height: 50,
+              flex: 1,
+              paddingRight: 50,
+            }}>
+            <DropDownPicker
+              style={{width: '100%'}}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={this.setOpen}
+              setValue={this.setValue}
+              setItems={this.setItems}
+            />
+          </View>
         </View>
-        /**
-         *if selectedValue == Private
-         *show option to select group  
-         */
         <View style={{flexDirection: 'column', height: 200, width: '100%'}}>
           <Text style={styles.textStyle}>Description</Text>
           <TextInput

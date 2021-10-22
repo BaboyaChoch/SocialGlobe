@@ -8,6 +8,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
+import {getEvents} from '../api/mapsApi';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -43,6 +44,7 @@ export default class Map extends Component {
         latitudeDelta: 0.009,
         longitudeDelta: 0.009,
       },
+      eventsList: [],
     };
   }
   geoSuccess = position => {
@@ -94,10 +96,23 @@ export default class Map extends Component {
   onRegionChange(region) {
     this.setState({region: region});
   }
+  onEventAdded(event) {
+    this.setState(prevState => ({
+      eventsList: [...prevState.eventsList, event],
+    }));
+  }
+
+  onEventsRecieved(events) {
+    console.log('recieved:', events);
+    this.setState({eventsList: events});
+  }
   componentDidMount() {
     this.requestLocationPermission().then(info => console.log());
+    getEvents(this.onEventsRecieved);
   }
+
   render() {
+    console.log('mapEvents::', this.state.eventsList);
     return (
       <View style={{flex: 1}}>
         <MapView style={styles.map} region={this.state.region}>
@@ -106,8 +121,9 @@ export default class Map extends Component {
         <View style={styles.buttons}>
           <Button
             onPress={() => {
-              const {navigation} = this.props;
-              navigation.navigate('CreateEvent');
+              console.log('mapEvents2::', this.state.eventsList);
+              //const {navigation} = this.props;
+              //navigation.navigate('CreateEvent');
             }}
             title="Create Event"
           />

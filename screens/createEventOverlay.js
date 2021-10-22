@@ -12,6 +12,7 @@ import {
 import {Component} from 'react/cjs/react.production.min';
 import Geolocation from 'react-native-geolocation-service';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {addEvent} from '../api/mapsApi';
 
 const BORDER_COLOR = '#000000';
 const TEXT_COLOR = '#142E45';
@@ -55,6 +56,12 @@ export default class createEventOverlay extends Component {
       open: false,
       value: null,
       items: ['Public', 'Private'],
+      title: '',
+      address: '',
+      date: '',
+      time: '',
+      visibility: '',
+      description: '',
     };
     this.pickerRef = React.createRef();
     this.setValue = this.setValue.bind(this);
@@ -94,25 +101,33 @@ export default class createEventOverlay extends Component {
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Title</Text>
           <TextInput
+            ref="title"
             style={styles.inputStyle}
+            onChangeText={value => this.setState({title: value})}
             placeholder=" Enter Here"></TextInput>
         </View>
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Address</Text>
           <TextInput
+            ref="address"
             style={styles.inputStyle}
+            onChangeText={value => this.setState({address: value})}
             placeholder=" Enter Here"></TextInput>
         </View>
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Date</Text>
           <TextInput
+            ref="date"
             style={styles.inputStyle}
+            onChangeText={value => this.setState({date: value})}
             placeholder=" Enter Here"></TextInput>
         </View>
         <View style={styles.rowStyle}>
           <Text style={styles.textStyle}>Time</Text>
           <TextInput
+            ref="time"
             style={styles.inputStyle}
+            onChangeText={value => this.setState({time: value})}
             placeholder=" Enter Here"></TextInput>
         </View>
         <View style={styles.rowStyle}>
@@ -124,6 +139,7 @@ export default class createEventOverlay extends Component {
               paddingRight: 50,
             }}>
             <DropDownPicker
+              ref="visibility"
               style={{width: '100%'}}
               open={open}
               value={value}
@@ -136,12 +152,30 @@ export default class createEventOverlay extends Component {
         </View>
         <View style={{flexDirection: 'column', height: 200, width: '100%'}}>
           <Text style={styles.textStyle}>Description</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder=" Enter Here"></TextInput>
+          <View style={styles.inputStyle}>
+            <TextInput
+              ref="description"
+              onChangeText={value => this.setState({description: value})}
+              placeholder=" Enter Description"></TextInput>
+          </View>
         </View>
         <View style={styles.rowStyle}>
-          <Button title="create" style={styles.buttonStyle}></Button>
+          <Button
+            title="create"
+            style={styles.buttonStyle}
+            onPress={() => {
+              // addEvent({
+              //   title: this.state.title,
+              //   address: this.state.address,
+              //   date: this.state.date,
+              //   time: this.state.time,
+              //   visibility: this.state.visibility,
+              //   description: this.state.description,
+              // });
+
+              const {navigation} = this.props;
+              navigation.navigate('Map');
+            }}></Button>
         </View>
       </View>
     );

@@ -1,43 +1,21 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, {useState} from 'react';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
+import {Component} from 'react/cjs/react.production.min';
+import Geolocation from 'react-native-geolocation-service';
+import {PermissionsAndroid, Platform, Button} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {set} from 'react-native-reanimated';
+//import DeviceInfo from 'react-native-device-info';
+import {getEvents} from '../api/mapsApi';
 
-import React from 'react';
-import MapView, {PROVIDER_GOOGLE, Polyline, Marker} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import MapViewDirections from 'react-native-maps-directions';
-import {StyleSheet, View, Platform, SafeAreaView} from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
-import {requestLocationAccuracy} from 'react-native-permissions';
-import {request, PERMISSIONS} from 'react-native-permissions';
-import {Component} from 'react';
-
-requestLocationPermission = async () => {
-  if (Platform.OS === 'ios') {
-    var response = request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    console.log('iPhone: ' + response);
-    if (request === 'granted') {
-      this.locateCurrentPosition();
-    }
-  } else {
-    var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    console.log('Android: ' + response);
-
-    if (request === 'granted') {
-      this.locateCurrentPosition();
-      this.requestLocationPermission();
-    }
-  }
-};
-
-locateCurrentPosition = () => {
-  Geolocation.getCurrentPosition(position => {
-    console.log(JSON.stringify(position));
+if (Platform.OS == 'ios') {
+  Geolocation.setRNConfiguration({
+    authorizationLevel: 'always',
   });
-};
+  Geolocation.requestAuthorization();
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +25,12 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  buttons: {
+    borderRadius: 100,
+    position: 'absolute', //use absolute position to show button on top of the map
+    top: '95%', //for center align
+    alignSelf: 'flex-end', //for align to right
   },
 });
 

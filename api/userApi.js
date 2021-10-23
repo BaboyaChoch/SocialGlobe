@@ -23,5 +23,5 @@ export async function getName(nameRecieved) {
     namesList.push(res.data());
   });
 
-  namesRecieved(namesList);
+  nameRecieved(namesList);
 }

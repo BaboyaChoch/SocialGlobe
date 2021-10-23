@@ -103,7 +103,7 @@ export default class Map extends Component {
   }
 
   onEventsRecieved(events) {
-    console.log('recieved:', events);
+    //console.log('recieved:', events);
     this.setState({eventsList: events});
   }
   componentDidMount() {
@@ -122,8 +122,8 @@ export default class Map extends Component {
           <Button
             onPress={() => {
               console.log('mapEvents2::', this.state.eventsList);
-              //const {navigation} = this.props;
-              //navigation.navigate('CreateEvent');
+              const {navigation} = this.props;
+              navigation.navigate('CreateEvent');
             }}
             title="Create Event"
           />

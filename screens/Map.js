@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import MapView, {PROVIDER_GOOGLE, Polyline, Marker} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import Geolocation from 'react-native-geolocation-service';
@@ -7,6 +7,7 @@ import {PermissionsAndroid, Platform, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {set} from 'react-native-reanimated';
+import MapViewDirections from 'react-native-maps-directions';
 //import DeviceInfo from 'react-native-device-info';
 import {getEvents} from '../api/mapsApi';
 

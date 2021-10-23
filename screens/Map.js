@@ -8,7 +8,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
-import {getEvents} from '../api/mapsApi';
+import {addEvent, getEvents} from '../api/mapsApi';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -16,24 +16,9 @@ if (Platform.OS == 'ios') {
   });
   Geolocation.requestAuthorization();
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  buttons: {
-    borderRadius: 100,
-    position: 'absolute', //use absolute position to show button on top of the map
-    top: '95%', //for center align
-    alignSelf: 'flex-end', //for align to right
-  },
-});
-
+function eventMarker(props) {
+  return <Marker coordinate={props.coordinates}></Marker>;
+}
 export default class Map extends Component {
   constructor({props}) {
     super(props);
@@ -57,6 +42,7 @@ export default class Map extends Component {
         latitudeDelta: 0.009,
         longitudeDelta: 0.0009,
       },
+      eventsList: [],
     });
   };
 
@@ -102,21 +88,42 @@ export default class Map extends Component {
     }));
   }
 
-  onEventsRecieved(events) {
-    //console.log('recieved:', events);
-    this.setState({eventsList: events});
-  }
+  // onEventsRecieved(events) {
+  //   console.log('recieved:', events);
+  //   this.setState({eventsList: events});
+  // }
+
+  onEventsRecieved = eventsList => {
+    this.setState(prevState => ({
+      eventsList: (prevState.eventsList = eventsList),
+    }));
+  };
   componentDidMount() {
     this.requestLocationPermission().then(info => console.log());
     getEvents(this.onEventsRecieved);
   }
+  showUserPrivateEvents() {
+    this.state.eventsList.map(eventInfo => {
+      const userBelongsToGroup = true;
+      if (eventInfo.visibility === 'private' && userBelongsToGroup)
+        console.log(eventInfo.coordinates);
+      //return <Marker coordinate={eventInfo.coordinates} />;
+    });
+  }
+  showPublicEvents() {
+    this.state.eventsList.map(eventInfo => {
+      if (eventInfo.visibility === 'public') {
+        console.log(eventInfo.coordinates);
+        return <Marker coordinate={eventInfo.coordinates} />;
+      }
+    });
+  }
 
   render() {
-    console.log('mapEvents::', this.state.eventsList);
     return (
       <View style={{flex: 1}}>
         <MapView style={styles.map} region={this.state.region}>
-          <Marker coordinate={this.state.region} />
+          {this.showPublicEvents()}
         </MapView>
         <View style={styles.buttons}>
           <Button
@@ -132,3 +139,20 @@ export default class Map extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  buttons: {
+    borderRadius: 100,
+    position: 'absolute', //use absolute position to show button on top of the map
+    top: '95%', //for center align
+    alignSelf: 'flex-end', //for align to right
+  },
+});

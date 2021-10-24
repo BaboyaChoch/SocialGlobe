@@ -11,6 +11,8 @@ import MapViewDirections from 'react-native-maps-directions';
 //import DeviceInfo from 'react-native-device-info';
 import {getEvents} from '../api/mapsApi';
 
+const GOOGLE_MAPS_APIKEY = ''; // api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc
+
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -35,12 +37,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const GOOGLE_MAPS_APIKEY = ''; // api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc
 const origin = {latitude: 37.78825, longitude: -122.4324};
 const destination = {latitude: 37.78895, longitude: -122.4053769};
-const coordinates = [
-  {latitude: 37.78895, longitude: -122.4053769},
-  {latitude: 37.78795, longitude: -122.4153769},
+const waypoints = [
+  {latitude: 37.77931171567034, longitude: -122.43359206702804},
+  {latitude: 37.777398395622996, longitude: -122.42647912078746},
+  {latitude: 37.77989057960354, longitude: -122.42186444974531},
 ];
 
 export default function Map() {
@@ -49,6 +51,7 @@ export default function Map() {
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         showsUserLocation={true}
+        rotateEnabled={false}
         style={styles.map}
         region={{
           latitude: 37.78825,
@@ -58,19 +61,22 @@ export default function Map() {
         }}>
         <MapViewDirections
           apikey={GOOGLE_MAPS_APIKEY}
-          origin={coordinates[0]}
-          destination={coordinates[1]}
+          origin={waypoints[0]}
+          destination={waypoints[waypoints.length - 1]}
           precision={'high'}
           strokeWidth={4}
           strokeColor="blue"
-        />
-
-        <Marker coordinate={origin} title={'test'}></Marker>
-        <Polyline
-          coordinates={[
-            {latitude: 37.78895, longitude: -122.4053769},
-            {latitude: 37.78795, longitude: -122.4153769},
-          ]}
+          onStart={params => {
+            console.log(
+              `Started routing between "${params.origin}" and "${params.destination}"`,
+            );
+          }}
+          onReady={result => {
+            console.log(
+              `Distance: ${(result.distance / 1.609).toFixed(2)} miles`,
+            );
+            console.log(`Duration: ${result.duration} minutes`);
+          }}
         />
       </MapView>
     </View>

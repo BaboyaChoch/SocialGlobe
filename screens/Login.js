@@ -1,3 +1,4 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import {Component} from 'react';
 import {
@@ -8,11 +9,13 @@ import {
   TextInput,
   Button,
 } from 'react-native';
+import { NativeScreenNavigationContainer } from 'react-native-screens';
 import {addName, getName} from '../api/userApi';
-export default class Login extends Component {
+export default class Login  extends React.Component {
   state = {
     userName: 'SOCIAL GLOBE TO THE MOON',
   };
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -23,13 +26,10 @@ export default class Login extends Component {
             placeholder="Name"></TextInput>
           <View style={styles.fixToText}>
             <Button
-              onPress={() => {
-                addName({
-                  name: this.state.userName,
-                });
-              }}
+              onPress={() => {const {navigate} = this.props.navigate;
+              navigate('Map');}}
               style={styles.button}
-              title="Save"
+              title="Map"
               color="#ffafaf"
               accessibilityLabel="Save Name"
             />
@@ -39,6 +39,7 @@ export default class Login extends Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

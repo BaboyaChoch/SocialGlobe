@@ -14,7 +14,6 @@ import Geolocation from 'react-native-geolocation-service';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {addEvent} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
-
 const BORDER_COLOR = '#000000';
 const TEXT_COLOR = '#142E45';
 const styles = StyleSheet.create({

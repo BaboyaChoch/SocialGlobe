@@ -144,12 +144,6 @@ export default class Map extends Component {
       <View style={{flex: 1}}>
         <MapView style={styles.map} region={this.state.region}>
           {this.showPublicEvents()}
-          {this.setCoordsState.coordinates.map((coordinate, index) => (
-            <MapView.Marker
-              key={`coordinate_${index}`}
-              coordinate={coordinate}
-            />
-          ))}
           {this.setCoordsState.coordinates.length >= 2 && (
             <MapViewDirections
               apikey={GOOGLE_MAPS_APIKEY}

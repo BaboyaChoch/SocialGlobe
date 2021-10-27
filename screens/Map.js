@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
@@ -9,6 +9,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
 import {addEvent, getEvents} from '../api/mapsApi';
+import {useNavigation} from '@react-navigation/core';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -16,39 +17,31 @@ if (Platform.OS == 'ios') {
   });
   Geolocation.requestAuthorization();
 }
-function eventMarker(props) {
-  return <Marker coordinate={props.coordinates}></Marker>;
-}
-export default class Map extends Component {
-  constructor({props}) {
-    super(props);
-    this.state = {
-      region: {
-        latitude: 30.4077484,
-        longitude: -91.1794054,
-        latitudeDelta: 0.009,
-        longitudeDelta: 0.009,
-      },
-      eventsList: [],
-    };
-  }
-  geoSuccess = position => {
+
+export default function Map() {
+  const [currentUserLocation, setCurrentUserLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.009,
+  });
+  const navigation = useNavigation();
+  const [eventsList, setEventsList] = useState([]);
+  function geoSuccess(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
-    this.setState({
-      region: {
-        latitude: lat,
-        longitude: long,
-        latitudeDelta: 0.009,
-        longitudeDelta: 0.0009,
-      },
-      eventsList: [],
-    });
-  };
 
-  getUserLocation() {
+    setCurrentUserLocation({
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: 0.009,
+      longitudeDelta: 0.0009,
+    });
+  }
+
+  function getUserLocation() {
     Geolocation.getCurrentPosition(
-      this.geoSuccess,
+      geoSuccess,
       err => {
         console.log(err);
       },
@@ -59,10 +52,12 @@ export default class Map extends Component {
       },
     );
   }
-  watchUserLocation() {
+
+  function watchUserLocation() {
     geolocation.watchPosition(info => console.log(info));
   }
-  async requestLocationPermission() {
+
+  async function requestLocationPermission() {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -71,7 +66,7 @@ export default class Map extends Component {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        this.getUserLocation();
+        getUserLocation();
       } else {
         console.log('Location denied');
       }
@@ -79,65 +74,60 @@ export default class Map extends Component {
       console.warn(err);
     }
   }
-  onRegionChange(region) {
-    this.setState({region: region});
-  }
-  onEventAdded(event) {
-    this.setState(prevState => ({
-      eventsList: [...prevState.eventsList, event],
-    }));
+
+  function oncurrentUserLocationChange(location) {
+    setCurrentUserLocation({location});
   }
 
-  // onEventsRecieved(events) {
-  //   console.log('recieved:', events);
-  //   this.setState({eventsList: events});
-  // }
+  function onEventAdded(event) {
+    setEventsList([...eventsList, event]);
+  }
 
-  onEventsRecieved = eventsList => {
-    this.setState(prevState => ({
-      eventsList: (prevState.eventsList = eventsList),
-    }));
+  const onEventsRecieved = eventsList => {
+    setEventsList(eventsList);
   };
-  componentDidMount() {
-    this.requestLocationPermission().then(info => console.log());
-    getEvents(this.onEventsRecieved);
-  }
-  showUserPrivateEvents() {
-    this.state.eventsList.map(eventInfo => {
+
+  function showUserPrivateEvents() {
+    eventsList.map(eventInfo => {
       const userBelongsToGroup = true;
       if (eventInfo.visibility === 'private' && userBelongsToGroup)
         console.log(eventInfo.coordinates);
       //return <Marker coordinate={eventInfo.coordinates} />;
     });
   }
-  showPublicEvents() {
-    this.state.eventsList.map(eventInfo => {
+
+  function showPublicEvents() {
+    eventsList.map(eventInfo => {
       if (eventInfo.visibility === 'public') {
-        console.log(eventInfo.coordinates);
-        return <Marker coordinate={eventInfo.coordinates} />;
+        console.log(eventInfo.title, ':', eventInfo.coordinates);
+        <Marker coordinate={eventInfo.coordinates}></Marker>;
       }
     });
   }
 
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        <MapView style={styles.map} region={this.state.region}>
-          {this.showPublicEvents()}
-        </MapView>
-        <View style={styles.buttons}>
-          <Button
-            onPress={() => {
-              console.log('mapEvents2::', this.state.eventsList);
-              const {navigation} = this.props;
-              navigation.navigate('CreateEvent');
-            }}
-            title="Create Event"
-          />
-        </View>
+  useEffect(() => {
+    requestLocationPermission();
+    getEvents(onEventsRecieved);
+    console.log(currentUserLocation);
+  }, []);
+
+  return (
+    <View style={{flex: 1}}>
+      <MapView style={styles.map} region={currentUserLocation}>
+        {eventsList.map(marker => (
+          <Marker coordinate={marker.coordinates}></Marker>
+        ))}
+      </MapView>
+      <View style={styles.nav}>
+        <Button
+          onPress={() => {
+            navigation.navigate('CreateEvent');
+          }}
+          title="Create Event"
+        />
       </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -149,8 +139,7 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  buttons: {
-    borderRadius: 100,
+  nav: {
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right

@@ -13,8 +13,8 @@ function App({navigation}) {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="CreateEvent" component={createEventOverlay} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="CreateEvent" component={createEventOverlay} />
       </Stack.Navigator>
     </NavigationContainer>
   );

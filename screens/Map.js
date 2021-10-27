@@ -10,7 +10,7 @@ import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
 import {addEvent, getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
-
+import {useIsFocused} from '@react-navigation/core';
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -26,6 +26,7 @@ export default function Map() {
     longitudeDelta: 0.009,
   });
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [eventsList, setEventsList] = useState([]);
   function geoSuccess(position) {
     const lat = position.coords.latitude;
@@ -109,7 +110,7 @@ export default function Map() {
     requestLocationPermission();
     getEvents(onEventsRecieved);
     console.log(currentUserLocation);
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={{flex: 1}}>

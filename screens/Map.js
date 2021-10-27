@@ -20,8 +20,8 @@ if (Platform.OS == 'ios') {
 
 export default function Map() {
   const [currentUserLocation, setCurrentUserLocation] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: 30.4077484,
+    longitude: -91.1794054,
     latitudeDelta: 0.009,
     longitudeDelta: 0.009,
   });

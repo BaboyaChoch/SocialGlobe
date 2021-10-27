@@ -2,6 +2,9 @@
 #
 .DS_Store
 
+#android
+android/*.hprof
+
 #env
 .env
 
@@ -60,3 +63,4 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+

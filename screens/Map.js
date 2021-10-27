@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
-import {Component} from 'react/cjs/react.production.min';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
-import {addEvent, getEvents} from '../api/mapsApi';
+import {getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
-
+import {useIsFocused} from '@react-navigation/core';
+import CreateEventOverlay from './createEventOverlay';
+import Modal from 'react-native-modal';
+const GREEN = '#e6fdf0';
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -27,6 +26,12 @@ export default function Map() {
   });
   const navigation = useNavigation();
   const [eventsList, setEventsList] = useState([]);
+  const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
+
+  function closeCreatEvent() {
+    setCreateEventIsVisiblility(false);
+  }
+
   function geoSuccess(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
@@ -111,9 +116,58 @@ export default function Map() {
     console.log(currentUserLocation);
   }, []);
 
+  const mapStyle = [
+    {
+      elementType: 'labels',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative.land_parcel',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+    {
+      featureType: 'administrative.neighborhood',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+  ];
+
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={currentUserLocation}>
+      <View style={{position: 'absolute'}}>
+        <Modal
+          isVisible={createEventIsVisible}
+          onBackButtonPress={() => {
+            setCreateEventIsVisiblility(false);
+          }}
+          backdropOpacity={0.1}
+          animationIn="bounceIn"
+          animationOut="bounceOut"
+          animationInTiming={750}
+          animationInTiming={750}>
+          <View style={styles.createEventWindowStyles}>
+            <CreateEventOverlay
+              closeWindow={closeCreatEvent}
+              onEventAdded={onEventAdded}
+              currentCoordinates={currentUserLocation}></CreateEventOverlay>
+          </View>
+        </Modal>
+      </View>
+      <MapView
+        style={styles.map}
+        customMapStyle={mapStyle}
+        region={currentUserLocation}>
         {eventsList.map(marker => (
           <Marker coordinate={marker.coordinates}></Marker>
         ))}
@@ -121,7 +175,8 @@ export default function Map() {
       <View style={styles.nav}>
         <Button
           onPress={() => {
-            navigation.navigate('CreateEvent');
+            setCreateEventIsVisiblility(true);
+            //navigation.navigate('CreateEvent');
           }}
           title="Create Event"
         />
@@ -131,6 +186,14 @@ export default function Map() {
 }
 
 const styles = StyleSheet.create({
+  createEventWindowStyles: {
+    position: 'absolute',
+    flex: 1,
+    backgroundColor: 'white',
+    width: '100%',
+    height: '80%',
+    borderRadius: 20,
+  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',

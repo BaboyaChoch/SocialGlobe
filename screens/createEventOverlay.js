@@ -1,16 +1,9 @@
 import React, {useState, useRef} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  Button,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Text, Button, ScrollView} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {addEvent} from '../api/mapsApi';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-
+import {TextInput, Checkbox} from 'react-native-paper';
 const BORDER_COLOR = 'black';
 const TEXT_COLOR = 'black';
 const API_KEY = 'AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc';
@@ -50,18 +43,20 @@ export default function CreateEventOverlay({
         height: '50%',
       }}>
       <View style={styles.rowStyle}>
-        <Text style={styles.textStyle}>Title</Text>
         <TextInput
+          label="Title"
+          mode="outlined"
+          value={title}
           style={styles.inputStyle}
           onChangeText={value => setTitle(value)}
-          placeholder=" Enter Here"
+          placeholder="Event Title"
           placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
       </View>
-      <View style={styles.rowStyle}>
-        <Text style={styles.textStyle}>Address</Text>
-        <View style={styles.inputStyle}>
+      <View style={styles.rowStyle} keyboardShouldPersistTaps={'handled'}>
+        <View style={styles.inputStyle} keyboardShouldPersistTaps={'handled'}>
           <GooglePlacesAutocomplete
-            placeholder="Search"
+            placeholder="Address"
+            placeholderTextColor="black"
             fetchDetails={true}
             GooglePlacesSearchQuery={{
               rankby: 'distance',
@@ -85,9 +80,9 @@ export default function CreateEventOverlay({
             styles={{
               container: {
                 flex: 1,
-                position: 'absolute',
-                width: '100%',
                 zIndex: 1,
+                borderColor: 'gray',
+                borderWidth: 1,
               },
               listView: {
                 position: 'absolute',
@@ -98,30 +93,30 @@ export default function CreateEventOverlay({
         </View>
       </View>
       <View style={styles.rowStyle}>
-        <Text style={styles.textStyle}>Date</Text>
         <TextInput
+          label="Date"
+          mode="outlined"
+          value={date}
           style={styles.inputStyle}
-          onChangeText={value => setDate(value)}
-          placeholder=" Enter Here"
-          placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
+          onChangeText={value => setDate(value)}></TextInput>
       </View>
       <View style={styles.rowStyle}>
-        <Text style={styles.textStyle}>Time</Text>
-        <TextInput
-          style={styles.inputStyle}
-          onChangeText={value => setTime(value)}
-          placeholder=" Enter Here"
-          placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
-      </View>
-      <View style={styles.rowStyle}>
-        <Text style={styles.textStyle}>Visibility</Text>
         <View
-          style={{
-            height: 50,
-            flex: 1,
-            paddingRight: 50,
-          }}>
-          <DropDownPicker
+          style={
+            (styles.inputStyle,
+            {
+              height: 50,
+              paddingRight: 50,
+            })
+          }>
+          <Checkbox.Item
+            label="Private"
+            status="checked"
+            onPress={() => {
+              setVisibilityOptions('private');
+            }}
+          />
+          {/* <DropDownPicker
             key={1}
             style={{width: 100, height: 35}}
             open={open}
@@ -130,19 +125,19 @@ export default function CreateEventOverlay({
             setOpen={setOpen}
             setValue={setEventVisibility}
             setItems={setVisibilityOptions}
-          />
+          /> */}
         </View>
       </View>
       <View style={{flexDirection: 'column', height: 200, width: '100%'}}>
-        <Text style={styles.textStyle}>Description</Text>
-        <View style={styles.inputStyle}>
-          <TextInput
-            style={{}}
-            multiline={true}
-            onChangeText={value => setDescription(value)}
-            placeholder=" Enter Description"
-            placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
-        </View>
+        <TextInput
+          label="Description"
+          mode="outlined"
+          value={description}
+          style={{margin: 5, height: '100%'}}
+          multiline={true}
+          onChangeText={value => setDescription(value)}
+          placeholder=" Enter Description"
+          placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
       </View>
       <View style={styles.rowStyle}>
         <Button
@@ -171,15 +166,14 @@ export default function CreateEventOverlay({
 }
 
 const styles = StyleSheet.create({
-  rowStyle: {flexDirection: 'row', marginTop: 10},
+  rowStyle: {flexDirection: 'row'},
   inputStyle: {
     height: 50,
     flex: 1,
-    borderColor: BORDER_COLOR,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginRight: 10,
-    marginLeft: 10,
+    //borderColor: BORDER_COLOR,
+    //borderWidth: 1,
+    //borderRadius: 10,
+    margin: 5,
     color: TEXT_COLOR,
     flexGrow: 1,
   },

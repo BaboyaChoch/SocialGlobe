@@ -166,7 +166,7 @@ export default function Map() {
       </View>
       <MapView
         style={styles.map}
-        customMapStyle={mapStyle}
+        customMapStyle={{}}
         region={currentUserLocation}>
         {eventsList.map(marker => (
           <Marker coordinate={marker.coordinates}></Marker>

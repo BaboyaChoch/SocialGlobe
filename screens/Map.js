@@ -10,6 +10,8 @@ import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
 import {addEvent, getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
+//importing paper
+import { Chip } from 'react-native-paper';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -126,6 +128,16 @@ export default function Map() {
           title="Create Event"
         />
       </View>
+      <View style={styles.bar}>
+       
+        {/* <Button
+          onPress={() => {
+            console.log("wohoo");
+          }}
+          title="press mii"
+        /> */}
+      </View>
+
     </View>
   );
 }
@@ -143,5 +155,10 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right
+  },
+  bar: {
+    position: 'absolute', //use absolute position to show button on top of the map
+    top: '95%', //for center align
+    alignSelf: 'flex-start', //for align on top
   },
 });

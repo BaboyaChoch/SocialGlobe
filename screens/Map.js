@@ -113,6 +113,7 @@ export default function Map() {
     console.log(currentUserLocation);
   }, []);
 
+  
   return (
     <View style={{flex: 1}}>
       <MapView style={styles.map} region={currentUserLocation}>
@@ -128,18 +129,18 @@ export default function Map() {
           title="Create Event"
         />
       </View>
-      <View style={styles.bar}>
-       
-        {/* <Button
-          onPress={() => {
-            console.log("wohoo");
-          }}
-          title="press mii"
-        /> */}
-      </View>
-
+            <View style={styles.bar}>
+            <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip>
+              <Chip  mode ="outlined" onPress={() => console.log('2')}>Fairs</Chip>
+                <Chip mode ="outlined" onPress={() => console.log('3')}>Sport</Chip>
+              <Chip mode ="outlined" onPress={() => console.log('4')}>Gaming</Chip>
+                <Chip  mode ="outlined" onPress={() => console.log('5')}>Nearby</Chip>
+              <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
+            </View>
     </View>
   );
+
+  
 }
 
 const styles = StyleSheet.create({
@@ -158,7 +159,9 @@ const styles = StyleSheet.create({
   },
   bar: {
     position: 'absolute', //use absolute position to show button on top of the map
-    top: '95%', //for center align
-    alignSelf: 'flex-start', //for align on top
+    flexDirection: 'row', 
+    
+   alignItems: 'flex-start', 
+
   },
 });

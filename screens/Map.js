@@ -3,7 +3,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PR
 import {StyleSheet, View, SafeAreaView, Text} from 'react-native';
 import {Component} from 'react/cjs/react.production.min';
 import Geolocation from 'react-native-geolocation-service';
-import {PermissionsAndroid, Platform, Button} from 'react-native';
+import {PermissionsAndroid, Platform, Button,ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {set} from 'react-native-reanimated';
@@ -113,8 +113,40 @@ export default function Map() {
     console.log(currentUserLocation);
   }, []);
 
+  var disEvent = false;
   
   return (
+   <View style = {{flex: 1}}> 
+      <MapView style={styles.map} region={currentUserLocation}>
+        {eventsList.map(marker => (
+          <Marker coordinate={marker.coordinates}></Marker>
+        ))}
+      </MapView>
+        <View style={styles.nav}>
+        <Button
+          onPress={() => {
+            navigation.navigate('CreateEvent');
+          }}
+          title="Create Event"
+        />
+      </View> 
+      
+        <ScrollView horizontal style={styles.ScrollView} >
+           
+            <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip> 
+              <Chip  mode ="outlined"  disabled ={disEvent} onPress={() => console.log('2')}>Fairs</Chip>
+            <Chip mode ="outlined" onPress={() => console.log('3')}>Sport</Chip>
+              <Chip mode ="outlined" onPress={() => console.log('4')}>Gaming</Chip>
+            <Chip  mode ="outlined" onPress={() => console.log('5')}>Nearby</Chip>
+              <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
+            <Chip  mode ="outlined" onPress={() => console.log('7')}>Gaming</Chip> 
+        </ScrollView> 
+
+    </View>
+      );
+    }
+
+ /*  return (
     <View style={{flex: 1}}>
       <MapView style={styles.map} region={currentUserLocation}>
         {eventsList.map(marker => (
@@ -128,40 +160,44 @@ export default function Map() {
           }}
           title="Create Event"
         />
-      </View>
-            <View style={styles.bar}>
-            <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip>
-              <Chip  mode ="outlined" onPress={() => console.log('2')}>Fairs</Chip>
-                <Chip mode ="outlined" onPress={() => console.log('3')}>Sport</Chip>
-              <Chip mode ="outlined" onPress={() => console.log('4')}>Gaming</Chip>
-                <Chip  mode ="outlined" onPress={() => console.log('5')}>Nearby</Chip>
-              <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
-            </View>
+      </View>    
+      <ScrollView style = {styles.ScrollView}>
+              <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip>
+                <Chip  mode ="outlined" onPress={() => console.log('2')}>Fairs</Chip>
+              <Chip mode ="outlined" onPress={() => console.log('3')}>Sport</Chip>
+                <Chip mode ="outlined" onPress={() => console.log('4')}>Gaming</Chip>
+              <Chip  mode ="outlined" onPress={() => console.log('5')}>Nearby</Chip>
+                <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
+                <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
+      </ScrollView>   
     </View>
-  );
+    );
+    */
 
-  
-}
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
   nav: {
-    position: 'absolute', //use absolute position to show button on top of the map
+    position: 'relative', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right
   },
-  bar: {
+  ScrollView: {
     position: 'absolute', //use absolute position to show button on top of the map
-    flexDirection: 'row', 
+    alignSelf: 'flex-start',
+    flexDirection: "row",
     
-   alignItems: 'flex-start', 
+    paddingTop: 10,
+    paddingLeft: 5,
+    
 
   },
 });

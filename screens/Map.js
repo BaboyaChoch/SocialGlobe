@@ -131,7 +131,7 @@ export default function Map() {
         />
       </View> 
       
-        <ScrollView horizontal style={styles.ScrollView} >
+        <ScrollView horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false}>
            
             <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip> 
               <Chip  mode ="outlined"  disabled ={disEvent} onPress={() => console.log('2')}>Fairs</Chip>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     alignSelf: 'flex-start',
     flexDirection: "row",
-    
+    //margin: 2,
     paddingTop: 10,
     paddingLeft: 5,
     

@@ -122,6 +122,7 @@ export default function Map() {
           <Marker coordinate={marker.coordinates}></Marker>
         ))}
       </MapView>
+      
         <View style={styles.nav}>
         <Button
           onPress={() => {
@@ -131,15 +132,14 @@ export default function Map() {
         />
       </View> 
       
-        <ScrollView horizontal style={styles.ScrollView} showsHorizontalScrollIndicator={false}>
-           
-            <Chip mode ="outlined" onPress={() => console.log('1')}>Nearby</Chip> 
-              <Chip  mode ="outlined"  disabled ={disEvent} onPress={() => console.log('2')}>Fairs</Chip>
-            <Chip mode ="outlined" onPress={() => console.log('3')}>Sport</Chip>
-              <Chip mode ="outlined" onPress={() => console.log('4')}>Gaming</Chip>
-            <Chip  mode ="outlined" onPress={() => console.log('5')}>Nearby</Chip>
-              <Chip  mode ="outlined" onPress={() => console.log('6')}>Gaming</Chip>
-            <Chip  mode ="outlined" onPress={() => console.log('7')}>Gaming</Chip> 
+        <ScrollView horizontal style={styles.ScrollView}  showsHorizontalScrollIndicator={false}>
+            <Chip mode ="outlined"  style ={styles.chipStyle} onPress={() => console.log('1')}>Nearby</Chip> 
+              <Chip  mode ="outlined" style ={styles.chipStyle} disabled ={disEvent} onPress={() => console.log('2')}>Fairs</Chip>
+            <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('3')}>Sport</Chip>
+              <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('4')}>Gaming</Chip>
+            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('5')}>Nearby</Chip>
+              <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('6')}>Gaming</Chip>
+            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('7')}>Gaming</Chip> 
         </ScrollView> 
 
     </View>
@@ -192,12 +192,13 @@ const styles = StyleSheet.create({
   },
   ScrollView: {
     position: 'absolute', //use absolute position to show button on top of the map
-    alignSelf: 'flex-start',
+   alignSelf: 'flex-start',
     flexDirection: "row",
     //margin: 2,
-    paddingTop: 10,
-    paddingLeft: 5,
     
+  },
+  chipStyle: {
+    margin: 3,
 
   },
 });

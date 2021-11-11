@@ -3,12 +3,23 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Login from './screens/Login';
-import Map from './screens/Map';
-import createEventOverlay from './screens/createEventOverlay';
+//import Login from './screens/Login';
+//import Map from './screens/Map';
+//import createEventOverlay from './screens/createEventOverlay';
+import Tabs from './navigation/tabs'
+
 const Stack = createStackNavigator();
 
-function App({navigation}) {
+
+const App = () => {
+  return(
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
+  );
+}
+
+/*function App({navigation}) {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -18,6 +29,6 @@ function App({navigation}) {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+}*/
 
 export default App;

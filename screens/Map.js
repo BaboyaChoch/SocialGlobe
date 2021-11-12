@@ -10,6 +10,7 @@ import {useIsFocused} from '@react-navigation/core';
 import CreateEventOverlay from './createEventOverlay';
 import Modal from 'react-native-modal';
 const GREEN = '#e6fdf0';
+
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -17,14 +18,17 @@ if (Platform.OS == 'ios') {
   Geolocation.requestAuthorization();
 }
 
-export default function Map() {
+export default function Map({route, navigation}) {
+  const eventToAdd = route.params;
+  console.log('Maps Pags: ', eventToAdd);
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
     longitude: -91.1794054,
     latitudeDelta: 0.009,
     longitudeDelta: 0.009,
   });
-  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
   const [eventsList, setEventsList] = useState([]);
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
 
@@ -62,24 +66,6 @@ export default function Map() {
     geolocation.watchPosition(info => console.log(info));
   }
 
-  async function requestLocationPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'SocialGlobe',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getUserLocation();
-      } else {
-        console.log('Location denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
   function oncurrentUserLocationChange(location) {
     setCurrentUserLocation({location});
   }
@@ -103,18 +89,40 @@ export default function Map() {
 
   function showPublicEvents() {
     eventsList.map(eventInfo => {
-      if (eventInfo.visibility === 'public') {
-        console.log(eventInfo.title, ':', eventInfo.coordinates);
-        <Marker coordinate={eventInfo.coordinates}></Marker>;
-      }
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'EST',
+        timeZoneName: 'short',
+      };
+      console.log(new Date(eventInfo.date).toLocaleString('en-US', options));
     });
+  }
+
+  async function requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'SocialGlobe',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        getUserLocation();
+      } else {
+        console.log('Location denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
-    console.log(currentUserLocation);
-  }, []);
+  }, [isFocused]);
 
   const mapStyle = [
     {
@@ -143,40 +151,24 @@ export default function Map() {
     },
   ];
 
+  //showPublicEvents();
   return (
     <View style={{flex: 1}}>
-      <View style={{position: 'absolute'}}>
-        <Modal
-          isVisible={createEventIsVisible}
-          onBackButtonPress={() => {
-            setCreateEventIsVisiblility(false);
-          }}
-          backdropOpacity={0.1}
-          animationIn="bounceIn"
-          animationOut="bounceOut"
-          animationInTiming={750}
-          animationInTiming={750}>
-          <View style={styles.createEventWindowStyles}>
-            <CreateEventOverlay
-              closeWindow={closeCreatEvent}
-              onEventAdded={onEventAdded}
-              currentCoordinates={currentUserLocation}></CreateEventOverlay>
-          </View>
-        </Modal>
-      </View>
-      <MapView
-        style={styles.map}
-        customMapStyle={{}}
-        region={currentUserLocation}>
-        {eventsList.map(marker => (
-          <Marker coordinate={marker.coordinates}></Marker>
+      <MapView style={styles.map} region={currentUserLocation}>
+        {eventsList.map(eventInfo => (
+          <Marker
+            key={eventInfo.eventId}
+            coordinate={eventInfo.coordinates}
+            onPress={() => {
+              navigation.navigate('EventDetailsPage', {details: eventInfo});
+            }}></Marker>
         ))}
       </MapView>
       <View style={styles.nav}>
         <Button
           onPress={() => {
             setCreateEventIsVisiblility(true);
-            //navigation.navigate('CreateEvent');
+            navigation.navigate('CreateEvent');
           }}
           title="Create Event"
         />

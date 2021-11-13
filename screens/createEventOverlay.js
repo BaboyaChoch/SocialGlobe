@@ -57,8 +57,9 @@ export default function CreateEventOverlay() {
     {label: 'Private', value: 'private'},
   ]);
   const [eventPictures, setEventPictures] = useState([
-    {title: 'longfilename.txt'},
-    {title: 'short.txt'},
+    {title: 'image1.txt'},
+    {title: 'image2.txt'},
+    {title: 'image3.txt'},
   ]);
   const navigation = useNavigation();
   const [isVisible, setVisibility] = useState(false);
@@ -128,7 +129,7 @@ export default function CreateEventOverlay() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'lightgray',
+        backgroundColor: 'white',
       }}>
       <View style={{marginTop: 15}}>
         <Text stlyle={styles.inputStyle}>Enter event information below!</Text>
@@ -144,14 +145,13 @@ export default function CreateEventOverlay() {
           activeOutlineColor={GREEN}
           placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
       </View>
-      <View style={{flex: 1, height: 200, margin: 15, width: '93%'}}>
-        <ScrollView style={{marginHorizontal: 2}}>
-          <AddressLookUp
-            location={currentUserLocation}
-            setAddress={setAddress}
-            setCoordinates={setEventCoordinates}
-          />
-        </ScrollView>
+      <View
+        style={{flex: 1, height: 200, margin: 15, width: '93%', flexGrow: 1}}>
+        <AddressLookUp
+          location={currentUserLocation}
+          setAddress={setAddress}
+          setCoordinates={setEventCoordinates}
+        />
       </View>
       <View style={{flexDirection: 'row', marginLeft: 15, marginRight: 15}}>
         <TouchableOpacity
@@ -189,13 +189,14 @@ export default function CreateEventOverlay() {
           flexDirection: 'column',
           height: 200,
           width: '100%',
+          margin: 0,
         }}
         height="50%">
         <TextInput
           label="Description"
           mode="outlined"
           value={description}
-          style={{margin: 15, height: '70%', borderColor: GREEN}}
+          style={{margin: 15, height: 300, borderColor: GREEN}}
           multiline={true}
           onChangeText={value => setDescription(value)}
           placeholder=" Enter Description"
@@ -217,6 +218,8 @@ export default function CreateEventOverlay() {
               borderColor: 'gray',
               flexDirection: 'row',
               borderRadius: 5,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
             {eventPictures.map((file, index) => (
               <FileCard cardTitle={index} fileName={file.title} />

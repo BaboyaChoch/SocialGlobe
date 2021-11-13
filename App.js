@@ -14,8 +14,8 @@ function App({navigation}) {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Map" component={Map} />
           <Stack.Screen name="CreateEvent" component={createEventOverlay} />
+          <Stack.Screen name="Map" component={Map} />
           <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>

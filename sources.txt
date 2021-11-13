@@ -1,0 +1,1 @@
+https://dev.to/mosoakinyemi/how-to-create-a-google-autocomplete-form-in-react-native-4ffb

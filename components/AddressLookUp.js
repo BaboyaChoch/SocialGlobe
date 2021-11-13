@@ -10,7 +10,6 @@ export default function AddressLookUp({
 }) {
   return (
     <GooglePlacesAutocomplete
-      currentLocation
       placeholder="Address"
       placeholderTextColor="black"
       fetchDetails={true}

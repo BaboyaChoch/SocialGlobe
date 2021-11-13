@@ -18,7 +18,9 @@ import Geolocation from 'react-native-geolocation-service';
 import DatePicker from 'react-native-date-picker';
 import FileCard from '../components/FileCard';
 import AddressLookUp from '../components/AddressLookUp';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import AddressAutoComplete from '../components/AddressAutoComplete';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Fumi} from 'react-native-textinput-effects';
 
 const BORDER_COLOR = 'black';
 const TEXT_COLOR = 'black';
@@ -129,31 +131,53 @@ export default function CreateEventOverlay() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#f9f9f9',
       }}>
       <View style={{marginTop: 15}}>
         <Text stlyle={styles.inputStyle}>Enter event information below!</Text>
       </View>
       <View style={styles.rowStyle}>
-        <TextInput
-          label="Title"
-          mode="outlined"
+        <Fumi
           value={title}
-          style={styles.inputStyle}
-          onChangeText={value => setTitle(value)}
-          placeholder="Event Title"
-          activeOutlineColor={GREEN}
-          placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
-      </View>
-      <View
-        style={{flex: 1, height: 200, margin: 15, width: '93%', flexGrow: 1}}>
-        <AddressLookUp
-          location={currentUserLocation}
-          setAddress={setAddress}
-          setCoordinates={setEventCoordinates}
+          onChangeText={text => {
+            setTitle(text);
+          }}
+          label={'Title'}
+          style={{flex: 1, margin: 15}}
+          iconClass={MaterialCommunityIcons}
+          iconName={'tag-text-outline'}
+          iconColor={ICON_COLOR}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+          style={styles.inputBoxStyle}
         />
       </View>
-      <View style={{flexDirection: 'row', marginLeft: 15, marginRight: 15}}>
+      <View style={styles.rowStyle}>
+        <AddressAutoComplete
+          address={address}
+          setAddress={setAddress}
+          boxStyle={{}}
+          containerStyle={{}}
+          iconColor={ICON_COLOR}></AddressAutoComplete>
+      </View>
+      <View style={styles.rowStyle}>
+        <Fumi
+          value={description}
+          onChangeText={text => {
+            setDescription(text);
+          }}
+          label={'Description'}
+          style={styles.inputBoxStyle}
+          iconClass={MaterialCommunityIcons}
+          iconName={'pencil'}
+          iconColor={ICON_COLOR}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+        />
+      </View>
+      <View style={{flexDirection: 'row', margin: 15, marginBottom: 0}}>
         <TouchableOpacity
           style={styles.buttonStyle}
           onPress={() => setOpen(true)}>
@@ -184,7 +208,7 @@ export default function CreateEventOverlay() {
           }}
         />
       </View>
-      <View
+      {/* <View
         style={{
           flexDirection: 'column',
           height: 200,
@@ -201,7 +225,7 @@ export default function CreateEventOverlay() {
           onChangeText={value => setDescription(value)}
           placeholder=" Enter Description"
           placeholderTextColor={PLACEHOLDER_COLOR}></TextInput>
-      </View>
+      </View> */}
       <View style={styles.rowStyle}>
         <View style={{flexDirection: 'row', margin: 15}}>
           <TouchableOpacity
@@ -236,17 +260,23 @@ export default function CreateEventOverlay() {
   );
 }
 
+const ICON_COLOR = '#5bc0de';
 const styles = StyleSheet.create({
   rowStyle: {flexDirection: 'row'},
-  inputStyle: {
+  inputBoxStyle: {
+    width: '100%',
     height: 50,
-    flex: 1,
-    //borderColor: BORDER_COLOR,
-    //borderWidth: 1,
-    //borderRadius: 10,
+    shadowColor: '#5cb85c',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 8,
     margin: 15,
-    color: TEXT_COLOR,
-    flexGrow: 1,
+    marginBottom: 0,
+    flex: 1,
+  },
+  inputStyle: {
+    color: 'red',
   },
   textStyle: {
     marginLeft: 10,

@@ -11,6 +11,7 @@ import {set} from 'react-native-reanimated';
 import {addEvent, getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -25,6 +26,7 @@ export default function Map() {
     latitudeDelta: 0.009,
     longitudeDelta: 0.009,
   });
+  
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [eventsList, setEventsList] = useState([]);
@@ -39,6 +41,7 @@ export default function Map() {
       longitudeDelta: 0.0009,
     });
   }
+
 
   function getUserLocation() {
     Geolocation.getCurrentPosition(
@@ -112,9 +115,149 @@ export default function Map() {
     console.log(currentUserLocation);
   }, [isFocused]);
 
+  const mapStyles = [
+    {
+        "featureType": "all",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "visibility": "on"
+            },
+            {
+                "weight": 0.9
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#1f8a70"
+            },
+            {
+                "weight": 0.7
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#19a86a"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#19a86a"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#002f4c"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#002f4c"
+            },
+            {
+                "lightness": -20
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "lightness": -17
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#002f4c"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#1f8a70"
+            },
+            {
+                "lightness": -10
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#004358"
+            }
+        ]
+    }
+]
+
+
+
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={currentUserLocation}>
+      <MapView style={styles.map} region={currentUserLocation} customMapStyle={mapStyles} >
         {eventsList.map(marker => (
           <Marker coordinate={marker.coordinates}></Marker>
         ))}
@@ -129,6 +272,9 @@ export default function Map() {
       </View>
     </View>
   );
+
+  
+  
 }
 
 const styles = StyleSheet.create({
@@ -138,6 +284,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   map: {
+      
     ...StyleSheet.absoluteFillObject,
   },
   nav: {

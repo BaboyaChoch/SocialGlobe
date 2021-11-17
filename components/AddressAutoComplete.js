@@ -92,8 +92,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     backgroundColor: 'white',
-    position: 'absolute',
     top: 50,
+    zIndex: 1,
+    position: 'absolute',
+    flex: 1,
   },
   resultItem: {
     width: '100%',
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     zIndex: 1,
     flex: 1,
+    flexGrow: 1,
     position: 'absolute',
-    height: 50,
   },
 });

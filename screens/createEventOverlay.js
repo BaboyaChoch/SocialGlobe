@@ -131,7 +131,7 @@ export default function CreateEventOverlay() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: 'skyblue',
       }}>
       <View style={{marginTop: 15}}>
         <Text stlyle={styles.inputStyle}>Enter event information below!</Text>
@@ -153,13 +153,23 @@ export default function CreateEventOverlay() {
           style={styles.inputBoxStyle}
         />
       </View>
-      <View style={styles.rowStyle}>
+      <View style={{flexDirection: 'row'}}>
         <AddressAutoComplete
+          containerStyle={{
+            width: '92.5%',
+            marginLeft: 15,
+            marginRight: 15,
+            marginTop: 5,
+            marginBottom: 5,
+            height: 50,
+            position: 'relative',
+            flex: 1,
+          }}
           address={address}
           setAddress={setAddress}
           boxStyle={{}}
-          containerStyle={{}}
-          iconColor={ICON_COLOR}></AddressAutoComplete>
+          iconColor={ICON_COLOR}
+        />
       </View>
       <View style={styles.rowStyle}>
         <Fumi
@@ -168,7 +178,19 @@ export default function CreateEventOverlay() {
             setDescription(text);
           }}
           label={'Description'}
-          style={styles.inputBoxStyle}
+          style={{
+            width: '100%',
+            height: 5000,
+            shadowColor: '#5cb85c',
+            shadowOffset: {width: 0, height: 1},
+            shadowOpacity: 0.8,
+            shadowRadius: 2,
+            elevation: 8,
+            margin: 15,
+            marginBottom: 0,
+            flex: 1,
+            zIndex: -1,
+          }}
           iconClass={MaterialCommunityIcons}
           iconName={'pencil'}
           iconColor={ICON_COLOR}

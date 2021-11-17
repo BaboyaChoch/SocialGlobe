@@ -16,7 +16,7 @@ const Tabs = () =>  {
                     position: 'absolute',
                     backgroundColor: '#0468BF',
                     borderRadius: 0,
-                    height: 50,              
+                    height: 55,              
                     //activeTintColor: '#F2C777',
                     //inactiveTintColor: '#0468BF',
                     //activeBackgroundColor: '#D95959',
@@ -24,32 +24,12 @@ const Tabs = () =>  {
                 },
             }}
             >
-            <Tab.Screen name="Home" component = {Login}
-                options={{
-                    tabBarIcon: () => {
-                        return (
-                            <Image
-                                style={{width: 30, height: 30 }}
-                                source={{
-                                    uri: 'https://cdn-icons-png.flaticon.com/512/25/25694.png',
-                                }}
-                            />
-                        )
-                    },
-                    headerShown: false,
-                    tabBarLabelStyle: {
-                        color: '#F2C777',
-                        fontSize: 13,
-                        
-                    }
-                }}
-            />
             <Tab.Screen name="Map" component = {Map}
             options={{
                 tabBarIcon: () => {
                     return (
                         <Image
-                            style={{width: 30, height: 30 }}
+                            style={{width: 30, height: 25 }}
                             source={{
                                 uri: 'https://cdn-icons-png.flaticon.com/512/25/25694.png',
                             }}
@@ -58,7 +38,7 @@ const Tabs = () =>  {
                 },
                 headerShown: false,
                 tabBarLabelStyle: {
-                    color: '#F2C777',
+                    color: '#F9F9F9',
                     fontSize: 13,
                 }
             }}/>
@@ -67,16 +47,16 @@ const Tabs = () =>  {
                 tabBarIcon: () => {
                     return (
                         <Image
-                            style={{width: 30, height: 30 }}
+                            style={{width: 25, height: 25 }}
                             source={{
-                                uri: 'https://cdn-icons-png.flaticon.com/512/25/25694.png',
+                                uri: 'http://simpleicon.com/wp-content/uploads/pencil1.png',
                             }}
                         />
                     )
                 },
                 headerShown: false,
                 tabBarLabelStyle: {
-                    color: '#F2C777',
+                    color: '#F9F9F9',
                     fontSize: 13,
                 }
             }}/>
@@ -85,15 +65,16 @@ const Tabs = () =>  {
                     tabBarIcon: () => {
                         return (
                             <Image
-                                style={{width: 30, height: 30 }}
+                                style={{width: 25, height: 25 }}
                                 source={{
-                                    uri: 'https://cdn-icons-png.flaticon.com/512/25/25694.png',
+                                    uri: 'https://cdn-icons-png.flaticon.com/512/1/1560.png',
                                 }}
                             />
                         )
                     },
+                    headerShown: false,
                     tabBarLabelStyle: {
-                        color: '#F2C777',
+                        color: '#F9F9F9',
                         fontSize: 13,
                     }
                 }}

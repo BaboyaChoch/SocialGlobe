@@ -114,7 +114,18 @@ export default function Map() {
   }, []);
 
   var disEvent = false;
-  
+
+  function showChipEvents(arg){ 
+    for (let i = 0; i < eventsList.length; i++) {
+      if (eventsList[i].eventType === arg){
+        // this console.log will need to get replaced by whatever
+        //shows the markers in the map.
+        console.log(arg, "event found");
+        //console.log(eventInfo.coordinates);
+      }
+    }
+  }
+
   return (
    <View style = {{flex: 1}}> 
       <MapView style={styles.map} region={currentUserLocation}>
@@ -133,13 +144,13 @@ export default function Map() {
       </View> 
       
         <ScrollView horizontal style={styles.ScrollView}  showsHorizontalScrollIndicator={false}>
-            <Chip mode ="outlined"  style ={styles.chipStyle} onPress={() => console.log('1')}>Nearby</Chip> 
-              <Chip  mode ="outlined" style ={styles.chipStyle} disabled ={disEvent} onPress={() => console.log('2')}>Fairs</Chip>
-            <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('3')}>Sport</Chip>
-              <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('4')}>Gaming</Chip>
-            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('5')}>Nearby</Chip>
-              <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('6')}>Gaming</Chip>
-            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => console.log('7')}>Gaming</Chip> 
+            <Chip mode ="outlined"  style ={styles.chipStyle} onPress={() => showChipEvents("nearby")}>Nearby</Chip> 
+              <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("fair")}>Fairs</Chip>
+            <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("sport")}>Sport</Chip>
+              <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("gaming")}>Gaming</Chip>
+            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("seminar")}>Seminars</Chip>
+              <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("fundraiser")}>Fundraisers</Chip>
+            <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("workshop")}>Workshops</Chip> 
         </ScrollView> 
 
     </View>

@@ -22,7 +22,7 @@ import {addEvent, getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
-import ModalTest from '../components/Modal';
+import UseModal from '../components/ModalView';
 
 const GOOGLE_MAPS_APIKEY = ''; //api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc ; remove key if not using
 const coordinates = [

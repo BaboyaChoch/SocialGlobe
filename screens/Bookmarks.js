@@ -11,10 +11,10 @@ const styles = StyleSheet.create({
       padding: '15px'
   },
   sectionHeader: {
-    paddingTop: 10,
+    paddingTop: 5,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 2,
+    paddingBottom: 0,
     fontSize: 25,
     fontWeight: 'bold',
     backgroundColor: 'rgba(247,247,247,1.0)',
@@ -34,7 +34,7 @@ export default function Bookmarks() {
     <View>
     <SectionList className={{SectionList}}
           sections={[
-            {title: 'Party ', data: ['Location: 123 Mike St, Baton Rougem LA 70820', 'Time: 8:00pm', 'Date: 12/15/21']},
+            {title: 'Party ', data: ['Location: 123 Mike St, Baton Rouge LA 70820', 'Time: 8:00pm', 'Date: 12/15/21']},
             {title: 'Study Session', data: ['Location: 3304 S Quad Dr, Baton Rouge, LA 70803', 'Time: 5:00pm', 'Date: 12/8/21']},
             {title: 'Study Session', data: ['Location: 3304 S Quad Dr, Baton Rouge, LA 70803', 'Time: 5:00pm', 'Date: 12/8/21']},
             {title: 'Study Session', data: ['Location: 3304 S Quad Dr, Baton Rouge, LA 70803', 'Time: 5:00pm', 'Date: 12/8/21']},

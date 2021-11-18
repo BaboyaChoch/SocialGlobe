@@ -29,6 +29,11 @@ export default function Map() {
   });
   const navigation = useNavigation();
   const [eventsList, setEventsList] = useState([]);
+  const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
+  const [applyFilter, setApplyFilter] = useState(false);
+  const [filteredEventsList, setFilteredEventsList] = useState([]);
+  var disableChip = false;
+
   function geoSuccess(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
@@ -113,27 +118,40 @@ export default function Map() {
     console.log(currentUserLocation);
   }, []);
 
-  var disEvent = false;
+  
 
-  function showChipEvents(arg){ 
+  function showChipEvents(arg){
+    const filteringResults = []; 
     for (let i = 0; i < eventsList.length; i++) {
       if (eventsList[i].eventType === arg){
-        // this console.log will need to get replaced by whatever
-        //shows the markers in the map.
-        console.log(arg, "event found");
-        //console.log(eventInfo.coordinates);
+        filteringResults.push(eventsList[i])
       }
     }
+    setFilteredEventsList(filteringResults)
+    setApplyFilter(true)
   }
 
   return (
    <View style = {{flex: 1}}> 
       <MapView style={styles.map} region={currentUserLocation}>
-        {eventsList.map(marker => (
-          <Marker coordinate={marker.coordinates}></Marker>
+      {!applyFilter && eventsList.map(eventInfo => (
+          <Marker
+            key={eventInfo.eventId}
+            coordinate={eventInfo.coordinates}
+            onPress={() => {
+              navigation.navigate('EventDetailsPage', {details: eventInfo});
+            }}></Marker>
+        ))}
+        {applyFilter && filteredEventsList.map(eventInfo => (
+          <Marker
+            key={eventInfo.eventId}
+            coordinate={eventInfo.coordinates}
+            onPress={() => {
+              navigation.navigate('EventDetailsPage', {details: eventInfo});
+            }}></Marker>
         ))}
       </MapView>
-      
+
         <View style={styles.nav}>
         <Button
           onPress={() => {
@@ -144,10 +162,11 @@ export default function Map() {
       </View> 
       
         <ScrollView horizontal style={styles.ScrollView}  showsHorizontalScrollIndicator={false}>
-            <Chip mode ="outlined"  style ={styles.chipStyle} onPress={() => showChipEvents("nearby")}>Nearby</Chip> 
+          <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => setApplyFilter(false)}>Remove Filters</Chip>
+            <Chip mode ="outlined"  style ={styles.chipStyle}  onPress={() => showChipEvents("nearby") }>Nearby</Chip> 
               <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("fair")}>Fairs</Chip>
             <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("sport")}>Sport</Chip>
-              <Chip mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("gaming")}>Gaming</Chip>
+              <Chip mode ="outlined" style ={styles.chipStyle}  onPress={() => showChipEvents("gaming")}>Gaming</Chip>
             <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("seminar")}>Seminars</Chip>
               <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("fundraiser")}>Fundraisers</Chip>
             <Chip  mode ="outlined" style ={styles.chipStyle} onPress={() => showChipEvents("workshop")}>Workshops</Chip> 
@@ -156,7 +175,7 @@ export default function Map() {
     </View>
       );
     }
-
+   
  /*  return (
     <View style={{flex: 1}}>
       <MapView style={styles.map} region={currentUserLocation}>

@@ -1,31 +1,22 @@
 import React, {useEffect, useState, useRef} from 'react';
-import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  Modal,
-  Image,
-  Pressable,
-  ScrollView,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import {StyleSheet, View, Dimensions, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {set} from 'react-native-reanimated';
 //import DeviceInfo from 'react-native-device-info';
-import {addEvent, getEvents} from '../api/mapsApi';
+import {getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
-import SetMarker from '../components/MarkerCard';
 import UseModal from '../components/UseModal';
 
 const GOOGLE_MAPS_APIKEY = ''; //api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc ; remove key if not using
+if (Platform.OS == 'ios') {
+  Geolocation.setRNConfiguration({
+    authorizationLevel: 'always',
+  });
+  Geolocation.requestAuthorization();
+}
 const coordinates = [
   {
     longitude: -91.1873842,
@@ -47,25 +38,24 @@ const coordinates = [
   },
 ];
 
-if (Platform.OS == 'ios') {
-  Geolocation.setRNConfiguration({
-    authorizationLevel: 'always',
-  });
-  Geolocation.requestAuthorization();
-}
-
-export default function Map() {
-  const {width, height} = Dimensions.get('window');
-  const mapView = useRef();
+export default function Map({route, navigation}) {
+  const eventToAdd = route.params;
+  console.log('Maps Pags: ', eventToAdd);
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
     longitude: -91.1794054,
     latitudeDelta: 0.009,
     longitudeDelta: 0.009,
   });
-  const navigation = useNavigation();
   const isFocused = useIsFocused();
+
   const [eventsList, setEventsList] = useState([]);
+  const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
+
+  function closeCreatEvent() {
+    setCreateEventIsVisiblility(false);
+  }
+
   function geoSuccess(position) {
     const lat = position.coords.latitude;
     const long = position.coords.longitude;
@@ -79,7 +69,7 @@ export default function Map() {
   }
 
   function getUserLocation() {
-    Geolocation.watchPosition(
+    Geolocation.getCurrentPosition(
       geoSuccess,
       err => {
         console.log(err);
@@ -94,6 +84,41 @@ export default function Map() {
 
   function watchUserLocation() {
     geolocation.watchPosition(info => console.log(info));
+  }
+
+  function oncurrentUserLocationChange(location) {
+    setCurrentUserLocation({location});
+  }
+
+  function onEventAdded(event) {
+    setEventsList([...eventsList, event]);
+  }
+
+  const onEventsRecieved = eventsList => {
+    setEventsList(eventsList);
+  };
+
+  function showUserPrivateEvents() {
+    eventsList.map(eventInfo => {
+      const userBelongsToGroup = true;
+      if (eventInfo.visibility === 'private' && userBelongsToGroup)
+        console.log(eventInfo.coordinates);
+      //return <Marker coordinate={eventInfo.coordinates} />;
+    });
+  }
+
+  function showPublicEvents() {
+    eventsList.map(eventInfo => {
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'EST',
+        timeZoneName: 'short',
+      };
+      console.log(new Date(eventInfo.date).toLocaleString('en-US', options));
+    });
   }
 
   async function requestLocationPermission() {
@@ -114,48 +139,17 @@ export default function Map() {
     }
   }
 
-  function oncurrentUserLocationChange(location) {
-    setCurrentUserLocation({location});
-  }
-
-  function onEventAdded(event) {
-    setEventsList([...eventsList, event]);
-  }
-
-  const onEventsRecieved = eventsList => {
-    setEventsList(eventsList);
-    console.log(eventsList);
-  };
-
-  function showUserPrivateEvents() {
-    eventsList.map(eventInfo => {
-      const userBelongsToGroup = true;
-      if (eventInfo.visibility === 'private' && userBelongsToGroup)
-        console.log(eventInfo.coordinates);
-      //return <Marker coordinate={eventInfo.coordinates} />;
-    });
-  }
-
-  function showPublicEvents() {
-    eventsList.map(eventInfo => {
-      if (eventInfo.visibility === 'public') {
-        console.log(eventInfo.title, ':', eventInfo.coordinates);
-        <Marker coordinate={eventInfo.coordinates}></Marker>;
-      }
-    });
-  }
-
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
-    console.log(currentUserLocation);
   }, [isFocused]);
 
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={currentUserLocation} ref={mapView}>
+      <MapView style={styles.map} region={currentUserLocation}>
         {eventsList.map(eventInfo => (
           <UseModal
+            key={eventInfo.eventId}
             coordinate={eventInfo.coordinates}
             title={eventInfo.title}
             description={eventInfo.description}

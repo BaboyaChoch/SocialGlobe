@@ -22,7 +22,8 @@ import {addEvent, getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
-import UseModal from '../components/ModalView';
+import SetMarker from '../components/MarkerCard';
+import UseModal from '../components/UseModal';
 
 const GOOGLE_MAPS_APIKEY = ''; //api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc ; remove key if not using
 const coordinates = [
@@ -135,93 +136,6 @@ export default function Map() {
     });
   }
 
-  function ModalTest(props) {
-    const [modalVisible, setModalVisible] = useState(false);
-    return (
-      <Marker
-        coordinate={props.coordinate}
-        onPress={() => setModalVisible(true)}>
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <TouchableOpacity
-              style={styles.container}
-              activeOpacity={1}
-              onPressOut={() => {
-                setModalVisible(!modalVisible);
-              }}>
-              <ScrollView
-                directionalLockEnabled={true}
-                contentContainerStyle={styles.scrollModal}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                      <Text style={styles.modalText}>Title: {props.title}</Text>
-                      <Text style={styles.modalText}>
-                        Description: {props.description}
-                      </Text>
-                      <View style={styles.divider} />
-                      <TouchableOpacity
-                        style={[
-                          styles.button,
-                          styles.modalButtonAlignLeft,
-                          {backgroundColor: 'white'},
-                        ]}
-                        onPress={() => {
-                          alert();
-                        }}>
-                        <Image
-                          style={{width: 25, height: 25}}
-                          source={{
-                            uri: 'https://i.ibb.co/60FsSPZ/001-plus.png',
-                          }}
-                        />
-                      </TouchableOpacity>
-                      <Pressable
-                        style={[
-                          styles.button,
-                          styles.modalButtonAlignMiddle,
-                          {backgroundColor: 'black'},
-                        ]}
-                        onPress={() => alert()}>
-                        <Text style={styles.textStyle}>?</Text>
-                      </Pressable>
-                      <Pressable
-                        style={[
-                          styles.button,
-                          styles.modalButtonAlignRight,
-                          {backgroundColor: '#47D13B'},
-                        ]}
-                        onPress={() => alert()}>
-                        <Text style={styles.textStyle}>Go</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </ScrollView>
-            </TouchableOpacity>
-          </Modal>
-        </View>
-      </Marker>
-    );
-  }
-
-  function MarkerTest(props) {
-    return (
-      <Marker coordinate={props.coordinate}>
-        <View style={styles.markerView}>
-          <Text style={styles.modalText}>Title: {props.title}</Text>
-          <Text style={styles.modalText}>Description: {props.description}</Text>
-        </View>
-      </Marker>
-    );
-  }
-
   function showPublicEvents() {
     eventsList.map(eventInfo => {
       if (eventInfo.visibility === 'public') {
@@ -241,7 +155,7 @@ export default function Map() {
     <View style={{flex: 1}}>
       <MapView style={styles.map} region={currentUserLocation} ref={mapView}>
         {eventsList.map(eventInfo => (
-          <MarkerTest
+          <UseModal
             coordinate={eventInfo.coordinates}
             title={eventInfo.title}
             description={eventInfo.description}
@@ -311,86 +225,5 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right
-  },
-  textAlignLeft: {
-    textAlign: 'left',
-    marginVertical: 3,
-  },
-  markerView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 5,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  divider: {
-    marginVertical: 8,
-    borderBottomColor: '#737373',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  modalButtonAlignLeft: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'flex-start',
-    marginTop: 25,
-  },
-  modalButtonAlignMiddle: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'center',
-    marginTop: 25,
-  },
-  modalButtonAlignRight: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'flex-end',
-    marginTop: 25,
   },
 });

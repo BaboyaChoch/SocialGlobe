@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import MapView, {Marker} from 'react-native-maps';
 export default function SetMarker(props) {
@@ -8,13 +8,9 @@ export default function SetMarker(props) {
       onPress={() => {
         props.onPress;
       }}>
-      <View style={styles.centeredView}>
-        <View style={styles.markerView}>
-          <Text style={styles.markerText}>Title: {props.title}</Text>
-          <Text style={styles.markerText}>
-            Description: {props.description}
-          </Text>
-        </View>
+      <View style={styles.markerView}>
+        <Text style={styles.markerText}>Title: {props.title}</Text>
+        <Text style={styles.markerText}>Description: {props.description}</Text>
       </View>
     </Marker>
   );

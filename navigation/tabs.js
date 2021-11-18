@@ -16,11 +16,7 @@ const Tabs = () =>  {
                     position: 'absolute',
                     backgroundColor: '#0468BF',
                     borderRadius: 0,
-                    height: 55,              
-                    //activeTintColor: '#F2C777',
-                    //inactiveTintColor: '#0468BF',
-                    //activeBackgroundColor: '#D95959',
-                    //inactiveBackgroundColor: '#022859',                  
+                    height: 55,                           
                 },
             }}
             >

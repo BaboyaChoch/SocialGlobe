@@ -75,7 +75,7 @@ const Tabs = () => {
         options={{
           tabBarIcon: () => {
             return (
-              <IconButton icon="bookmark" color={ICON_COLOR} size={ICON_SIZE} />
+              <IconButton icon="bookmark" color={ICON_COLOR} size={ICON_SIZE} onPress={console.log(ICON_COLOR)}/>
             );
           },
           tabBarLabel: () => {
@@ -94,7 +94,9 @@ const Tabs = () => {
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';
 const ICON_SIZE = 27;
-const ICON_COLOR = '#e29e21';
+// const ICON_COLOR = '#ff5200';
+const ICON_COLOR = 'red';
+console.log(ICON_COLOR);
 const styles = StyleSheet.create({
   iconStyles: {width: 15, height: 15},
 });

@@ -1,28 +1,20 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import EventDetailsPage from './screens/EventDetailsPage';
+import Tabs from './navigation/tabs';
 
-import Tabs from './navigation/tabs'
-
-
-const App = () => {
-  return(
-    <NavigationContainer>
-      <Tabs />
-    </NavigationContainer>
-  );
-}
-
-/*function App({navigation}) {
+const Stack = createStackNavigator();
+function App({navigation}) {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="CreateEvent" component={createEventOverlay} />
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="root" component={Tabs} />
+        <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}*/
+}
 
 export default App;

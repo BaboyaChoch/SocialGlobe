@@ -142,7 +142,7 @@ export default function Map() {
         "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#0d0d0d"
+                "color": "#19a86a"
             }
         ]
     },
@@ -175,10 +175,16 @@ export default function Map() {
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#4a4a4a"
-            },
-            {
                 "lightness": 5
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#19a86a"
             }
         ]
     },

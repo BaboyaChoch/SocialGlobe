@@ -9,10 +9,13 @@ import {
   SafeAreaView,
   TextInput,
   ActivityIndicator,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {addName, getName} from '../api/userApi';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import {firebase} from '@react-native-firebase/auth';
+
 import {
   Avatar,
   Card,
@@ -21,16 +24,33 @@ import {
   IconButton,
   Button,
   Colors,
+  Alert,
 } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
-export default function ({navigation}) {
+import Geolocation from 'react-native-geolocation-service';
+
+const locationPermissionAlert = () =>
+  Alert.alert(
+    'LOCATION PERMISSIONS NOT GRANTED',
+    'User cannot proceeed until location permissions are granted',
+    [
+      {
+        text: 'Grant Permission',
+        onPress: () => requestLocationPermission(),
+        style: 'default',
+      },
+      {
+        text: 'Exit',
+        onPress: () => console.log('EXIT APPLICATION'),
+        style: 'destructive',
+      },
+    ],
+  );
+
+export default function Login({navigation}) {
+  const [locationPermissionGranted, setLocationPermissionGranted] =
+    useState(false);
   const [isLoadingUser, setIsLoadingUser] = useState(false);
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '1048065763270-92hn4h8ae9eq052mm24pihc1d9vbdjmg.apps.googleusercontent.com',
-    });
-  });
 
   async function onGoogleButtonPress() {
     // Get the users ID token
@@ -44,10 +64,35 @@ export default function ({navigation}) {
     return auth().signInWithCredential(googleCredential);
   }
 
+  async function requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setLocationPermissionGranted(true);
+        GoogleSignin.configure({
+          webClientId:
+            '1048065763270-92hn4h8ae9eq052mm24pihc1d9vbdjmg.apps.googleusercontent.com',
+        });
+      } else {
+        locationPermissionAlert();
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  useEffect(() => {
+    requestLocationPermission();
+  });
+
   return (
     <SafeAreaView style={styles.container}>
-      {isLoadingUser && <ActivityIndicator color={ORANGE} size="large" />}
-      {!isLoadingUser && (
+      {(isLoadingUser || !locationPermissionGranted) && (
+        <ActivityIndicator color={ORANGE} size="large" />
+      )}
+      {!isLoadingUser && locationPermissionGranted && (
         <View>
           <View
             style={{
@@ -100,6 +145,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: WHITE,
+  },
+  alertContainer: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   button: {
     width: 300,

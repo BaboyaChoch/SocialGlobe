@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     position: 'relative',
-    top: 300,
     color: TEXT_COLOR,
   },
   card: {backgroundColor: WHITE, elevation: 15},

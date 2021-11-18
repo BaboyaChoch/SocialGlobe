@@ -164,6 +164,7 @@ export default function CreateEventOverlay() {
             height: 50,
             position: 'relative',
             flex: 1,
+            elevation: 10,
           }}
           address={address}
           setAddress={setAddress}
@@ -189,7 +190,6 @@ export default function CreateEventOverlay() {
             margin: 15,
             marginBottom: 0,
             flex: 1,
-            zIndex: -1,
           }}
           iconClass={MaterialCommunityIcons}
           iconName={'pencil'}

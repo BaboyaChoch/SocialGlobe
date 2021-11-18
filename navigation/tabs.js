@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, StyleSheet} from 'react-native';
-import Login from '../screens/Login';
+import UserProfile from '../screens/UserProfile';
 import Map from '../screens/Map';
 import createEventOverlay from '../screens/createEventOverlay';
 import Bookmarks from '../screens/Bookmarks';
@@ -90,8 +90,8 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Login"
-        component={Login}
+        name="UserProfile"
+        component={UserProfile}
         options={{
           tabBarIcon: () => {
             return (

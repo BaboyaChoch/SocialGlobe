@@ -10,9 +10,9 @@ function App({navigation}) {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="root" component={Tabs} />
-        <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="home" component={Tabs} />
+        <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -164,8 +164,9 @@ export default function CreateEventOverlay() {
             height: 50,
             position: 'relative',
             flex: 1,
-            elevation: 10,
-          }}
+            elevation: 8,
+            zIndex: 10,
+          }}z
           address={address}
           setAddress={setAddress}
           boxStyle={{}}

@@ -8,7 +8,7 @@ import {getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import CreateEventOverlay from './createEventOverlay';
-import Modal from 'react-native-modal';
+//import Modal from 'react-native-modal';
 const GREEN = '#e6fdf0';
 
 if (Platform.OS == 'ios') {

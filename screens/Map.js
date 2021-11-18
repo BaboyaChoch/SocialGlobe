@@ -162,7 +162,9 @@ export default function Map({route, navigation}) {
             key={eventInfo.eventId}
             coordinate={eventInfo.coordinates}
             onPress={() => {
-              navigation.navigate('EventDetailsPage', {details: eventInfo});
+              navigation.navigate('EventDetailsPage', {
+                eventDetails: eventInfo,
+              });
             }}></Marker>
         ))}
       </MapView>

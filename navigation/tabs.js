@@ -5,6 +5,7 @@ import Login from '../screens/Login';
 import Map from '../screens/Map';
 import createEventOverlay from '../screens/createEventOverlay';
 import Bookmarks from '../screens/Bookmarks';
+
 import {IconButton, Colors} from 'react-native-paper';
 const Tab = createBottomTabNavigator();
 
@@ -76,6 +77,25 @@ const Tabs = () => {
           tabBarIcon: () => {
             return (
               <IconButton icon="bookmark" color={ICON_COLOR} size={ICON_SIZE} />
+            );
+          },
+          tabBarLabel: () => {
+            return null;
+          },
+          headerShown: false,
+          tabBarLabelStyle: {
+            color: '#F9F9F9',
+            fontSize: 13,
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarIcon: () => {
+            return (
+              <IconButton icon="account" color={ICON_COLOR} size={ICON_SIZE} />
             );
           },
           tabBarLabel: () => {

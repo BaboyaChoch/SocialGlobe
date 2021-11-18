@@ -17,8 +17,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/core';
 // import ReportEvent from '../components/ReportEvent';
 import {useIsFocused} from '@react-navigation/core';
+import {firebase} from '@react-native-firebase/auth';
 
 export default function EventDetailsPage({route, navigation}) {
+  const user = firebase.auth().currentUser;
   const {eventDetails} = route.params;
   console.log('Details Page: ', eventDetails);
   const [state, setState] = useState({});
@@ -39,11 +41,8 @@ export default function EventDetailsPage({route, navigation}) {
   const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
 
   useEffect(() => {}, [isFocused]);
-  useEffect(() => {
-    return () => {
-      setState({});
-    };
-  }, []);
+  useEffect(() => {}, []);
+
   return (
     <>
       <Modal
@@ -59,12 +58,14 @@ export default function EventDetailsPage({route, navigation}) {
       <View
         style={{
           flexDirection: 'column',
-          backgroundColor: BACK_GROUND_COLOR,
+          backgroundColor: BACKGROUND_COLOR,
           flex: 1,
         }}>
         <View style={{flexDirection: 'row'}}>
           <SliderBox images={images} sliderBoxHeight={300} />
         </View>
+        <Divider />
+        <Divider />
         <Divider />
         <View>
           <View
@@ -106,7 +107,8 @@ export default function EventDetailsPage({route, navigation}) {
             />
           </View>
         </View>
-
+        <Divider />
+        <Divider />
         <Divider />
         <View
           style={{
@@ -116,10 +118,12 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title="Lil Im Tired As Shit Concert"
-              subtitle="Baboya"></Card.Title>
+              title={eventDetails.title}
+              subtitle="USER"></Card.Title>
           </Card>
         </View>
+        <Divider />
+        <Divider />
         <Divider />
         <View
           style={{
@@ -129,10 +133,12 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title="2105 SaveMe Drive"
-              subtitle="70803 Baton Rouge, LA"></Card.Title>
+              title={eventDetails.address.description}
+              subtitle="CITY, STATE ZIPCODE"></Card.Title>
           </Card>
         </View>
+        <Divider />
+        <Divider />
         <Divider />
         <View
           style={{
@@ -142,10 +148,14 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title="Mon, Nov 20"
-              subtitle="10:00am"></Card.Title>
+              title={new Date(eventDetails.date).toDateString()}
+              subtitle={new Date(
+                eventDetails.date,
+              ).toLocaleTimeString()}></Card.Title>
           </Card>
         </View>
+        <Divider />
+        <Divider />
         <Divider />
         <SafeAreaView style={styles.container}>
           <ScrollView style={{marginHorizontal: 2}}>
@@ -153,36 +163,31 @@ export default function EventDetailsPage({route, navigation}) {
               style={{
                 flexDirection: 'row',
               }}>
-              <Card style={{backgroundColor: CARD_COLOR, height: 300}}>
+              <Card style={{backgroundColor: BACKGROUND_COLOR, height: 300}}>
                 <Card.Content>
-                  <Paragraph style={{color: Colors.blue400}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum.
+                  <Paragraph style={{color: SUBTITLE_COLOR}}>
+                    {eventDetails.description}
                   </Paragraph>
                 </Card.Content>
               </Card>
             </View>
           </ScrollView>
         </SafeAreaView>
-        <Divider />
       </View>
     </>
   );
 }
-const TITLE_COLOR = Colors.green400;
-const SUBTITLE_COLOR = Colors.black;
-const CARD_COLOR = 'white';
+
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';
-const ICON_SIZE = 27;
 const ORANGE = '#e29e21';
-const BACK_GROUND_COLOR = 'white';
+const WHITE = '#f9f9f9';
+
+const TITLE_COLOR = BLUE;
+const SUBTITLE_COLOR = ORANGE;
+const ICON_SIZE = 27;
+const BACKGROUND_COLOR = WHITE;
+
 const styles = StyleSheet.create({
   image_box: {},
   title: {},
@@ -205,6 +210,6 @@ const styles = StyleSheet.create({
   subititle: {color: SUBTITLE_COLOR, fontSize: 10},
   card: {
     flex: 1,
-    backgroundColor: CARD_COLOR,
+    backgroundColor: BACKGROUND_COLOR,
   },
 });

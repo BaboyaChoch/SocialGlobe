@@ -7,10 +7,10 @@ import {
   Modal,
   Image,
   Pressable,
-  Marker,
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native';
+import MapView, {Marker} from 'react-native-maps';
 
 export default function UseModal(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -21,19 +21,18 @@ export default function UseModal(props) {
           animationType="slide"
           transparent={true}
           visible={modalVisible}
+          style={styles.centeredView}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}>
           <TouchableOpacity
-            style={styles.container}
+            style={styles.centeredView}
             activeOpacity={1}
             onPressOut={() => {
               setModalVisible(!modalVisible);
             }}>
-            <ScrollView
-              directionalLockEnabled={true}
-              contentContainerStyle={styles.scrollModal}>
-              <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+              <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Title: {props.title}</Text>
                   <Text style={styles.modalText}>
@@ -62,7 +61,7 @@ export default function UseModal(props) {
                       {backgroundColor: 'black'},
                     ]}
                     onPress={() => alert()}>
-                    <Text style={styles.textStyle}>name</Text>
+                    <Text style={styles.textStyle}>?</Text>
                   </Pressable>
                   <Pressable
                     style={[
@@ -74,15 +73,14 @@ export default function UseModal(props) {
                     <Text style={styles.textStyle}>Go</Text>
                   </Pressable>
                 </View>
-              </TouchableWithoutFeedback>
-            </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </TouchableOpacity>
         </Modal>
       </View>
     </Marker>
   );
 }
-
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

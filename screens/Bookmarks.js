@@ -24,9 +24,6 @@ export default function Bookmarks() {
   return (
     <SafeAreaView>
       <ScrollView>
-        {userBookmarks.map(bookmark => (
-          <Text>{bookmark.title}</Text>
-        ))}
         <SectionList
           className={{SectionList}}
           sections={[

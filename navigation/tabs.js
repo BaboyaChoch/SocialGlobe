@@ -45,6 +45,7 @@ const Tabs = () => {
             color: '#F9F9F9',
             fontSize: 13,
           },
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -68,6 +69,7 @@ const Tabs = () => {
             color: '#F9F9F9',
             fontSize: 13,
           },
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -87,6 +89,7 @@ const Tabs = () => {
             color: '#F9F9F9',
             fontSize: 13,
           },
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -106,6 +109,7 @@ const Tabs = () => {
             color: '#F9F9F9',
             fontSize: 13,
           },
+          unmountOnBlur: true,
         }}
       />
     </Tab.Navigator>

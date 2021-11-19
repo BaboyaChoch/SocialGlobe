@@ -121,11 +121,10 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
+    setFocusRegion(currentUserLocation);
   }, [isFocused]);
 
   useEffect(() => {}, [filteredEventsList]);
-
-  console.log(filteredEventsList);
 
   return (
     <View style={{flex: 1}}>

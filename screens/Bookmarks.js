@@ -13,13 +13,14 @@ import {getUserBookmarks} from '../api/bookmarksApi';
 export default function Bookmarks() {
   const [userBookmarks, setUserBookmarks] = useState();
   const isFocused = useIsFocused();
-  const onBookmarksRecieved = userBookmarks => {
-    setUserBookmarks(userBookmarks);
+
+  const onBookmarksRecieved = bookmarks => {
+    setUserBookmarks(bookmarks);
   };
 
   useEffect(() => {
     getUserBookmarks(onBookmarksRecieved);
-  }, [isFocused]);
+  });
 
   return (
     <SafeAreaView>

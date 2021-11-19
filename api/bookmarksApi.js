@@ -25,7 +25,7 @@ export async function getUserBookmarks(bookmarksRecieved, eventId = null) {
     let snapshot = await fb_firestore
       .firestore()
       .collection('Bookmarks')
-      .doc(current_user.uid)
+      .where(firebase.firestore.FieldPath.documentId(), '==', current_user.uid)
       .get();
 
     snapshot.forEach(res => {

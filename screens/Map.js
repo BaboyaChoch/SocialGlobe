@@ -4,11 +4,12 @@ import {StyleSheet, View, Dimensions, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
 //import DeviceInfo from 'react-native-device-info';
-import {getEvents} from '../api/mapsApi';
+
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
 import UseModal from '../components/UseModal';
+import {getEvents} from '../api/mapsApi';
 
 const GOOGLE_MAPS_APIKEY = ''; //api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc ; remove key if not using
 if (Platform.OS == 'ios') {
@@ -152,7 +153,10 @@ export default function Map({route, navigation}) {
             key={eventInfo.eventId}
             coordinate={eventInfo.coordinates}
             title={eventInfo.title}
-            description={eventInfo.description}
+            time={eventInfo.time}
+            address={eventInfo.address}
+            date={eventInfo.date}
+            eventType={eventInfo.eventType}
           />
         ))}
 

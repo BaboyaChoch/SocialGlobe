@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import MapView, {Marker} from 'react-native-maps';
-import {IconButton, Colors} from 'react-native-paper';
+import {IconButton, Colors, Divider} from 'react-native-paper';
 
 export default function UseModal(props) {
   const [modalVisible, setModalVisible] = useState(false);
-
   const navigation = useNavigation();
+
   return (
     <Marker coordinate={props.coordinate} onPress={() => setModalVisible(true)}>
       <View style={styles.centeredView}>
@@ -31,21 +31,39 @@ export default function UseModal(props) {
             }}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={styles.modalText}>Title: {props.title}</Text>
-                <Text style={styles.modalText}>
-                  Description: {props.description}
+                <Text style={[styles.modalText, styles.modalTitle]}>
+                  {props.title}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                  }}>
+                <Text style={[styles.modalText, , {fontSize: 16}]}>
+                  {props.address.description}
+                  {'\n'}
+                  <View style={styles.divider} />
+                  {props.date}
+                  {'\n'}
+                  <View style={styles.divider} />
+                  {props.time}
+                  {'\n'}
+                  <View style={styles.divider} />
+                  {props.eventType}
+                </Text>
+                <Divider />
+                <View style={styles.alignButton}>
+                  <IconButton
+                    icon="bookmark"
+                    color={Colors.black}
+                    size={40}
+                    onPress={() => {
+                      navigation.navigate('');
+                    }}
+                  />
                   <IconButton
                     icon="plus"
                     color={Colors.black}
                     size={40}
                     onPress={() => {
-                      navigation.navigate('Map', {eventToAdd: details});
+                      navigation.navigate('Map', {
+                        eventToAdd: props.route.eventToAdd,
+                      });
                     }}
                   />
                   <IconButton
@@ -54,7 +72,7 @@ export default function UseModal(props) {
                     size={40}
                     onPress={() => {
                       navigation.navigate('EventDetailsPage', {
-                        eventDetails: eventInfo,
+                        eventDetails: props.route.eventDetails,
                       });
                     }}
                   />
@@ -63,7 +81,7 @@ export default function UseModal(props) {
                     color={Colors.green500}
                     size={40}
                     onPress={() => {
-                      console.log('reported');
+                      console.log('');
                     }}
                   />
                 </View>
@@ -81,12 +99,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+    marginVertical: 55,
+    marginHorizontal: 22,
   },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 10,
+    borderRadius: 30,
+    padding: 9,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -110,29 +130,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  modalButtonAlignLeft: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'flex-start',
-    marginTop: 25,
-  },
-  modalButtonAlignMiddle: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'center',
-    marginTop: 25,
-  },
-  modalButtonAlignRight: {
-    position: 'absolute',
-    top: '99%',
-    alignSelf: 'flex-end',
-    marginTop: 25,
-  },
-  tView: {
-    flex: 1,
+  alignButton: {
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'green',
-    marginTop: 22,
+  },
+  divider: {
+    marginVertical: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  modalTitle: {
+    fontWeight: 'bold',
+    fontSize: 24,
   },
 });

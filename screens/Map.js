@@ -1,23 +1,39 @@
 import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet, View, Dimensions, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  ScrollView,
+  Modal,
+  Text,
+  Pressable,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
+import {IconButton, Colors, Divider} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
 import UseModal from '../components/UseModal';
+import ModeModal from '../components/UseModal';
+import Route from '../components/Route';
 import {getEvents} from '../api/mapsApi';
+import getDirections from 'react-native-google-maps-directions';
 
-const GOOGLE_MAPS_APIKEY = ''; //api key = AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc ; remove key if not using
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
   });
   Geolocation.requestAuthorization();
 }
+const des = {
+  longitude: -91.1873842,
+  latitude: 30.4227145,
+};
 const coordinates = [
   {
     longitude: -91.1873842,
@@ -140,6 +156,74 @@ export default function Map({route, navigation}) {
     }
   }
 
+  const [modalVisible, setModalVisible] = useState(false);
+  function ModeModal(props) {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          style={styles.centeredView}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <TouchableWithoutFeedback
+            onPressOut={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={[styles.modalText, styles.modalTitle]}>
+                  {props.title}
+                </Text>
+                <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
+                <Divider />
+                <View style={styles.alignButton}>
+                  <IconButton
+                    icon="bus"
+                    color={Colors.blue300}
+                    size={40}
+                    onPress={() => {
+                      console.log('');
+                    }}
+                  />
+                  <IconButton
+                    icon="walk"
+                    color={Colors.black}
+                    size={40}
+                    onPress={() => {
+                      console.log('');
+                    }}
+                  />
+                  <IconButton
+                    icon="bike"
+                    color={Colors.blue300}
+                    size={40}
+                    onPress={() => {
+                      getDirections();
+                    }}
+                  />
+                  <IconButton
+                    icon="car"
+                    color={Colors.green500}
+                    size={40}
+                    onPress={() => {}}
+                  />
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+        <Pressable
+          style={[styles.button, {backgroundColor: 'blue'}]}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.textStyle}>Show Modal</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
@@ -156,45 +240,14 @@ export default function Map({route, navigation}) {
             time={eventInfo.time}
             address={eventInfo.address}
             date={eventInfo.date}
-            eventType={eventInfo.eventType}
           />
         ))}
 
         {coordinates.length >= 2 && (
-          <MapViewDirections
-            apikey={GOOGLE_MAPS_APIKEY}
+          <Route
             origin={currentUserLocation}
-            waypoints={
-              coordinates.length > 2 ? coordinates.slice(1, -1) : undefined
-            }
-            destination={coordinates[coordinates.length - 1]}
-            precision={'high'}
-            optimizeWaypoints={true}
-            strokeWidth={5}
-            strokeColor="blue"
-            onStart={params => {
-              console.log(
-                `Started routing between "${params.origin}" and "${params.destination}" `,
-              );
-            }}
-            onReady={result => {
-              console.log(
-                `Distance: ${(result.distance / 1.609).toFixed(2)} miles`,
-              );
-              console.log(`Duration: ${result.duration.toFixed(0)} minutes`);
-
-              mapView.current.fitToCoordinates(result.coordinates, {
-                edgePadding: {
-                  right: width / 20,
-                  bottom: height / 20,
-                  left: width / 20,
-                  top: height / 20,
-                },
-              });
-            }}
-            onError={errorMessage => {
-              console.log('Error: MapviewDirections');
-            }}
+            destination={coordinates}
+            modeOfTransport={'WALKING'}
           />
         )}
       </MapView>
@@ -205,6 +258,9 @@ export default function Map({route, navigation}) {
           }}
           title="Create Event"
         />
+      </View>
+      <View>
+        <ModeModal></ModeModal>
       </View>
     </View>
   );
@@ -223,5 +279,54 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    marginVertical: 55,
+    marginHorizontal: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: 9,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'left',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'left',
+  },
+  alignButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  divider: {
+    marginVertical: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  modalTitle: {
+    fontWeight: 'bold',
+    fontSize: 24,
   },
 });

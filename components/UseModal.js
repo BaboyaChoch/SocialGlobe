@@ -9,6 +9,7 @@ import {
 import {useNavigation} from '@react-navigation/core';
 import MapView, {Marker} from 'react-native-maps';
 import {IconButton, Colors, Divider} from 'react-native-paper';
+import getDirections from 'react-native-google-maps-directions';
 
 export default function UseModal(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,7 +36,7 @@ export default function UseModal(props) {
                   {props.title}
                 </Text>
                 <Text style={[styles.modalText, , {fontSize: 16}]}>
-                  {props.address.description}
+                  {props.address}
                   {'\n'}
                   <View style={styles.divider} />
                   {props.date}
@@ -53,7 +54,7 @@ export default function UseModal(props) {
                     color={Colors.black}
                     size={40}
                     onPress={() => {
-                      navigation.navigate('');
+                      addToUserBookmarks(eventDetails.eventId);
                     }}
                   />
                   <IconButton
@@ -81,7 +82,7 @@ export default function UseModal(props) {
                     color={Colors.green500}
                     size={40}
                     onPress={() => {
-                      console.log('');
+                      getDirections();
                     }}
                   />
                 </View>

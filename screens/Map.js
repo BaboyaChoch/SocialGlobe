@@ -153,10 +153,7 @@ export default function Map({route, navigation}) {
   //showPublicEvents();
   return (
     <View style={{flex: 1}}>
-      <MapView
-        style={styles.map}
-        customMapStyle={MAP_STYLES}
-        region={currentUserLocation}>
+      <MapView style={styles.map} region={currentUserLocation}>
         {eventsList.map(eventInfo => (
           <Marker
             key={eventInfo.eventId}

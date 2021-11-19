@@ -11,6 +11,8 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   Platform,
+  Alert,
+  BackHandler,
 } from 'react-native';
 import {addName, getName} from '../api/userApi';
 import {GoogleSignin} from '@react-native-community/google-signin';
@@ -24,34 +26,16 @@ import {
   IconButton,
   Button,
   Colors,
-  Alert,
 } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import Geolocation from 'react-native-geolocation-service';
-
-const locationPermissionAlert = () =>
-  Alert.alert(
-    'LOCATION PERMISSIONS NOT GRANTED',
-    'User cannot proceeed until location permissions are granted',
-    [
-      {
-        text: 'Grant Permission',
-        onPress: () => requestLocationPermission(),
-        style: 'default',
-      },
-      {
-        text: 'Exit',
-        onPress: () => console.log('EXIT APPLICATION'),
-        style: 'destructive',
-      },
-    ],
-  );
 
 export default function Login({navigation}) {
   const [locationPermissionGranted, setLocationPermissionGranted] =
     useState(false);
   const [isLoadingUser, setIsLoadingUser] = useState(false);
-
+  const [locationPermissionResult, setLocationPermissionResult] =
+    useState('not_granted');
   async function onGoogleButtonPress() {
     // Get the users ID token
     setIsLoadingUser(true);
@@ -64,11 +48,38 @@ export default function Login({navigation}) {
     return auth().signInWithCredential(googleCredential);
   }
 
-  async function requestLocationPermission() {
+  const locationPermissionMissingAlert = () => {
+    Alert.alert(
+      'LOCATION PERMISSIONS NOT GRANTED',
+      'User cannot proceeed until location permissions are granted',
+      [
+        {
+          text: 'Grant Permission',
+          onPress: () => requestLocationPermission(),
+          style: 'default',
+        },
+        {
+          text: 'Exit',
+          onPress: () => BackHandler.exitApp(),
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  const checkPermissions = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    console.log(granted);
+  };
+
+  const requestLocationPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
+      setLocationPermissionResult(granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         setLocationPermissionGranted(true);
         GoogleSignin.configure({
@@ -76,22 +87,26 @@ export default function Login({navigation}) {
             '1048065763270-92hn4h8ae9eq052mm24pihc1d9vbdjmg.apps.googleusercontent.com',
         });
       } else {
-        locationPermissionAlert();
       }
     } catch (err) {
       console.warn(err);
     }
-  }
+  };
 
   useEffect(() => {
     requestLocationPermission();
   });
 
+  // useEffect(() => {
+  //   console.log(locationPermissionGranted, locationPermissionResult);
+  //   if (!locationPermissionGranted) {
+  //     locationPermissionMissingAlert();
+  //   }
+  // }, [locationPermissionResult]);
+
   return (
     <SafeAreaView style={styles.container}>
-      {(isLoadingUser || !locationPermissionGranted) && (
-        <ActivityIndicator color={ORANGE} size="large" />
-      )}
+      {isLoadingUser && <ActivityIndicator color={ORANGE} size="large" />}
       {!isLoadingUser && locationPermissionGranted && (
         <View>
           <View

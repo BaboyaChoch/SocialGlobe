@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/core';
 // import ReportEvent from '../components/ReportEvent';
 import {useIsFocused} from '@react-navigation/core';
 import {firebase} from '@react-native-firebase/auth';
+import addToUserBookmarks from '../api/bookmarksApi';
 
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
@@ -95,6 +96,14 @@ export default function EventDetailsPage({route, navigation}) {
               size={40}
               onPress={() => {
                 console.log('reported');
+              }}
+            />
+            <IconButton
+              icon="bookmark"
+              color={Colors.blue500}
+              size={40}
+              onPress={() => {
+                addToUserBookmarks(eventDetails.eventId);
               }}
             />
             <IconButton

@@ -15,9 +15,9 @@ const Tabs = () => {
       screenOptions={{
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: BLUE,
+          backgroundColor: WHITE,
           borderRadius: 0,
-          height: 35,
+          height: 40,
           //activeTintColor: '#F2C777',
           //inactiveTintColor: '#0468BF',
           //activeBackgroundColor: '#D95959',
@@ -113,8 +113,10 @@ const Tabs = () => {
 };
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';
-const ICON_SIZE = 27;
+const ICON_SIZE = 32;
 const ICON_COLOR = '#e29e21';
+const WHITE = '#f9f9f9';
+
 const styles = StyleSheet.create({
   iconStyles: {width: 15, height: 15},
 });

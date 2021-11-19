@@ -8,7 +8,7 @@ import {getEvents} from '../api/mapsApi';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import CreateEventOverlay from './createEventOverlay';
-const GREEN = '#e6fdf0';
+import MapFilterOptions from '../components/MapFilterOptions';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -26,14 +26,12 @@ export default function Map({route, navigation}) {
     latitudeDelta: 0.009,
     longitudeDelta: 0.009,
   });
+  const [focusRegion, setFocusRegion] = useState(currentUserLocation);
   const isFocused = useIsFocused();
-
   const [eventsList, setEventsList] = useState([]);
+  const [applyFilter, setApplyFilter] = useState(false);
+  const [filteredEventsList, setFilteredEventsList] = useState([]);
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
-
-  function closeCreatEvent() {
-    setCreateEventIsVisiblility(false);
-  }
 
   function geoSuccess(position) {
     const lat = position.coords.latitude;
@@ -69,36 +67,9 @@ export default function Map({route, navigation}) {
     setCurrentUserLocation({location});
   }
 
-  function onEventAdded(event) {
-    setEventsList([...eventsList, event]);
-  }
-
   const onEventsRecieved = eventsList => {
     setEventsList(eventsList);
   };
-
-  function showUserPrivateEvents() {
-    eventsList.map(eventInfo => {
-      const userBelongsToGroup = true;
-      if (eventInfo.visibility === 'private' && userBelongsToGroup)
-        console.log(eventInfo.coordinates);
-      //return <Marker coordinate={eventInfo.coordinates} />;
-    });
-  }
-
-  function showPublicEvents() {
-    eventsList.map(eventInfo => {
-      const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'EST',
-        timeZoneName: 'short',
-      };
-      console.log(new Date(eventInfo.date).toLocaleString('en-US', options));
-    });
-  }
 
   async function requestLocationPermission() {
     try {
@@ -118,53 +89,74 @@ export default function Map({route, navigation}) {
     }
   }
 
+  const filterOutByEventType = filterOption => {
+    setFilteredEventsList([]);
+    eventsList.forEach(event => {
+      if (event.eventType === filterOption) {
+        setFilteredEventsList([...filteredEventsList, event]);
+      }
+    });
+  };
+  const filterMapByFilterOption = filterOption => {
+    setFilteredEventsList([]);
+    eventsList.forEach(event => {
+      if (event.eventType === filterOption) {
+        setFilteredEventsList([...filteredEventsList, event]);
+      }
+    });
+    if (filteredEventsList.length > 0) {
+      setFilteredEventsList(filterOutByEventType);
+      setApplyFilter(true);
+      setFocusRegion(filteredEventsList[0].coordinates);
+      console.log(filteredEventsList);
+    } else {
+      console.log('SnackBar:', `Currently No Events of Type '${filterOption}'`);
+    }
+  };
+  const filteredEventsListIsNotEmpty = () =>
+    filteredEventsList != null &&
+    filteredEventsList != undefined &&
+    filteredEventsList.length > 0;
+
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
   }, [isFocused]);
 
-  const mapStyle = [
-    {
-      elementType: 'labels',
-      stylers: [
-        {
-          visibility: 'off',
-        },
-      ],
-    },
-    {
-      featureType: 'administrative.land_parcel',
-      stylers: [
-        {
-          visibility: 'off',
-        },
-      ],
-    },
-    {
-      featureType: 'administrative.neighborhood',
-      stylers: [
-        {
-          visibility: 'off',
-        },
-      ],
-    },
-  ];
+  useEffect(() => {}, [filteredEventsList]);
 
-  //showPublicEvents();
+  console.log(filteredEventsList);
+
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={currentUserLocation}>
-        {eventsList.map(eventInfo => (
-          <Marker
-            key={eventInfo.eventId}
-            coordinate={eventInfo.coordinates}
-            onPress={() => {
-              navigation.navigate('EventDetailsPage', {
-                eventDetails: eventInfo,
-              });
-            }}></Marker>
-        ))}
+      <MapView style={styles.map} region={focusRegion}>
+        {!applyFilter &&
+          eventsList.map(eventInfo => (
+            <Marker
+              key={eventInfo.eventId}
+              coordinate={eventInfo.coordinates}
+              onPress={() => {
+                navigation.navigate('EventDetailsPage', {
+                  eventDetails: eventInfo,
+                });
+              }}></Marker>
+          ))}
+        {applyFilter &&
+          filteredEventsListIsNotEmpty() &&
+          filteredEventsList.map(eventInfo => (
+            <Marker
+              key={eventInfo.eventId}
+              coordinate={eventInfo.coordinates}
+              onPress={() => {
+                navigation.navigate('EventDetailsPage', {
+                  eventDetails: eventInfo,
+                });
+              }}></Marker>
+          ))}
       </MapView>
+      <View>
+        <MapFilterOptions onPress={filterMapByFilterOption}></MapFilterOptions>
+      </View>
     </View>
   );
 }
@@ -312,7 +304,10 @@ const MAP_STYLES = [
     ],
   },
 ];
-
+const GREEN = '#19a86a';
+const BLUE = '#002f4c';
+const ORANGE = '#e29e21';
+const WHITE = '#f9f9f9';
 const styles = StyleSheet.create({
   createEventWindowStyles: {
     position: 'absolute',
@@ -334,5 +329,10 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
     alignSelf: 'flex-end', //for align to right
+  },
+  filterOptionsContainer: {
+    position: 'absolute', //use absolute position to show button on top of the map
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
   },
 });

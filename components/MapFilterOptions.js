@@ -18,17 +18,6 @@ export default function MapFilterOptions({onPress}) {
       style={styles.container}
       showsHorizontalScrollIndicator={false}>
       <Chip
-        icon="home"
-        mode={CHIP_TYPE}
-        style={styles.chipStyle}
-        selected={isNearBySelected}
-        onPress={() => {
-          chipActionOnPress('nearby');
-          setIsNearbySelected(true);
-        }}>
-        Nearby
-      </Chip>
-      <Chip
         icon="string-lights"
         mode={CHIP_TYPE}
         style={styles.chipStyle}

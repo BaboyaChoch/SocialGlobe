@@ -5,9 +5,7 @@ import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
 //import DeviceInfo from 'react-native-device-info';
 import {getEvents} from '../api/mapsApi';
-import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
-import CreateEventOverlay from './createEventOverlay';
 import MapFilterOptions from '../components/MapFilterOptions';
 
 if (Platform.OS == 'ios') {
@@ -31,18 +29,20 @@ export default function Map({route, navigation}) {
   const [eventsList, setEventsList] = useState([]);
   const [applyFilter, setApplyFilter] = useState(false);
   const [filteredEventsList, setFilteredEventsList] = useState([]);
+  const [locationPermissionResult, setLocationPermissionResult] =
+    useState('not_granted');
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
 
   function geoSuccess(position) {
-    const lat = position.coords.latitude;
-    const long = position.coords.longitude;
-
-    setCurrentUserLocation({
-      latitude: lat,
-      longitude: long,
+    const coordinates = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
       latitudeDelta: 0.009,
       longitudeDelta: 0.0009,
-    });
+    };
+
+    setCurrentUserLocation(coordinates);
+    setFocusRegion(coordinates);
   }
 
   function getUserLocation() {
@@ -79,6 +79,7 @@ export default function Map({route, navigation}) {
           title: 'SocialGlobe',
         },
       );
+      setLocationPermissionResult(granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         getUserLocation();
       } else {
@@ -97,6 +98,7 @@ export default function Map({route, navigation}) {
       }
     });
   };
+
   const filterMapByFilterOption = filterOption => {
     setFilteredEventsList([]);
     eventsList.forEach(event => {
@@ -113,6 +115,7 @@ export default function Map({route, navigation}) {
       console.log('SnackBar:', `Currently No Events of Type '${filterOption}'`);
     }
   };
+
   const filteredEventsListIsNotEmpty = () =>
     filteredEventsList != null &&
     filteredEventsList != undefined &&
@@ -121,10 +124,7 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
-    setFocusRegion(currentUserLocation);
   }, [isFocused]);
-
-  useEffect(() => {}, [filteredEventsList]);
 
   return (
     <View style={{flex: 1}}>

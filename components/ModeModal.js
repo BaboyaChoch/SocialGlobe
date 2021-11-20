@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/core';
 import MapView, {Marker} from 'react-native-maps';
 import {IconButton, Colors, Divider} from 'react-native-paper';
 
-export default function ModeeModal(props) {
+export default function ModesModal(props) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -31,25 +31,27 @@ export default function ModeeModal(props) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={[styles.modalText, styles.modalTitle]}>
-                {props.title}
+                Choose mode of transportion
               </Text>
               <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
               <Divider />
               <View style={styles.alignButton}>
-                <IconButton
+                {/* <IconButton
                   icon="bus"
                   color={Colors.blue300}
                   size={40}
                   onPress={() => {
-                    console.log('');
+                    setModeOfTransport('TRAINSIT'),
+                      setModalVisible(!modalVisible);
                   }}
-                />
+                /> */}
                 <IconButton
                   icon="walk"
                   color={Colors.black}
                   size={40}
                   onPress={() => {
-                    console.log('');
+                    setModeOfTransport('WALKING'),
+                      setModalVisible(!modalVisible);
                   }}
                 />
                 <IconButton
@@ -57,14 +59,18 @@ export default function ModeeModal(props) {
                   color={Colors.blue300}
                   size={40}
                   onPress={() => {
-                    getDirections();
+                    setModeOfTransport('BICYCLING'),
+                      setModalVisible(!modalVisible);
                   }}
                 />
                 <IconButton
                   icon="car"
                   color={Colors.green500}
                   size={40}
-                  onPress={() => {}}
+                  onPress={() => {
+                    setModeOfTransport('DRIVING'),
+                      setModalVisible(!modalVisible);
+                  }}
                 />
               </View>
             </View>

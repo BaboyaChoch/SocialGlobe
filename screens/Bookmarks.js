@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import {getUserBookmarks} from '../api/bookmarksApi';
 import InfoCard from './InfoCard';
+import {firebase} from '@react-native-firebase/auth';
 
 export default function Bookmarks() {
   const [userBookmarks, setUserBookmarks] = useState();
   const isFocused = useIsFocused();
+  const user = firebase.auth().currentUser;
 
   const onBookmarksRecieved = bookmarks => {
     setUserBookmarks(bookmarks);

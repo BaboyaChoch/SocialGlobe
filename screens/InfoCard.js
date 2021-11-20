@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {SliderBox} from 'react-native-image-slider-box';
 import {
   StyleSheet,
   View,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import {
   Avatar,
@@ -13,163 +15,92 @@ import {
   Button,
   Colors,
 } from 'react-native-paper';
+import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
+
+
 
 export default function InfoCard() {
 
-  return (
+  const [images, setImages] = useState([
+    'https://source.unsplash.com/1024x768/?nature',
+    'https://source.unsplash.com/1024x768/?water',
+    'https://source.unsplash.com/1024x768/?girl',
+    'https://source.unsplash.com/1024x768/?tree',
+  ]);
+const getrows = {
+
+}
+  return InfoCard.map(rows) (
     <SafeAreaView style={styles.container}>
       
         <View>
         <Card style={styles.card}>
+        <Image 
+          source={{uri: "https://source.unsplash.com/1024x768/?nature"}}
+          style={{
+            width: 300,
+            height: 200,
+          }}
+        />
             <Card.Title 
                 style={styles.header}
-                title='Robotics Competition'
+                title={`${eventDetails.title}`}
             />
             <Card.Content style={styles.content}>
             <Paragraph 
                 style={styles.location}>
-                {'Patrick F. Taylor Hall'}
+                {`${eventDetails.address.description}`}
               </Paragraph>
               <Paragraph 
                 style={styles.address}>
-                {'123 WherePFTIs Dr'}
+                {`${new Date(eventDetails.date).toDateString()}`}
               </Paragraph>
               <Paragraph 
                 style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
+                {`${new Date(
+                eventDetails.date,
+              ).toLocaleTimeString()}`}
               </Paragraph>
               <Paragraph 
                 style={styles.category}>
-                {'Robotics'}
+                {`${eventDetails.description}`}
               </Paragraph>
                 <Card.Content style={{flexDirection: 'row'}}>
                 <IconButton
-                icon="map-marker"
+                icon="plus"
+                color={GREEN}
+                //add event to destinations
+                onPress={() => {
+                  navigation.navigate('Map', {eventToAdd: details});
+                }}
                 size={40}
               />
              <IconButton
-                icon="map-search"
+                icon="information"
+                color={Colors.cyan400}
+                //more info, redirect to details page
+                onPress={() => {
+                  navigation.navigate('EventDetailsPage');
+                }}
                 size={40}
               />
               <IconButton
-                icon="information-outline"
+                icon="navigation"
+                color={ORANGE}
+                //get directions to event
+                onPress={() => {
+                  console.log('reported');
+                }}
                 size={40}
               />
                 </Card.Content>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-open-outline" //lock-outline if private
                 size={40}
+                //color={GREEN} //Colors.red900 if private
               />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
+              </Card.Content>
             </Card.Content>
           </Card>
         </View>
@@ -178,7 +109,6 @@ export default function InfoCard() {
 }
 
 const GREEN = '#19a86a';
-const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
@@ -218,31 +148,45 @@ const styles = StyleSheet.create({
     fontSize: 14,
     width: 230,
     padding: 0,
-    left: 25,
+    margin: 0,
+    position: 'relative',
+    textAlign: 'left',
   },
   location: {
     bottom: 1,
     fontSize: 15,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   address: {
     top: 1,
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   subaddress: {
     bottom: 8,
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   category: {
     bottom: 3,
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: 'left',
   },
-  pin: {
+  heart: {
+    position: 'relative',
+    bottom: 250,
+    left: 200,
+    backgroundColor: 'white',
+    scaleX: .75,
+    scaleY: .75,
+    },
+    privacyicon:{
       position: 'relative',
-      bottom: 133,
-      left: 40,
-  }
+      left: 30,
+    },
+    privacy: {
+      position: 'relative',
+      top: 13,
+      left: 25,
+    }
 });

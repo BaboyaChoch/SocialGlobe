@@ -6,7 +6,7 @@ import Map from '../screens/Map';
 import createEventOverlay from '../screens/createEventOverlay';
 import Bookmarks from '../screens/Bookmarks';
 
-import {IconButton, Colors} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
@@ -18,10 +18,6 @@ const Tabs = () => {
           backgroundColor: WHITE,
           borderRadius: 0,
           height: 40,
-          //activeTintColor: '#F2C777',
-          //inactiveTintColor: '#0468BF',
-          //activeBackgroundColor: '#D95959',
-          //inactiveBackgroundColor: '#022859',
         },
       }}>
       <Tab.Screen

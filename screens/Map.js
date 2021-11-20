@@ -30,11 +30,7 @@ if (Platform.OS == 'ios') {
   });
   Geolocation.requestAuthorization();
 }
-const des = {
-  longitude: -91.1873842,
-  latitude: 30.4227145,
-};
-const coordinates = [
+const coordinateArray = [
   {
     longitude: -91.1873842,
     latitude: 30.4227145,
@@ -65,10 +61,13 @@ export default function Map({route, navigation}) {
     longitudeDelta: 0.009,
   });
   const isFocused = useIsFocused();
-
+  const [currentUserSelection, setCurrentUserSelection] = useState();
   const [eventsList, setEventsList] = useState([]);
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
-
+  const [userDestination, setUserDestination] = useState();
+  const [modeOfTransport, setModeOfTransport] = useState();
+  const mapRef = useRef(null);
+  const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
     setCreateEventIsVisiblility(false);
   }
@@ -175,25 +174,18 @@ export default function Map({route, navigation}) {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Text style={[styles.modalText, styles.modalTitle]}>
-                  {props.title}
+                  Gerald's Castle
                 </Text>
                 <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
                 <Divider />
                 <View style={styles.alignButton}>
                   <IconButton
-                    icon="bus"
-                    color={Colors.blue300}
-                    size={40}
-                    onPress={() => {
-                      console.log('');
-                    }}
-                  />
-                  <IconButton
                     icon="walk"
                     color={Colors.black}
                     size={40}
                     onPress={() => {
-                      console.log('');
+                      setModeOfTransport('WALKING'),
+                        setModalVisible(!modalVisible);
                     }}
                   />
                   <IconButton
@@ -201,14 +193,18 @@ export default function Map({route, navigation}) {
                     color={Colors.blue300}
                     size={40}
                     onPress={() => {
-                      getDirections();
+                      setModeOfTransport('BICYCLING'),
+                        setModalVisible(!modalVisible);
                     }}
                   />
                   <IconButton
                     icon="car"
                     color={Colors.green500}
                     size={40}
-                    onPress={() => {}}
+                    onPress={() => {
+                      setModeOfTransport('DRIVING'),
+                        setModalVisible(!modalVisible);
+                    }}
                   />
                 </View>
               </View>
@@ -231,9 +227,10 @@ export default function Map({route, navigation}) {
 
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={currentUserLocation}>
+      <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
         {eventsList.map(eventInfo => (
           <UseModal
+            onPress={() => setCurrentUserSelection(eventInfo)}
             key={eventInfo.eventId}
             coordinate={eventInfo.coordinates}
             title={eventInfo.title}
@@ -243,11 +240,12 @@ export default function Map({route, navigation}) {
           />
         ))}
 
-        {coordinates.length >= 2 && (
+        {coordinateArray.length >= 2 && (
           <Route
             origin={currentUserLocation}
-            destination={coordinates}
-            modeOfTransport={'WALKING'}
+            destination={coordinateArray}
+            modeOfTransport={modeOfTransport}
+            mapRef={mapRef}
           />
         )}
       </MapView>

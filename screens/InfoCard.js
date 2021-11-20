@@ -43,26 +43,26 @@ const getrows = {
           }}
         />
             <Card.Title 
-                style={styles.header}
+                style={styles.title}
                 title={`${eventDetails.title}`}
             />
             <Card.Content style={styles.content}>
             <Paragraph 
-                style={styles.location}>
+                style={styles.address}>
                 {`${eventDetails.address.description}`}
               </Paragraph>
               <Paragraph 
-                style={styles.address}>
+                style={styles.date}>
                 {`${new Date(eventDetails.date).toDateString()}`}
               </Paragraph>
               <Paragraph 
-                style={styles.subaddress}>
+                style={styles.time}>
                 {`${new Date(
                 eventDetails.date,
               ).toLocaleTimeString()}`}
               </Paragraph>
               <Paragraph 
-                style={styles.category}>
+                style={styles.description}>
                 {`${eventDetails.description}`}
               </Paragraph>
                 <Card.Content style={{flexDirection: 'row'}}>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     bottom: 8,
   },
-  header: {
+  title: {
     fontSize: 14,
     width: 230,
     padding: 0,
@@ -152,24 +152,24 @@ const styles = StyleSheet.create({
     position: 'relative',
     textAlign: 'left',
   },
-  location: {
+  address: {
     bottom: 1,
     fontSize: 15,
     textAlign: 'left',
   },
-  address: {
+  date: {
     top: 1,
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'left',
   },
-  subaddress: {
+  time: {
     bottom: 8,
     fontSize: 12,
     textAlign: 'left',
   },
-  category: {
+  description: {
     bottom: 3,
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'left',
   },
   heart: {

@@ -70,5 +70,10 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>SocialGlobe would like access to your photo gallery</string>
+    <key>NSCameraUsageDescription</key>
+    <string>SocialGlobe would like to use your camera</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
 </dict>
 </plist>

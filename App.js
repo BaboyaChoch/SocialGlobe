@@ -5,6 +5,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import EventDetailsPage from './screens/EventDetailsPage';
 import Tabs from './navigation/tabs';
 import Login from './screens/Login';
+import EventDescriptionAndImageSelect from './screens/EventDescriptionAndImageSelect';
+
 const Stack = createStackNavigator();
 function App({navigation}) {
   return (
@@ -13,6 +15,10 @@ function App({navigation}) {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="home" component={Tabs} />
         <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
+        <Stack.Screen
+          name="EventDescriptionAndImageSelect"
+          component={EventDescriptionAndImageSelect}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -27,9 +27,7 @@ export default function Bookmarks() {
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <InfoCard />
-      </ScrollView>
+      <ScrollView>{/* <InfoCard /> */}</ScrollView>
     </SafeAreaView>
   );
 }

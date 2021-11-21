@@ -22,7 +22,6 @@ import UseModal from '../components/UseModal';
 import ModeModal from '../components/UseModal';
 import Route from '../components/Route';
 import {getEvents} from '../api/mapsApi';
-import getDirections from 'react-native-google-maps-directions';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -31,21 +30,10 @@ if (Platform.OS == 'ios') {
   Geolocation.requestAuthorization();
 }
 const coordinateArray = [
+  {},
   {
     longitude: -91.1873842,
     latitude: 30.4227145,
-    latitudeDelta: 0.009,
-    longitudeDelta: 0.0009,
-  },
-  {
-    longitude: -91.1879546,
-    latitude: 30.4211469,
-    latitudeDelta: 0.009,
-    longitudeDelta: 0.0009,
-  },
-  {
-    longitude: -91.17617969999999,
-    latitude: 30.4186758,
     latitudeDelta: 0.009,
     longitudeDelta: 0.0009,
   },
@@ -66,6 +54,9 @@ export default function Map({route, navigation}) {
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
   const [userDestination, setUserDestination] = useState();
   const [modeOfTransport, setModeOfTransport] = useState();
+  const [routeResult, setRouteResult] = useState();
+  const [routeIsReady, setRouteIsReady] = useState(false);
+
   const mapRef = useRef(null);
   const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
@@ -155,8 +146,8 @@ export default function Map({route, navigation}) {
     }
   }
 
-  const [modalVisible, setModalVisible] = useState(false);
   function ModeModal(props) {
+    const [modalVisible, setModalVisible] = useState(false);
     return (
       <View style={styles.centeredView}>
         <Modal
@@ -176,7 +167,11 @@ export default function Map({route, navigation}) {
                 <Text style={[styles.modalText, styles.modalTitle]}>
                   Gerald's Castle
                 </Text>
-                <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
+                <Text style={[styles.modalText, , {fontSize: 16}]}>
+                  Distance: {props.distance}
+                  {'\n'}
+                  Duration: {props.duration}
+                </Text>
                 <Divider />
                 <View style={styles.alignButton}>
                   <IconButton
@@ -184,8 +179,9 @@ export default function Map({route, navigation}) {
                     color={Colors.black}
                     size={40}
                     onPress={() => {
-                      setModeOfTransport('WALKING'),
-                        setModalVisible(!modalVisible);
+                      setModeOfTransport('WALKING');
+                      setModalVisible(!modalVisible);
+                      setRouteIsReady(true);
                     }}
                   />
                   <IconButton
@@ -193,8 +189,9 @@ export default function Map({route, navigation}) {
                     color={Colors.blue300}
                     size={40}
                     onPress={() => {
-                      setModeOfTransport('BICYCLING'),
-                        setModalVisible(!modalVisible);
+                      setModeOfTransport('BICYCLING');
+                      setModalVisible(!modalVisible);
+                      setRouteIsReady(true);
                     }}
                   />
                   <IconButton
@@ -202,8 +199,9 @@ export default function Map({route, navigation}) {
                     color={Colors.green500}
                     size={40}
                     onPress={() => {
-                      setModeOfTransport('DRIVING'),
-                        setModalVisible(!modalVisible);
+                      setModeOfTransport('DRIVING');
+                      setModalVisible(!modalVisible);
+                      setRouteIsReady(true);
                     }}
                   />
                 </View>
@@ -237,15 +235,18 @@ export default function Map({route, navigation}) {
             time={eventInfo.time}
             address={eventInfo.address}
             date={eventInfo.date}
+            origin={currentUserLocation}
+            modeOfTransport={modeOfTransport}
           />
         ))}
 
-        {coordinateArray.length >= 2 && (
+        {routeIsReady && (
           <Route
             origin={currentUserLocation}
             destination={coordinateArray}
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
+            handleRouteResult={setRouteResult()}
           />
         )}
       </MapView>

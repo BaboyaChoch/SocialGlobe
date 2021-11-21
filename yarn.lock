@@ -6223,6 +6223,11 @@
   "resolved" "https://registry.npmjs.org/react-native-google-maps-directions/-/react-native-google-maps-directions-2.1.1.tgz"
   "version" "2.1.1"
 
+"react-native-google-matrix@^0.0.3":
+  "integrity" "sha1-CVG2I/qaUbTREcf49iMMDAvUvYI="
+  "resolved" "https://registry.npmjs.org/react-native-google-matrix/-/react-native-google-matrix-0.0.3.tgz"
+  "version" "0.0.3"
+
 "react-native-google-places-autocomplete@^2.4.1":
   "integrity" "sha512-NJrzZ5zsguhTqe0C5tIW9PfxOn2wkWDiGYIBFksHzFOIIURxFPUlO0cJmfOjs5CBIDtMampgNXBdgADExBen5w=="
   "resolved" "https://registry.npmjs.org/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-2.4.1.tgz"

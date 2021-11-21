@@ -246,7 +246,7 @@ export default function Map({route, navigation}) {
             destination={coordinateArray}
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
-            handleRouteResult={setRouteResult()}
+            handleRouteResult={param => setRouteResult(param)}
           />
         )}
       </MapView>

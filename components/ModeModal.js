@@ -7,8 +7,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/core';
-import MapView, {Marker} from 'react-native-maps';
+
 import {IconButton, Colors, Divider} from 'react-native-paper';
 
 export default function ModesModal(props) {
@@ -31,20 +30,15 @@ export default function ModesModal(props) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={[styles.modalText, styles.modalTitle]}>
-                Choose mode of transportion
+                Gerald's Castle
               </Text>
-              <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
+              <Text style={[styles.modalText, , {fontSize: 16}]}>
+                Distance: {props.distance}
+                {'\n'}
+                Duration: {props.duration}
+              </Text>
               <Divider />
               <View style={styles.alignButton}>
-                {/* <IconButton
-                  icon="bus"
-                  color={Colors.blue300}
-                  size={40}
-                  onPress={() => {
-                    setModeOfTransport('TRAINSIT'),
-                      setModalVisible(!modalVisible);
-                  }}
-                /> */}
                 <IconButton
                   icon="walk"
                   color={Colors.black}

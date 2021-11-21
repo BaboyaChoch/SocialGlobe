@@ -1,10 +1,29 @@
 import MapViewDirections from 'react-native-maps-directions';
-import {Dimensions} from 'react-native';
-import React from 'react';
+import {
+  Dimensions,
+  Text,
+  StyleSheet,
+  View,
+  Modal,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import React, {useState, useEffect} from 'react';
 
 export default function Route(props) {
   const GOOGLE_MAPS_APIKEY = 'AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc';
   const {width, height} = Dimensions.get('window');
+
+  function getRouteEstimates(result) {
+    const distanceEstimate = result.distance / 1.609;
+    const durationEstimate = result.duration.toFixed(0);
+    return {
+      estimateDistance: distanceEstimate,
+      estimateDuration: durationEstimate,
+    };
+  }
+  useEffect(() => {
+    console.log('im here');
+  });
 
   return (
     <MapViewDirections
@@ -19,16 +38,11 @@ export default function Route(props) {
       destination={props.destination[props.destination.length - 1]}
       precision={'high'}
       optimizeWaypoints={true}
-      strokeWidth={5}
-      strokeColor="blue"
-      onStart={params => {
-        console.log(
-          `Started routing between "${params.origin}" and "${params.destination}" `,
-        );
-      }}
+      strokeWidth={10}
+      strokeColor="steelblue"
+      onStart={params => {}}
       onReady={result => {
-        console.log(`Distance: ${(result.distance / 1.609).toFixed(2)} miles`);
-        console.log(`Duration: ${result.duration.toFixed(0)} minutes`);
+        props.handleRouteResult(getRouteEstimates(result));
         props.mapRef.current.fitToCoordinates(props.destination, {
           edgePadding: {
             right: width / 20,
@@ -38,8 +52,8 @@ export default function Route(props) {
           },
         });
       }}
-      onError={errorMessage => {
-        console.log('Error: MapviewDirections');
+      onError={error => {
+        return;
       }}
     />
   );

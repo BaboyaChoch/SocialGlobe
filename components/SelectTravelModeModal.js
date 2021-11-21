@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,8 +17,12 @@ export default function SelectTravelModeModal(props) {
     props.selectionOnclick(travelMode);
     props.handleVisisble(false);
     props.handleRouteReady(true);
-    props.handleDestinations(props.currentUserSelection);
+    props.handleDestinations([...props.destinations, props.currentDestination]);
   };
+
+  useEffect(() => {
+    console.log({1: props.destinations, 2: props.currentDestination});
+  }, [props.destinations]);
 
   return (
     <View style={styles.centeredView}>

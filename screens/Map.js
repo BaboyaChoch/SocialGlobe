@@ -141,7 +141,7 @@ export default function Map({route, navigation}) {
   }
 
   useEffect(() => {
-    console.log(currentUserLocation);
+    //console.log(currentUserLocation);
   });
   useEffect(() => {
     requestLocationPermission();
@@ -150,16 +150,26 @@ export default function Map({route, navigation}) {
 
   useEffect(() => {
     if (routeResult != undefined) {
-      console.log('map.js', routeResult);
+      //console.log('map.js', routeResult);
       setRouteDetailsIsReady(true);
     }
   }, [routeResult]);
 
   useEffect(() => {
     if (currentUserSelection != undefined) {
-      console.log(currentUserSelection);
+      console.log('selection:', currentUserSelection);
     }
   }, [currentUserSelection]);
+
+  useEffect(() => {
+    console.log({
+      currentPage: 'map.js',
+      dest: currentUserSelection,
+      selection: currentUserSelection,
+      origin: currentUserLocation,
+      mode: modeOfTransport,
+    });
+  }, [routeIsReady]);
 
   return (
     <View style={{flex: 1}}>
@@ -204,6 +214,7 @@ export default function Map({route, navigation}) {
           destinations={userDestinations}
           currentOrigin={currentUserSelection}
           handleDestinations={setUserDestinations}
+          currentDestination={currentUserLocation}
         />
       </View>
     </View>

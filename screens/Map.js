@@ -260,7 +260,6 @@ export default function Map({route, navigation}) {
       </MapView>
       {routeIsReady && routeDetailsIsReady && (
         <View style={styles.nav}>
-
           <Text
             style={
               styles.routeDetails

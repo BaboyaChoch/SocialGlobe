@@ -17,8 +17,8 @@ export default function Route(props) {
     const distanceEstimate = result.distance / 1.609;
     const durationEstimate = result.duration.toFixed(0);
     return {
-      estimateDistance: distanceEstimate,
-      estimateDuration: durationEstimate,
+      estimatedDistance: distanceEstimate,
+      estimatedDuration: durationEstimate,
     };
   }
 
@@ -37,7 +37,7 @@ export default function Route(props) {
       optimizeWaypoints={true}
       strokeWidth={10}
       strokeColor="steelblue"
-      onStart={params => {}}
+      onStart={() => console.log('')}
       onReady={result => {
         props.handleRouteResult(getRouteEstimates(result));
         props.mapRef.current.fitToCoordinates(props.destination, {

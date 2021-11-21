@@ -32,7 +32,7 @@ if (Platform.OS == 'ios') {
 const coordinateArray = [
   {},
   {
-    longitude: -91.1873842,
+    longitude: -91.1273842,
     latitude: 30.4227145,
     latitudeDelta: 0.009,
     longitudeDelta: 0.0009,
@@ -62,6 +62,7 @@ export default function Map({route, navigation}) {
   const [modeOfTransport, setModeOfTransport] = useState();
   const [routeResult, setRouteResult] = useState();
   const [routeIsReady, setRouteIsReady] = useState(false);
+  const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
 
   const mapRef = useRef(null);
   const {width, height} = Dimensions.get('window');
@@ -230,8 +231,12 @@ export default function Map({route, navigation}) {
   }, [isFocused]);
 
   useEffect(() => {
-    console.log(routeResult);
+    if (routeResult != undefined) {
+      console.log('map.js', routeResult);
+      setRouteDetailsIsReady(true);
+    }
   }, [routeResult]);
+
   return (
     <View style={{flex: 1}}>
       <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
@@ -259,14 +264,14 @@ export default function Map({route, navigation}) {
           />
         )}
       </MapView>
-      <View style={styles.nav}>
-        <Button
-          onPress={() => {
-            navigation.navigate('CreateEvent');
-          }}
-          title="Create Event"
-        />
-      </View>
+      {routeIsReady && routeDetailsIsReady && (
+        <View style={styles.nav}>
+          <Text
+            style={
+              styles.routeDetails
+            }>{`${routeResult.estimatedDistance}------${routeResult.estimatedDuration}`}</Text>
+        </View>
+      )}
       <View>
         <ModeModal></ModeModal>
       </View>
@@ -286,7 +291,8 @@ const styles = StyleSheet.create({
   nav: {
     position: 'absolute', //use absolute position to show button on top of the map
     top: '95%', //for center align
-    alignSelf: 'flex-end', //for align to right
+    alignSelf: 'flex-end', //for align to righ
+    flexDirection: 'column',
   },
   centeredView: {
     flex: 1,
@@ -336,5 +342,18 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontWeight: 'bold',
     fontSize: 24,
+  },
+  routeDetails: {
+    fontSize: 15,
+    height: 50,
+    borderColor: 'red',
+    borderWidth: 5,
+    width: 200,
+    color: 'red',
+  },
+  textCont: {
+    flexDirection: 'row',
+    flex: 1,
+    position: 'relative',
   },
 });

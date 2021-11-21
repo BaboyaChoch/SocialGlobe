@@ -5,6 +5,9 @@
 #env
 .env
 
+#hprof
+android/*.hprof
+
 # Xcode
 #
 build/

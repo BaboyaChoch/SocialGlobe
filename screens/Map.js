@@ -37,6 +37,12 @@ const coordinateArray = [
     latitudeDelta: 0.009,
     longitudeDelta: 0.0009,
   },
+  {
+    longitude: -91.1943842,
+    latitude: 30.4227145,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.0009,
+  },
 ];
 
 export default function Map({route, navigation}) {
@@ -210,7 +216,7 @@ export default function Map({route, navigation}) {
           </TouchableWithoutFeedback>
         </Modal>
         <Pressable
-          style={[styles.button, {backgroundColor: 'blue'}]}
+          style={[styles.button, {backgroundColor: 'pink'}]}
           onPress={() => setModalVisible(true)}>
           <Text style={styles.textStyle}>Show Modal</Text>
         </Pressable>
@@ -223,6 +229,9 @@ export default function Map({route, navigation}) {
     getEvents(onEventsRecieved);
   }, [isFocused]);
 
+  useEffect(() => {
+    console.log(routeResult);
+  }, [routeResult]);
   return (
     <View style={{flex: 1}}>
       <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>

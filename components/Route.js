@@ -21,9 +21,6 @@ export default function Route(props) {
       estimateDuration: durationEstimate,
     };
   }
-  useEffect(() => {
-    console.log('im here');
-  });
 
   return (
     <MapViewDirections

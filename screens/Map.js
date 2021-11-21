@@ -164,7 +164,7 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     console.log({
       currentPage: 'map.js',
-      dest: currentUserSelection,
+      dest: userDestinations,
       selection: currentUserSelection,
       origin: currentUserLocation,
       mode: modeOfTransport,
@@ -181,7 +181,6 @@ export default function Map({route, navigation}) {
             eventInfo={eventInfo}
             origin={currentUserLocation}
             modeOfTransport={modeOfTransport}
-            handleSelection={setCurrentUserSelection}
             currentOrigin={currentUserLocation}
             handleNavigate={setIsChooseTravelModeVisible}
           />
@@ -214,7 +213,7 @@ export default function Map({route, navigation}) {
           destinations={userDestinations}
           currentOrigin={currentUserSelection}
           handleDestinations={setUserDestinations}
-          currentDestination={currentUserLocation}
+          currentDestination={currentUserSelection}
         />
       </View>
     </View>

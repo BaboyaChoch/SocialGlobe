@@ -37,7 +37,6 @@ export default function CreateEventEventMarker(props) {
             }}>
             <TouchableWithoutFeedback
               onPressOut={() => {
-                props.handleSelection(props.eventInfo);
                 setModalVisible(!modalVisible);
               }}>
               <View style={styles.centeredView}>

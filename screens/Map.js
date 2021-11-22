@@ -220,15 +220,16 @@ export default function Map({route, navigation}) {
             }>{`${routeResult.estimatedDistance} miles------${routeResult.estimatedDuration} mins`}</Text>
         </View>
       )}
-      <View style={styles.navs}>
-        <Button
-          onPress={() => {
-            setRouteIsReady(false);
-          }}
-          title="End Route"
-        />
-      </View>
-
+      {routeIsReady && (
+        <View style={styles.navs}>
+          <Button
+            onPress={() => {
+              setRouteIsReady(false);
+            }}
+            title="End Route"
+          />
+        </View>
+      )}
       <View>
         <SelectTravelModeModal
           selectionOnclick={setModeOfTransport}

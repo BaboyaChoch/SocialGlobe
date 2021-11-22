@@ -65,7 +65,7 @@ export default function Route(props) {
   useEffect(() => {
     setTimeout(function () {
       fitRouteToScreen(props.origin, props.destinations);
-    }, 800);
+    }, 250);
   }, [props.origin, props.destinations, props.modeOfTransport]);
 
   return (

@@ -66,7 +66,6 @@ export default function Map({route, navigation}) {
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
   const mapRef = useRef(null);
-  const [markerIsVisible, setMarkerIsVisible] = useState(true);
 
   const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
@@ -187,16 +186,10 @@ export default function Map({route, navigation}) {
     });
   }, [routeIsReady]);
 
-  useEffect(() => {
-    if (routeIsReady == true) {
-      setMarkerIsVisible(false);
-    }
-  });
-
   return (
     <View style={{flex: 1}}>
       <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
-        {markerIsVisible &&
+        {!routeIsReady &&
           eventsList.map(eventInfo => (
             <CreateEventEventMarker
               onPress={() => setCurrentUserSelection(eventInfo)}
@@ -216,7 +209,6 @@ export default function Map({route, navigation}) {
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
-            markerVisible={() => setMarkerIsVisible(false)}
           />
         )}
       </MapView>
@@ -228,6 +220,15 @@ export default function Map({route, navigation}) {
             }>{`${routeResult.estimatedDistance} miles------${routeResult.estimatedDuration} mins`}</Text>
         </View>
       )}
+      <View style={styles.navs}>
+        <Button
+          onPress={() => {
+            setRouteIsReady(false);
+          }}
+          title="End Route"
+        />
+      </View>
+
       <View>
         <SelectTravelModeModal
           selectionOnclick={setModeOfTransport}
@@ -320,5 +321,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     position: 'relative',
+  },
+  navs: {
+    position: 'absolute',
+    top: '95%',
+    alignSelf: 'flex-start',
   },
 });

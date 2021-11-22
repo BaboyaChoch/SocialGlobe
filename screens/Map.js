@@ -30,6 +30,21 @@ if (Platform.OS == 'ios') {
   Geolocation.requestAuthorization();
 }
 
+const coordinateArray = [
+  {},
+  {
+    longitude: -91.181757,
+    latitude: 30.419881,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.0009,
+  },
+  {
+    longitude: -91.181757,
+    latitude: 30.412411,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.0009,
+  },
+];
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
   console.log('Maps Pags: ', eventToAdd);
@@ -140,17 +155,17 @@ export default function Map({route, navigation}) {
     }
   }
   function fitRouteToScreen(origin, destination) {
-    destination[0] = origin;
-    var destinationWithOrigin = [origin].concat(destination);
+    const tempDestination = destination;
+    tempDestination[0] = origin;
+    const destinationWithOrigin = [origin].concat(tempDestination);
     mapRef.current.fitToCoordinates(destinationWithOrigin, {
       edgePadding: {
         right: width / 20,
-        bottom: height / 20,
+        bottom: height / 15,
         left: width / 20,
         top: height / 20,
       },
     });
-    console.log(destinationWithOrigin);
   }
   useEffect(() => {
     //console.log(currentUserLocation);
@@ -182,7 +197,7 @@ export default function Map({route, navigation}) {
       mode: modeOfTransport,
     });
     setTimeout(function () {
-      fitRouteToScreen(currentUserLocation, userDestinations);
+      fitRouteToScreen(currentUserLocation, coordinateArray);
     }, 800);
   }, [routeIsReady]);
 
@@ -204,7 +219,7 @@ export default function Map({route, navigation}) {
         {routeIsReady && (
           <Route
             origin={currentUserLocation}
-            destinations={userDestinations}
+            destinations={coordinateArray}
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}

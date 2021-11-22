@@ -8,28 +8,48 @@ import {
   SectionList,
   ScrollView,
 } from 'react-native';
-import {getUserBookmarks} from '../api/bookmarksApi';
+import {getAllBookmarkEvents, getUserBookmarks} from '../api/bookmarksApi';
 import InfoCard from './InfoCard';
 import {firebase} from '@react-native-firebase/auth';
+import {getAnEvent} from '../api/mapsApi';
+
+import {addToUserBookmarks} from '../api/bookmarksApi';
 
 export default function Bookmarks() {
   const [userBookmarks, setUserBookmarks] = useState();
   const isFocused = useIsFocused();
   const user = firebase.auth().currentUser;
+  const [eventsInfo, setEventsInfo] = useState([]);
+  const [isBookmarkReady, setIsBookmarkReady] = useState(false);
 
   const onBookmarksRecieved = bookmarks => {
     setUserBookmarks(bookmarks);
+    getAllBookmarkEvents(bookmarks, onEventInfoRecieved);
+  };
+
+  const onEventInfoRecieved = events => {
+    setEventsInfo(events);
+    setIsBookmarkReady(true);
   };
 
   useEffect(() => {
     getUserBookmarks(onBookmarksRecieved);
-  });
-
+  }, [isFocused]);
+  console.log(eventsInfo);
   return (
-    <SafeAreaView>
-      <ScrollView>{/* <InfoCard /> */}</ScrollView>
-    </SafeAreaView>
+    <View>
+      {eventsInfo.map((bookmark, index) => (
+        <Text key={index} style={{fontSize: 30}}>
+          {bookmark.title}
+        </Text>
+      ))}
+    </View>
   );
+  {
+    /* <SafeAreaView >
+       <ScrollView> <InfoCard /> </ScrollView> 
+    </SafeAreaView> */
+  }
 }
 const styles = StyleSheet.create({
   SectionList: {

@@ -35,15 +35,20 @@ export default function Bookmarks() {
   useEffect(() => {
     getUserBookmarks(onBookmarksRecieved);
   }, [isFocused]);
+
   console.log(eventsInfo);
+
   return (
-    <View>
-      {eventsInfo.map((bookmark, index) => (
-        <Text key={index} style={{fontSize: 30}}>
-          {bookmark.title}
-        </Text>
-      ))}
-    </View>
+    <SafeAreaView>
+      <ScrollView>
+        {eventsInfo.map((bookmark, index) => (
+          <Text key={index} style={{fontSize: 30}}>
+            {bookmark.title}
+          </Text>
+        ))}
+        {/* <InfoCard /> */}
+      </ScrollView>
+    </SafeAreaView>
   );
   {
     /* <SafeAreaView >

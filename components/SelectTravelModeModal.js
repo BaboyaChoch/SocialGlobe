@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,33 +10,40 @@ import {
 
 import {IconButton, Colors, Divider} from 'react-native-paper';
 
-export default function ModesModal(props) {
-  const [modalVisible, setModalVisible] = useState(false);
+export default function SelectTravelModeModal(props) {
+  console.log('in SelectTravelModeModal');
+
+  const setTravelModeAndShowRoute = travelMode => {
+    props.selectionOnclick(travelMode);
+    props.handleVisisble(false);
+    props.handleRouteReady(true);
+    props.handleDestinations([...props.destinations, props.currentDestination]);
+  };
+
+  useEffect(() => {
+    console.log({1: props.destinations, 2: props.currentDestination});
+  }, [props.destinations]);
 
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={props.visible}
         style={styles.centeredView}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          props.handleVisisble(false);
         }}>
         <TouchableWithoutFeedback
           onPressOut={() => {
-            setModalVisible(!modalVisible);
+            props.handleVisisble(false);
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={[styles.modalText, styles.modalTitle]}>
-                Gerald's Castle
+                Choose mode of transport
               </Text>
-              <Text style={[styles.modalText, , {fontSize: 16}]}>
-                Distance: {props.distance}
-                {'\n'}
-                Duration: {props.duration}
-              </Text>
+              <Text style={[styles.modalText, , {fontSize: 16}]}></Text>
               <Divider />
               <View style={styles.alignButton}>
                 <IconButton
@@ -44,8 +51,7 @@ export default function ModesModal(props) {
                   color={Colors.black}
                   size={40}
                   onPress={() => {
-                    setModeOfTransport('WALKING'),
-                      setModalVisible(!modalVisible);
+                    setTravelModeAndShowRoute('WALKING');
                   }}
                 />
                 <IconButton
@@ -53,8 +59,7 @@ export default function ModesModal(props) {
                   color={Colors.blue300}
                   size={40}
                   onPress={() => {
-                    setModeOfTransport('BICYCLING'),
-                      setModalVisible(!modalVisible);
+                    setTravelModeAndShowRoute('BICYCLING');
                   }}
                 />
                 <IconButton
@@ -62,8 +67,7 @@ export default function ModesModal(props) {
                   color={Colors.green500}
                   size={40}
                   onPress={() => {
-                    setModeOfTransport('DRIVING'),
-                      setModalVisible(!modalVisible);
+                    setTravelModeAndShowRoute('DRIVING');
                   }}
                 />
               </View>
@@ -71,14 +75,10 @@ export default function ModesModal(props) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <Pressable
-        style={[styles.button, {backgroundColor: 'blue'}]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

@@ -18,8 +18,8 @@ import {IconButton, Colors, Divider} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import MapViewDirections from 'react-native-maps-directions';
-import UseModal from '../components/UseModal';
-import ModeModal from '../components/UseModal';
+import CreateEventEventMarker from '../components/CreateEventMarker';
+import SelectTravelModeModal from '../components/SelectTravelModeModal';
 import Route from '../components/Route';
 import {getEvents} from '../api/mapsApi';
 
@@ -29,21 +29,6 @@ if (Platform.OS == 'ios') {
   });
   Geolocation.requestAuthorization();
 }
-const coordinateArray = [
-  {},
-  {
-    longitude: -91.1273842,
-    latitude: 30.4227145,
-    latitudeDelta: 0.009,
-    longitudeDelta: 0.0009,
-  },
-  {
-    longitude: -91.1943842,
-    latitude: 30.4227145,
-    latitudeDelta: 0.009,
-    longitudeDelta: 0.0009,
-  },
-];
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
@@ -58,13 +43,15 @@ export default function Map({route, navigation}) {
   const [currentUserSelection, setCurrentUserSelection] = useState();
   const [eventsList, setEventsList] = useState([]);
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
-  const [userDestination, setUserDestination] = useState();
+  const [userDestinations, setUserDestinations] = useState([{}]);
   const [modeOfTransport, setModeOfTransport] = useState();
   const [routeResult, setRouteResult] = useState();
   const [routeIsReady, setRouteIsReady] = useState(false);
   const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
-
+  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
+    useState(false);
   const mapRef = useRef(null);
+
   const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
     setCreateEventIsVisiblility(false);
@@ -152,79 +139,22 @@ export default function Map({route, navigation}) {
       console.warn(err);
     }
   }
-
-  function ModeModal(props) {
-    const [modalVisible, setModalVisible] = useState(false);
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          style={styles.centeredView}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}>
-          <TouchableWithoutFeedback
-            onPressOut={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={[styles.modalText, styles.modalTitle]}>
-                  Gerald's Castle
-                </Text>
-                <Text style={[styles.modalText, , {fontSize: 16}]}>
-                  Distance: {props.distance}
-                  {'\n'}
-                  Duration: {props.duration}
-                </Text>
-                <Divider />
-                <View style={styles.alignButton}>
-                  <IconButton
-                    icon="walk"
-                    color={Colors.black}
-                    size={40}
-                    onPress={() => {
-                      setModeOfTransport('WALKING');
-                      setModalVisible(!modalVisible);
-                      setRouteIsReady(true);
-                    }}
-                  />
-                  <IconButton
-                    icon="bike"
-                    color={Colors.blue300}
-                    size={40}
-                    onPress={() => {
-                      setModeOfTransport('BICYCLING');
-                      setModalVisible(!modalVisible);
-                      setRouteIsReady(true);
-                    }}
-                  />
-                  <IconButton
-                    icon="car"
-                    color={Colors.green500}
-                    size={40}
-                    onPress={() => {
-                      setModeOfTransport('DRIVING');
-                      setModalVisible(!modalVisible);
-                      setRouteIsReady(true);
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-        <Pressable
-          style={[styles.button, {backgroundColor: 'pink'}]}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.textStyle}>Show Modal</Text>
-        </Pressable>
-      </View>
-    );
+  function fitRouteToScreen(origin, destination) {
+    destination[0] = origin;
+    var destinationWithOrigin = [origin].concat(destination);
+    mapRef.current.fitToCoordinates(destinationWithOrigin, {
+      edgePadding: {
+        right: width / 20,
+        bottom: height / 20,
+        left: width / 20,
+        top: height / 20,
+      },
+    });
+    console.log(destinationWithOrigin);
   }
-
+  useEffect(() => {
+    //console.log(currentUserLocation);
+  });
   useEffect(() => {
     requestLocationPermission();
     getEvents(onEventsRecieved);
@@ -232,32 +162,49 @@ export default function Map({route, navigation}) {
 
   useEffect(() => {
     if (routeResult != undefined) {
-      console.log('map.js', routeResult);
+      //console.log('map.js', routeResult);
       setRouteDetailsIsReady(true);
     }
   }, [routeResult]);
+
+  useEffect(() => {
+    if (currentUserSelection != undefined) {
+      console.log('selection:', currentUserSelection);
+    }
+  }, [currentUserSelection]);
+
+  useEffect(() => {
+    console.log({
+      currentPage: 'map.js',
+      dest: userDestinations,
+      selection: currentUserSelection,
+      origin: currentUserLocation,
+      mode: modeOfTransport,
+    });
+    setTimeout(function () {
+      fitRouteToScreen(currentUserLocation, userDestinations);
+    }, 800);
+  }, [routeIsReady]);
 
   return (
     <View style={{flex: 1}}>
       <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
         {eventsList.map(eventInfo => (
-          <UseModal
+          <CreateEventEventMarker
             onPress={() => setCurrentUserSelection(eventInfo)}
             key={eventInfo.eventId}
-            coordinate={eventInfo.coordinates}
-            title={eventInfo.title}
-            time={eventInfo.time}
-            address={eventInfo.address}
-            date={eventInfo.date}
+            eventInfo={eventInfo}
             origin={currentUserLocation}
             modeOfTransport={modeOfTransport}
+            currentOrigin={currentUserLocation}
+            handleNavigate={setIsChooseTravelModeVisible}
           />
         ))}
 
         {routeIsReady && (
           <Route
             origin={currentUserLocation}
-            destination={coordinateArray}
+            destinations={userDestinations}
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
@@ -269,11 +216,20 @@ export default function Map({route, navigation}) {
           <Text
             style={
               styles.routeDetails
-            }>{`${routeResult.estimatedDistance}------${routeResult.estimatedDuration}`}</Text>
+            }>{`${routeResult.estimatedDistance} miles------${routeResult.estimatedDuration} mins`}</Text>
         </View>
       )}
       <View>
-        <ModeModal></ModeModal>
+        <SelectTravelModeModal
+          selectionOnclick={setModeOfTransport}
+          visible={isChooseTravelModeVisible}
+          handleVisisble={setIsChooseTravelModeVisible}
+          handleRouteReady={setRouteIsReady}
+          destinations={userDestinations}
+          currentOrigin={currentUserSelection}
+          handleDestinations={setUserDestinations}
+          currentDestination={currentUserSelection}
+        />
       </View>
     </View>
   );

@@ -66,6 +66,7 @@ export default function Map({route, navigation}) {
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
   const mapRef = useRef(null);
+  const [markerIsVisible, setMarkerIsVisible] = useState(true);
 
   const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
@@ -154,19 +155,7 @@ export default function Map({route, navigation}) {
       console.warn(err);
     }
   }
-  function fitRouteToScreen(origin, destination) {
-    const tempDestination = destination;
-    tempDestination[0] = origin;
-    const destinationWithOrigin = [origin].concat(tempDestination);
-    mapRef.current.fitToCoordinates(destinationWithOrigin, {
-      edgePadding: {
-        right: width / 20,
-        bottom: height / 15,
-        left: width / 20,
-        top: height / 20,
-      },
-    });
-  }
+
   useEffect(() => {
     //console.log(currentUserLocation);
   });
@@ -196,25 +185,29 @@ export default function Map({route, navigation}) {
       origin: currentUserLocation,
       mode: modeOfTransport,
     });
-    setTimeout(function () {
-      fitRouteToScreen(currentUserLocation, coordinateArray);
-    }, 800);
   }, [routeIsReady]);
+
+  useEffect(() => {
+    if (routeIsReady == true) {
+      setMarkerIsVisible(false);
+    }
+  });
 
   return (
     <View style={{flex: 1}}>
       <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
-        {eventsList.map(eventInfo => (
-          <CreateEventEventMarker
-            onPress={() => setCurrentUserSelection(eventInfo)}
-            key={eventInfo.eventId}
-            eventInfo={eventInfo}
-            origin={currentUserLocation}
-            modeOfTransport={modeOfTransport}
-            currentOrigin={currentUserLocation}
-            handleNavigate={setIsChooseTravelModeVisible}
-          />
-        ))}
+        {markerIsVisible &&
+          eventsList.map(eventInfo => (
+            <CreateEventEventMarker
+              onPress={() => setCurrentUserSelection(eventInfo)}
+              key={eventInfo.eventId}
+              eventInfo={eventInfo}
+              origin={currentUserLocation}
+              modeOfTransport={modeOfTransport}
+              currentOrigin={currentUserLocation}
+              handleNavigate={setIsChooseTravelModeVisible}
+            />
+          ))}
 
         {routeIsReady && (
           <Route
@@ -223,6 +216,7 @@ export default function Map({route, navigation}) {
             modeOfTransport={modeOfTransport}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
+            markerVisible={() => setMarkerIsVisible(false)}
           />
         )}
       </MapView>

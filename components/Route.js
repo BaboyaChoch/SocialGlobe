@@ -40,6 +40,19 @@ export default function Route(props) {
       estimatedDuration: durationEstimate,
     };
   }
+  function fitRouteToScreen(origin, destination) {
+    const tempDestination = destination;
+    tempDestination[0] = origin;
+    const destinationWithOrigin = [origin].concat(tempDestination);
+    props.mapRef.current.fitToCoordinates(destinationWithOrigin, {
+      edgePadding: {
+        right: width / 20,
+        bottom: height / 15,
+        left: width / 20,
+        top: height / 20,
+      },
+    });
+  }
 
   useEffect(() => {
     const info = {
@@ -49,6 +62,11 @@ export default function Route(props) {
     };
     console.log(info);
   });
+  useEffect(() => {
+    setTimeout(function () {
+      fitRouteToScreen(props.origin, props.destinations);
+    }, 800);
+  }, [props.origin, props.destinations, props.modeOfTransport]);
 
   return (
     <MapViewDirections

@@ -188,7 +188,11 @@ export default function Map({route, navigation}) {
 
   return (
     <View style={{flex: 1}}>
-      <MapView ref={mapRef} style={styles.map} region={currentUserLocation}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        region={currentUserLocation}
+        showsUserLocation={true}>
         {!routeIsReady &&
           eventsList.map(eventInfo => (
             <CreateEventEventMarker
@@ -217,11 +221,11 @@ export default function Map({route, navigation}) {
           <Text
             style={
               styles.routeDetails
-            }>{`${routeResult.estimatedDistance} miles------${routeResult.estimatedDuration} mins`}</Text>
+            }>{`  ${routeResult.estimatedDistance} miles------${routeResult.estimatedDuration} mins`}</Text>
         </View>
       )}
       {routeIsReady && (
-        <View style={styles.navs}>
+        <View style={styles.endRouteButton}>
           <Button
             onPress={() => {
               setRouteIsReady(false);
@@ -323,7 +327,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
-  navs: {
+  endRouteButton: {
     position: 'absolute',
     top: '95%',
     alignSelf: 'flex-start',

@@ -46,7 +46,7 @@ export default function Map({route, navigation}) {
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
   const mapRef = useRef(null);
-
+  const [currentUserSelection, setCurrentUserSelection] = useState();
   function geoSuccess(position) {
     const coordinates = {
       latitude: position.coords.latitude,
@@ -128,48 +128,66 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     console.log(filterQuery);
   }, [filterQuery]);
+
+  useEffect(() => {
+    if (routeResult != undefined) {
+      //console.log('map.js', routeResult);
+      setRouteDetailsIsReady(true);
+    }
+  }, [routeResult]);
+
+  useEffect(() => {
+    if (currentUserSelection != undefined) {
+      console.log('selection:', currentUserSelection);
+    }
+  }, [currentUserSelection]);
+  useEffect(() => {
+    console.log({
+      currentPage: 'map.js',
+      dest: userDestinations,
+      selection: currentUserSelection,
+      origin: currentUserLocation,
+      mode: modeOfTransport,
+    });
+  }, [routeIsReady]);
+
   return (
     <>
       <MapView
-        ref={mapRef}
         style={styles.map}
         region={focusRegion}
         customMapStyle={getMapStyles()}
-        showsUserLocation={true}>
-        {applyFilter
+        showsUserLocation={true}
+        ref={mapRef}>
+        {!routeIsReady && applyFilter
           ? filteredEventsList.map(eventInfo => (
-              <Marker
+              <CreateEventEventMarker
+                onPress={() => setCurrentUserSelection(eventInfo)}
                 key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                }}></Marker>
+                eventInfo={eventInfo}
+                origin={currentUserLocation}
+                modeOfTransport={modeOfTransport}
+                currentOrigin={currentUserLocation}
+                handleNavigate={setIsChooseTravelModeVisible}
+              />
             ))
           : eventsList.map(eventInfo => (
-              <Marker
+              <CreateEventEventMarker
+                onPress={() => setCurrentUserSelection(eventInfo)}
                 key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                }}></Marker>
+                eventInfo={eventInfo}
+                origin={currentUserLocation}
+                modeOfTransport={modeOfTransport}
+                currentOrigin={currentUserLocation}
+                handleNavigate={setIsChooseTravelModeVisible}
+              />
             ))}
+
         {routeIsReady && (
           <Route
             origin={currentUserLocation}
-            destinations={[
-              {},
-              {
-                latitude: 30.41428,
-                latitudeDelta: 0.009,
-                longitude: -91.17700090000001,
-                longitudeDelta: 0.0009,
-              },
-            ]}
-            modeOfTransport={'DRIVING'}
+            destinations={coordinateForDestinations}
+            modeOfTransport={modeOfTransport}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
           />
@@ -190,6 +208,36 @@ export default function Map({route, navigation}) {
             Get Directions
           </Button>
         )}
+      </View>
+      {routeIsReady && routeDetailsIsReady && (
+        <View style={styles.navs}>
+          <Text
+            style={
+              styles.routeDetails
+            }>{`   ${routeResult.estimatedDistance} miles  ${routeResult.estimatedDuration} mins`}</Text>
+        </View>
+      )}
+      {routeIsReady && (
+        <View style={styles.endRouteButton}>
+          <Button
+            onPress={() => {
+              setRouteIsReady(false);
+            }}
+            title="End Route"
+          />
+        </View>
+      )}
+      <View>
+        <SelectTravelModeModal
+          selectionOnclick={setModeOfTransport}
+          visible={isChooseTravelModeVisible}
+          handleVisisble={setIsChooseTravelModeVisible}
+          handleRouteReady={setRouteIsReady}
+          destinations={userDestinations}
+          currentOrigin={currentUserSelection}
+          handleDestinations={setUserDestinations}
+          currentDestination={currentUserSelection}
+        />
       </View>
     </>
   );
@@ -229,5 +277,24 @@ const styles = StyleSheet.create({
     top: '0%', //for center align
     alignSelf: 'flex-start', //for align to right
     width: '100%',
+  },
+  routeDetails: {
+    fontSize: 15,
+    height: 50,
+    borderColor: 'red',
+    borderWidth: 5,
+    width: 200,
+    color: 'red',
+  },
+  endRouteButton: {
+    position: 'absolute',
+    top: '80%',
+    alignSelf: 'flex-end',
+  },
+  navs: {
+    position: 'absolute', //use absolute position to show button on top of the map
+    top: '90%', //for center align
+    alignSelf: 'flex-start', //for align to right
+    backgroundColor: 'white',
   },
 });

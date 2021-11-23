@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, SafeAreaView} from 'react-native';
+import {StyleSheet, View, SafeAreaView, Alert} from 'react-native';
 import {
   Avatar,
   Card,
@@ -8,18 +8,28 @@ import {
   IconButton,
   Button,
   Colors,
+  Snackbar,
 } from 'react-native-paper';
 import getEventPhoto from '../api/imagesApi';
-import {useIsFocused} from '@react-navigation/core';
+import {useIsFocused, useNavigation} from '@react-navigation/core';
+import {addToUserBookmarks} from '../api/bookmarksApi';
 
-export default function InfoCard(props) {
-  const {eventDetails} = props;
+export default function InfoCard({eventDetails, isBookmark = false}) {
+  const navigation = useNavigation();
   const [eventImage, setEventImage] = useState({});
   const screenIsFocused = useIsFocused();
+  const [snackbarMessage, setSnackbarMessage] = useState('Hello!');
+  const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
+    useState(false);
+
   console.log('event details: ', eventDetails);
 
   const onImageRecieved = image => {
     setEventImage({uri: image});
+  };
+
+  const handleDismissSnackbar = () => {
+    setShowBookmarkAddedSnackbar(false);
   };
 
   useEffect(() => {
@@ -27,61 +37,111 @@ export default function InfoCard(props) {
   }, [screenIsFocused]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Card style={styles.card}>
-          <Card.Cover source={eventImage} style={{marginTop: 5}} />
-          <Card.Title
-            style={styles.header}
-            title={eventDetails.event_title}
-            subtitle={eventDetails.event_creater}
-            titleStyle={{color: Colors.green500}}
-            subtitleStyle={{paddingLeft: 4}}
-          />
-          <Card.Content style={styles.content}>
-            <Paragraph style={styles.date}>
-              {eventDetails.event_start_datetime.date}
-            </Paragraph>
-            <Paragraph style={styles.subDate}>
-              {'@ ' + eventDetails.event_start_datetime.time}
-            </Paragraph>
-            <Paragraph style={styles.address}>
-              {eventDetails.event_address.main_text}
-            </Paragraph>
-            <Paragraph style={styles.subaddress}>
-              {eventDetails.event_address.secondary_text}
-            </Paragraph>
-            <Paragraph style={styles.category}>
-              {eventDetails.event_type}
-            </Paragraph>
-            <Card.Content style={{flexDirection: 'row'}}>
-              <IconButton icon="plus" size={40} color={Colors.black} />
-              <IconButton
-                icon="information-outline"
-                size={40}
-                color={Colors.blue300}
-              />
-              <IconButton icon="navigation" size={40} color={GREEN} />
-            </Card.Content>
-            <Card.Content style={{height: 0}}>
-              {eventDetails.event_visibility === 'public' ? (
+    <>
+      <SafeAreaView style={styles.container}>
+        <View>
+          <Card style={styles.card}>
+            <Card.Cover source={eventImage} style={{marginTop: 5}} />
+            <Card.Title
+              style={styles.header}
+              title={eventDetails.event_title}
+              subtitle={eventDetails.event_creater}
+              titleStyle={{color: Colors.green500}}
+              subtitleStyle={{paddingLeft: 4}}
+            />
+            <Card.Content style={styles.content}>
+              <Paragraph style={styles.date}>
+                {eventDetails.event_start_datetime.date}
+              </Paragraph>
+              <Paragraph style={styles.subDate}>
+                {'@ ' + eventDetails.event_start_datetime.time}
+              </Paragraph>
+              <Paragraph style={styles.address}>
+                {eventDetails.event_address.main_text}
+              </Paragraph>
+              <Paragraph style={styles.subaddress}>
+                {eventDetails.event_address.secondary_text}
+              </Paragraph>
+              <Paragraph style={styles.category}>
+                {eventDetails.event_type}
+              </Paragraph>
+              <Card.Content style={{flexDirection: 'row'}}>
+                <IconButton icon="plus" size={40} color={Colors.black} />
                 <IconButton
-                  style={styles.visibility}
-                  icon="lock-open-variant-outline" //lock-outline if private
+                  icon="information-outline"
                   size={40}
+                  color={Colors.blue300}
+                  onPress={() => {
+                    navigation.navigate('EventDetailsPage', {
+                      eventDetails: eventDetails,
+                    });
+                  }}
                 />
-              ) : (
                 <IconButton
-                  style={styles.visibility}
-                  icon="lock-outline" //lock-outline if private
+                  icon="navigation"
                   size={40}
+                  color={GREEN}
+                  onPress={() => {}}
                 />
-              )}
+                {/* {isBookmark && (
+                <IconButton
+                  icon="navigation"
+                  size={40}
+                  color={GREEN}
+                  visible={false}
+                  onPress={() => {}}
+                />
+              )} */}
+              </Card.Content>
+              <Card.Content style={{height: 0}}>
+                {isBookmark ? (
+                  eventDetails.event_visibility === 'public' && isBookmark ? (
+                    <IconButton
+                      style={styles.visibility}
+                      icon="lock-open-variant-outline" //lock-outline if private
+                      size={40}
+                    />
+                  ) : (
+                    <IconButton
+                      style={styles.visibility}
+                      icon="lock-outline" //lock-outline if private
+                      size={40}
+                    />
+                  )
+                ) : (
+                  <IconButton
+                    style={styles.visibility}
+                    icon="bookmark" //if not bookmark, show boomkar instead
+                    size={40}
+                    color={Colors.blue500}
+                    onPress={() => {
+                      addToUserBookmarks(eventDetails.event_id);
+                      Alert.alert(
+                        'Boomarked Event!',
+                        'Your Event has been bookmarked',
+                      );
+                      // setSnackbarMessage('Bookmarked Evented!');
+                      // setShowBookmarkAddedSnackbar(true);
+                    }}
+                  />
+                )}
+              </Card.Content>
             </Card.Content>
-          </Card.Content>
-        </Card>
-      </View>
-    </SafeAreaView>
+          </Card>
+        </View>
+      </SafeAreaView>
+      {/* <Snackbar
+        visible={showBookmarkAddedSnackbar}
+        onDismiss={handleDismissSnackbar}
+        action={{
+          label: 'Thanks!',
+          onPress: () => {
+            handleDismissSnackbar();
+          },
+        }}>
+        {snackbarMessage}
+      </Snackbar> */}
+    </>
   );
 }
 

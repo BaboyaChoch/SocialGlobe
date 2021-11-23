@@ -257,7 +257,6 @@ export default function Map({route, navigation}) {
           />
         )} */}
       </MapView>
-
       <View style={styles.autocompleteContainer}>
         <EventTypeSearch
           handleFilter={handleFilter}

@@ -42,6 +42,7 @@ export default function EventDetailsPage({route, navigation}, props) {
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
   };
+  
   useEffect(() => {
     getEventPhoto(eventDetails.event_id, onImageRecieved);
   }, [isFocused]);

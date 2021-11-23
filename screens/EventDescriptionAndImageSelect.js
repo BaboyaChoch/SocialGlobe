@@ -6,11 +6,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
 import {SliderBox} from 'react-native-image-slider-box';
-import {IconButton, Divider, Card, Paragraph, Button} from 'react-native-paper';
+import {
+  IconButton,
+  Divider,
+  Card,
+  Paragraph,
+  Button,
+  Avatar,
+} from 'react-native-paper';
 
 export default function EventDescriptionAndImageSelect({route, navigation}) {
   const [images, setImages] = useState([
-    'https://content.hostgator.com/img/weebly_image_sample.png',
+    'https://images.unsplash.com/photo-1569511502671-8c1bbf96fc8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1466&q=80',
   ]);
 
   const LAUCH_IMAGE_PICKER_OPTIONS = {
@@ -55,6 +62,9 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     });
   };
   const imagesUpLoaded = images.length > 0 && images != null;
+  const LeftContent = props => (
+    <Avatar.Icon {...props} icon="folder" style={{backgroundColor: WHITE}} />
+  );
 
   useEffect(() => {
     console.log(route.params.eventDetails);
@@ -62,54 +72,81 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   return (
     <View style={styles.container}>
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          backgroundColor: GRAY,
-          width: '100%',
-        }}>
-        <Button
-          icon="pencil"
-          size={25}
-          color={BLUE}
-          onPress={selectFile}
-          style={styles.button}
-          mode="contained">
-          Edit
-        </Button>
-        <Button
-          icon="upload"
-          size={25}
-          color={BLUE}
-          onPress={selectFile}
-          style={styles.button}
-          mode="contained">
-          Upload
-        </Button>
-      </View> */}
-
       <SliderBox
         images={images}
         sliderBoxHeight={300}
         onCurrentImagePressed={selectFile}
       />
-      <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          backgroundColor: WHITE,
+          width: '100%',
+        }}>
+        <Button
+          icon="pencil"
+          color={ORANGE}
+          onPress={selectFile}
+          style={styles.button}
+          labelStyle={{color: WHITE}}
+          mode="contained">
+          Edit
+        </Button>
+        <Button
+          icon="upload"
+          color={ORANGE}
+          onPress={selectFile}
+          style={styles.button}
+          labelStyle={{color: WHITE}}
+          mode="contained">
+          Upload
+        </Button>
+      </View>
+      <View style={{margin: 10, marginBottom: 5, marginTop: 5}}>
+        <Text style={{fontSize: 20, color: BLUE, fontWeight: '500'}}>
+          Enter Event Description Below:
+        </Text>
+      </View>
+      <SafeAreaView
+        style={{
+          marginLeft: 5,
+          marginRight: 5,
+          borderWidth: 1,
+          borderColor: BLUE,
+          borderRadius: 2,
+          height: 310,
+        }}>
         <ScrollView style={{marginHorizontal: 2}}>
-          <View
-            style={{
-              flexDirection: 'row',
-            }}>
-            <Card style={{backgroundColor: WHITE, height: 300}}>
-              <Card.Content>
-                <Paragraph style={styles.textInputStyle}>
-                  {'Enter Description'}
-                </Paragraph>
-              </Card.Content>
-            </Card>
-          </View>
+          <TextInput
+            style={styles.textInputStyle}
+            multiline={true}
+            numberOfLines={30}
+            placeholder="Enter Here"
+            placeholderTextColor="gray"></TextInput>
         </ScrollView>
       </SafeAreaView>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: WHITE,
+          width: '100%',
+          marginTop: 10,
+        }}>
+        <Button
+          icon="content-save"
+          mode="contained"
+          color={ORANGE}
+          onPress={() => {
+            navigation.navigate('EventDescriptionAndImageSelect', {
+              eventDetails: getEventDetails(),
+            });
+          }}
+          labelStyle={{color: WHITE}}>
+          Create Event
+        </Button>
+      </View>
     </View>
   );
 }
@@ -123,23 +160,34 @@ const TITLE_COLOR = BLUE;
 const ICON_SIZE = 27;
 
 const styles = StyleSheet.create({
-  container: {
+  main_container: {
     flexDirection: 'column',
     flex: 1,
     alignItems: 'center',
     //justifyContent: 'center',
-    backgroundColor: WHITE,
+    backgroundColor: BLUE,
+  },
+  container: {
+    flex: 1,
+    height: 200,
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 4,
     margin: 5,
+    borderWidth: 2,
   },
   buttonText: {
     textAlign: 'center',
     fontSize: 15,
     color: '#fff',
   },
-  textInputStyle: {color: BLUE, fontSize: 14, fontWeight: '300'},
+  textInputStyle: {
+    color: BLUE,
+    fontSize: 14,
+    fontWeight: '400',
+    marginTop: 0,
+    paddingLeft: 16,
+  },
 });

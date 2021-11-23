@@ -43,7 +43,13 @@ export default function Bookmarks() {
           eventsInfo.map(
             (details, index) => (
               console.log(details),
-              (<InfoCard key={index} eventDetails={details} />)
+              (
+                <InfoCard
+                  key={index}
+                  eventDetails={details}
+                  isBookmark={true}
+                />
+              )
             ),
           )}
       </ScrollView>

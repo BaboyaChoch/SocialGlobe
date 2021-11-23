@@ -145,7 +145,6 @@ export default function Map({route, navigation}) {
                 }}></Marker>
             ))}
       </MapView>
-
       <View style={styles.autocompleteContainer}>
         <EventTypeSearch
           handleFilter={handleFilter}

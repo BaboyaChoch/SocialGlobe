@@ -28,8 +28,7 @@ export function getUserBookmarks(bookmarksRecived) {
             bookmarksRecived(results);
           }
         } else {
-          // doc.data() will be undefined in this case
-          console.log('No such document!');
+          bookmarksRecived(current_event);
         }
       })
       .catch(error => {

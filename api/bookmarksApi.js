@@ -1,15 +1,18 @@
 import {firebase as fb_firestore} from '@react-native-firebase/firestore';
 import {firebase as fb_authenticator} from '@react-native-firebase/auth';
 import {getAnEvent} from './mapsApi';
+import {isFor} from '@babel/types';
 const current_user = fb_authenticator.auth().currentUser;
 const db = fb_firestore.firestore();
 let bookmarkedEventsList = [];
 let current_event = null;
+
 const handleBookMarks = list => {
-  if (list.includes(current_event)) {
+  if (list.length == 0) {
+    addToBookmark([current_event]);
+  } else if (list.includes(current_event)) {
     return 'Event Already Bookmarked';
-  }
-  {
+  } else {
     return addToBookmark([...list, current_event]);
   }
 };
@@ -28,7 +31,7 @@ export function getUserBookmarks(bookmarksRecived) {
             bookmarksRecived(results);
           }
         } else {
-          bookmarksRecived(current_event);
+          bookmarksRecived([]);
         }
       })
       .catch(error => {
@@ -38,26 +41,34 @@ export function getUserBookmarks(bookmarksRecived) {
 }
 
 export async function getAllBookmarkEvents(bookmarks, eventsRecieved) {
-  let eventsList = [];
+  try {
+    let eventsList = [];
 
-  let snapshot = await db
-    .collection('Events')
-    .where(fb_firestore.firestore.FieldPath.documentId(), 'in', bookmarks)
-    .get();
+    let snapshot = await db
+      .collection('Events')
+      .where(fb_firestore.firestore.FieldPath.documentId(), 'in', bookmarks)
+      .get();
 
-  snapshot.forEach(res => eventsList.push(res.data()));
+    snapshot.forEach(res => eventsList.push(res.data()));
 
-  eventsRecieved(eventsList);
+    eventsRecieved(eventsList);
+  } catch (err) {
+    eventsRecieved([current_event]);
+  }
 }
 
 export function addToBookmark(bookmark) {
-  if (current_user != null && current_user != undefined) {
-    const docRef = db.collection('Bookmarks').doc(`${current_user.uid}`);
-    docRef.update({
-      user_bookmarks: bookmark,
-    });
+  try {
+    if (current_user != null && current_user != undefined) {
+      const docRef = db.collection('Bookmarks').doc(`${current_user.uid}`);
+      docRef.update({
+        user_bookmarks: bookmark,
+      });
+    }
+    return 'Bookmarked Event!';
+  } catch (err) {
+    console.log('Erro while adding bookmark: ', err);
   }
-  return 'Bookmarked Event!';
 }
 
 export function addToUserBookmarks(eventId) {

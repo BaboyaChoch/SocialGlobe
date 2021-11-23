@@ -1,5 +1,3 @@
-s (77 sloc)  1.96 KB
-   
 import {useIsFocused} from '@react-navigation/core';
 import React, {useState, useRef, useEffect} from 'react';
 import {

@@ -42,9 +42,13 @@ export default function EventDetailsPage({route, navigation}) {
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
   };
-  
+
   useEffect(() => {
-    getEventPhoto(eventDetails.event_id, onImageRecieved);
+    getEventPhoto(
+      eventDetails.event_id,
+      eventDetails.event_user_id,
+      onImageRecieved,
+    );
   }, [isFocused]);
 
   return (

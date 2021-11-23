@@ -33,7 +33,11 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
   };
 
   useEffect(() => {
-    getEventPhoto(eventDetails.event_id, onImageRecieved);
+    getEventPhoto(
+      eventDetails.event_id,
+      eventDetails.event_user_id,
+      onImageRecieved,
+    );
   }, [screenIsFocused]);
 
   return (

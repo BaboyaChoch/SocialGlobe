@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {PermissionsAndroid, Platform, Button, Text} from 'react-native';
+import {PermissionsAndroid, Platform, Text, Linking} from 'react-native';
+import {Button} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
-
 import getMapStyles from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
+import Route from '../components/Route';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -36,6 +37,16 @@ export default function Map({route, navigation}) {
     useState('not_granted');
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
   const [filterQuery, setFilterQuery] = useState();
+  const [currentUserSelection, setCurrentUserSelection] = useState();
+  const [userDestinations, setUserDestinations] = useState([{}]);
+  const [modeOfTransport, setModeOfTransport] = useState();
+  const [routeResult, setRouteResult] = useState();
+  const [routeIsReady, setRouteIsReady] = useState(false);
+  const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
+  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
+    useState(false);
+  const mapRef = useRef(null);
+
   function geoSuccess(position) {
     const coordinates = {
       latitude: position.coords.latitude,
@@ -108,6 +119,7 @@ export default function Map({route, navigation}) {
     setApplyFilter(false);
     setFocusRegion(currentUserLocation);
   };
+
   useEffect(() => {
     requestLocationPermission();
     getAllEventsByVisiblity('public', onEventsRecieved);
@@ -119,6 +131,7 @@ export default function Map({route, navigation}) {
   return (
     <>
       <MapView
+        ref={mapRef}
         style={styles.map}
         region={focusRegion}
         customMapStyle={getMapStyles()}
@@ -144,6 +157,23 @@ export default function Map({route, navigation}) {
                   });
                 }}></Marker>
             ))}
+        {routeIsReady && (
+          <Route
+            origin={currentUserLocation}
+            destinations={[
+              {},
+              {
+                latitude: 30.41428,
+                latitudeDelta: 0.009,
+                longitude: -91.17700090000001,
+                longitudeDelta: 0.0009,
+              },
+            ]}
+            modeOfTransport={'DRIVING'}
+            mapRef={mapRef}
+            handleRouteResult={param => setRouteResult(param)}
+          />
+        )}
       </MapView>
       <View style={styles.autocompleteContainer}>
         <EventTypeSearch
@@ -151,9 +181,24 @@ export default function Map({route, navigation}) {
           handleClear={handleClear}
         />
       </View>
+      <View style={styles.nav}>
+        {routeIsReady && (
+          <Button
+            icon="navigation"
+            onPress={() => Linking.openURL(url)}
+            labelStyle={{color: BLUE}}>
+            Get Directions
+          </Button>
+        )}
+      </View>
     </>
   );
 }
+
+const url = Platform.select({
+  ios: 'maps:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
+  android: 'geo:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
+});
 
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';
@@ -171,7 +216,7 @@ const styles = StyleSheet.create({
   },
   nav: {
     position: 'absolute', //use absolute position to show button on top of the map
-    top: '95%', //for center align
+    top: '90%', //for center align
     alignSelf: 'flex-end', //for align to right
   },
   filterOptionsContainer: {

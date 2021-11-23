@@ -177,7 +177,7 @@ export default function Map({route, navigation}) {
         customMapStyle={getMapStyles()}
         showsUserLocation={true}
         ref={mapRef}>
-        {applyFilter
+        {!routeIsReady && applyFilter
           ? filteredEventsList.map(eventInfo => (
               <CreateEventEventMarker
                 onPress={() => setCurrentUserSelection(eventInfo)}
@@ -187,9 +187,6 @@ export default function Map({route, navigation}) {
                 modeOfTransport={modeOfTransport}
                 currentOrigin={currentUserLocation}
                 handleNavigate={setIsChooseTravelModeVisible}
-                // openEventDetailsPage={navigation.navigate('EventDetailsPage', {
-                //   eventDetails: eventInfo,
-                // })}
               />
             ))
           : eventsList.map(eventInfo => (
@@ -201,53 +198,10 @@ export default function Map({route, navigation}) {
                 modeOfTransport={modeOfTransport}
                 currentOrigin={currentUserLocation}
                 handleNavigate={setIsChooseTravelModeVisible}
-                // openEventDetailsPage={navigation.navigate('EventDetailsPage', {
-                //   eventDetails: eventInfo,
-                // })}
               />
             ))}
 
-        {/* {
-          !routeIsReady &&
-            eventsList.map(eventInfo => (
-              <CreateEventEventMarker
-                onPress={() => setCurrentUserSelection(eventInfo)}
-                key={eventInfo.event_id}
-                eventInfo={eventInfo}
-                origin={currentUserLocation}
-                modeOfTransport={modeOfTransport}
-                currentOrigin={currentUserLocation}
-                handleNavigate={setIsChooseTravelModeVisible}
-                openEventDetailsPage={navigation.navigate('EventDetailsPage', {
-                  eventDetails: eventInfo,
-                })}
-              />
-            )) 
-           {applyFilter
-          ? filteredEventsList.map(eventInfo => (
-              <Marker
-                key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                }}></Marker>
-            ))
-          : eventsList.map(eventInfo => (
-              <Marker
-                key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                  
-                }}></Marker>
-            ))} 
-        } */}
-
-        {/* {routeIsReady && (
+        {routeIsReady && (
           <Route
             origin={currentUserLocation}
             destinations={coordinateForDestinations}
@@ -255,7 +209,7 @@ export default function Map({route, navigation}) {
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
           />
-        )} */}
+        )}
       </MapView>
       <View style={styles.autocompleteContainer}>
         <EventTypeSearch
@@ -313,8 +267,9 @@ const styles = StyleSheet.create({
   },
   nav: {
     position: 'absolute', //use absolute position to show button on top of the map
-    top: '95%', //for center align
-    alignSelf: 'flex-end', //for align to right
+    top: '90%', //for center align
+    alignSelf: 'flex-start', //for align to right
+    backgroundColor: 'white',
   },
   filterOptionsContainer: {
     position: 'absolute', //use absolute position to show button on top of the map
@@ -329,8 +284,8 @@ const styles = StyleSheet.create({
   },
   endRouteButton: {
     position: 'absolute',
-    top: '95%',
-    alignSelf: 'flex-start',
+    top: '90%',
+    alignSelf: 'flex-end',
   },
   routeDetails: {
     fontSize: 15,

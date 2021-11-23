@@ -1,29 +1,10 @@
-// import MapViewDirections from 'react-native-maps-directions';
+import MapViewDirections from 'react-native-maps-directions';
 import {Dimensions, Text} from 'react-native';
 import React, {useState, useEffect} from 'react';
-// import getDirections from 'react-native-google-maps-directions';
 
 export default function Route(props) {
   const GOOGLE_MAPS_APIKEY = 'AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc';
   const {width, height} = Dimensions.get('window');
-
-  function getDirectionsFromNativeMapsApp() {
-    getDirections({
-      source: props.currentOrigin,
-      destination: props.destinations,
-      params: [
-        {
-          key: 'travelmode',
-          value: props.modeOfTransport, // may be "walking", "bicycling" or "transit" as well
-        },
-        {
-          key: 'dir_action',
-          value: 'navigate', // this instantly initializes navigation using the given travel mode
-        },
-      ],
-      waypoints: [],
-    });
-  }
 
   function getRouteEstimates(result) {
     const distanceEstimate = (result.distance / 1.609).toFixed(2);

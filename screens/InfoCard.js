@@ -14,7 +14,7 @@ import getEventPhoto from '../api/imagesApi';
 import {useIsFocused, useNavigation} from '@react-navigation/core';
 import {addToUserBookmarks} from '../api/bookmarksApi';
 
-export default function InfoCard({eventDetails, isBookmark = false}) {
+export default function InfoCard({eventDetails, isBookmark = false}, props) {
   const navigation = useNavigation();
   const [eventImage, setEventImage] = useState({});
   const screenIsFocused = useIsFocused();
@@ -33,7 +33,11 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
   };
 
   useEffect(() => {
-    getEventPhoto(eventDetails.event_id, onImageRecieved);
+    getEventPhoto(
+      eventDetails.event_id,
+      eventDetails.event_user_id,
+      onImageRecieved,
+    );
   }, [screenIsFocused]);
 
   return (
@@ -81,7 +85,9 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
                   icon="navigation"
                   size={40}
                   color={GREEN}
-                  onPress={() => {}}
+                  onPress={() => {
+                    props.handleNavigateModal(true);
+                  }}
                 />
                 {/* {isBookmark && (
                 <IconButton

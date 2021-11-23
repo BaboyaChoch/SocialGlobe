@@ -6,10 +6,11 @@ const db = fb_firestore.firestore();
 let bookmarkedEventsList = [];
 let current_event = null;
 const handleBookMarks = list => {
-  if (list.includes(current_event)) {
+  if (list.length == 0) {
+    addToBookmark([current_event]);
+  } else if (list.includes(current_event)) {
     return 'Event Already Bookmarked';
-  }
-  {
+  } else {
     return addToBookmark([...list, current_event]);
   }
 };
@@ -29,7 +30,7 @@ export function getUserBookmarks(bookmarksRecived) {
           }
         } else {
           // doc.data() will be undefined in this case
-          console.log('No such document!');
+          bookmarksRecived([]);
         }
       })
       .catch(error => {
@@ -52,13 +53,17 @@ export async function getAllBookmarkEvents(bookmarks, eventsRecieved) {
 }
 
 export function addToBookmark(bookmark) {
-  if (current_user != null && current_user != undefined) {
-    const docRef = db.collection('Bookmarks').doc(`${current_user.uid}`);
-    docRef.update({
-      user_bookmarks: bookmark,
-    });
+  try {
+    if (current_user != null && current_user != undefined) {
+      const docRef = db.collection('Bookmarks').doc(`${current_user.uid}`);
+      docRef.update({
+        user_bookmarks: bookmark,
+      });
+    }
+    return 'Bookmarked Event!';
+  } catch (err) {
+    console.log('Erro while adding bookmark: ', err);
   }
-  return 'Bookmarked Event!';
 }
 
 export function addToUserBookmarks(eventId) {

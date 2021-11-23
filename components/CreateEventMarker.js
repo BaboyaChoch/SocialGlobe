@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  View,
-  Text,
   Modal,
   TouchableWithoutFeedback,
   ScrollView,
@@ -10,7 +8,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import MapView, {Marker} from 'react-native-maps';
-import {IconButton, Colors, Divider} from 'react-native-paper';
+
 import InfoCard from '../screens/InfoCard';
 import {useIsFocused} from '@react-navigation/core';
 import {firebase} from '@react-native-firebase/auth';
@@ -38,27 +36,28 @@ export default function CreateEventEventMarker(props) {
       <Marker
         coordinate={props.eventInfo.event_coordinates}
         onPress={() => setModalVisible(true)}>
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            style={styles.centeredView}
-            onRequestClose={() => {
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          style={styles.centeredView}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <TouchableWithoutFeedback
+            onPressOut={() => {
               setModalVisible(!modalVisible);
             }}>
-            <TouchableWithoutFeedback
-              onPressOut={() => {
-                setModalVisible(!modalVisible);
-              }}>
-              <SafeAreaView>
-                <ScrollView>
-                  <InfoCard key={props.key} eventDetails={props.eventInfo} />
-                </ScrollView>
-              </SafeAreaView>
-            </TouchableWithoutFeedback>
-          </Modal>
-        </View>
+            <SafeAreaView>
+              <ScrollView>
+                <InfoCard
+                  eventDetails={props.eventInfo}
+                  handleNavigateModal={props.handleNavigate}
+                />
+              </ScrollView>
+            </SafeAreaView>
+          </TouchableWithoutFeedback>
+        </Modal>
       </Marker>
     )
   );

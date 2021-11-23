@@ -48,6 +48,7 @@ export default function EventDetailsPage({route, navigation}) {
     console.log('Image Recieved: ', image);
     setImages([image]);
   };
+
   useEffect(() => {
     getEventPhoto(eventDetails.event_id, onImageRecieved);
   }, [isFocused]);
@@ -202,7 +203,7 @@ const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
 const TITLE_COLOR = BLUE;
-const SUBTITLE_COLOR = ORANGE;
+const SUBTITLE_COLOR = Colors.grey700;
 const ICON_SIZE = 27;
 const BACKGROUND_COLOR = WHITE;
 

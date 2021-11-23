@@ -60,7 +60,11 @@ export default function EventAddressSelection({route, navigation}) {
       },
     );
   };
-
+  const handleOnpress = coordinates => {
+    coordinates.latitudeDelta = 0.009;
+    coordinates.longitudeDelta = 0.009;
+    setLocation(coordinates);
+  };
   useEffect(() => {
     console.log('current event details: ', eventDetails);
     getUserLocation();
@@ -86,7 +90,10 @@ export default function EventAddressSelection({route, navigation}) {
         customMapStyle={getMapStyles()}
         style={styles.map}
         region={location}
-        showsUserLocation={true}>
+        showsUserLocation={true}
+        onPress={data => {
+          handleOnpress(data.nativeEvent.coordinate);
+        }}>
         <Marker coordinate={location}></Marker>
       </MapView>
       <View style={styles.nav}>

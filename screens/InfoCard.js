@@ -1,9 +1,5 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, View, SafeAreaView} from 'react-native';
 import {
   Avatar,
   Card,
@@ -13,190 +9,78 @@ import {
   Button,
   Colors,
 } from 'react-native-paper';
+import getEventPhoto from '../api/imagesApi';
+import {useIsFocused} from '@react-navigation/core';
 
-export default function InfoCard() {
+export default function InfoCard(props) {
+  const {eventDetails} = props;
+  const [eventImage, setEventImage] = useState({});
+  const screenIsFocused = useIsFocused();
+  console.log('event details: ', eventDetails);
+
+  const onImageRecieved = image => {
+    setEventImage({uri: image});
+  };
+
+  useEffect(() => {
+    getEventPhoto(eventDetails.event_id, onImageRecieved);
+  }, [screenIsFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
-      
-        <View>
+      <View>
         <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
+          <Card.Cover source={eventImage} style={{marginTop: 5}} />
+          <Card.Title
+            style={styles.header}
+            title={eventDetails.event_title}
+            subtitle={eventDetails.event_user_id}
+            titleStyle={{color: Colors.green500}}
+            subtitleStyle={{paddingLeft: 4}}
+          />
+          <Card.Content style={styles.content}>
+            <Paragraph style={styles.date}>
+              {eventDetails.event_start_datetime.date}
+            </Paragraph>
+            <Paragraph style={styles.subDate}>
+              {'@ ' + eventDetails.event_start_datetime.time}
+            </Paragraph>
+            <Paragraph style={styles.address}>
+              {eventDetails.event_address.main_text}
+            </Paragraph>
+            <Paragraph style={styles.subaddress}>
+              {eventDetails.event_address.secondary_text}
+            </Paragraph>
+            <Paragraph style={styles.category}>
+              {eventDetails.event_type}
+            </Paragraph>
+            <Card.Content style={{flexDirection: 'row'}}>
+              <IconButton icon="plus" size={40} color={Colors.black} />
               <IconButton
                 icon="information-outline"
                 size={40}
+                color={Colors.blue300}
               />
-                </Card.Content>
-                <Card.Content  style={{height: 0}}>
-                <IconButton style={styles.heart}
-                icon="lock-open-outline" //lock-outline if private
-                size={40}
-                />
-                </Card.Content>
+              <IconButton icon="navigation" size={40} color={GREEN} />
             </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
+            <Card.Content style={{height: 0}}>
+              {eventDetails.event_visibility === 'public' ? (
                 <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
-                <Card.Content  style={{height: 0}}>
-                <IconButton style={styles.heart}
-                icon="lock-outline" //lock-outline if private
-                size={40}
+                  style={styles.visibility}
+                  icon="lock-open-variant-outline" //lock-outline if private
+                  size={40}
                 />
-                </Card.Content>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
+              ) : (
                 <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
-                <Card.Content  style={{height: 0}}>
-                <IconButton style={styles.heart}
-                icon="lock-open-outline" //lock-outline if private
-                size={40}
+                  style={styles.visibility}
+                  icon="lock-outline" //lock-outline if private
+                  size={40}
                 />
-                </Card.Content>
+              )}
             </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
-                size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
-                </Card.Content>
-                <Card.Content  style={{height: 0}}>
-                <IconButton style={styles.heart}
-                icon="lock-outline" //lock-outline if private
-                size={40}
-                />
-                </Card.Content>
-            </Card.Content>
-          </Card>
-        </View>
+          </Card.Content>
+        </Card>
+      </View>
     </SafeAreaView>
   );
 }
@@ -227,22 +111,24 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: WHITE,
-     elevation: 15,
-     margin: 10,
-     width: 300,
-     alignItems: 'center',
-     justifyContent: 'center',
-     borderRadius: 20,     
+    elevation: 15,
+    margin: 10,
+    width: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
   },
   content: {
     position: 'relative',
     bottom: 8,
+    alignItems: 'flex-start',
   },
   header: {
     fontSize: 14,
-    width: 230,
+    width: '100%',
     padding: 0,
-    left: 25,
+    //left: 25,
+    justifyContent: 'flex-start',
   },
   location: {
     bottom: 1,
@@ -250,14 +136,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   address: {
-    top: 1,
+    marginTop: 0,
     fontSize: 18,
     textAlign: 'center',
   },
   subaddress: {
     bottom: 8,
-    fontSize: 12,
+    fontSize: 10,
+    color: Colors.grey600,
     textAlign: 'center',
+    paddingLeft: 4,
+  },
+  date: {
+    top: 1,
+    fontSize: 18,
+    textAlign: 'center',
+    color: Colors.red400,
+  },
+  subDate: {
+    bottom: 8,
+    fontSize: 10,
+    color: Colors.grey600,
+    textAlign: 'center',
+    paddingLeft: 4,
   },
   category: {
     bottom: 3,
@@ -265,16 +166,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   pin: {
-      position: 'relative',
-      bottom: 133,
-      left: 40,
-  },
-  heart: {
     position: 'relative',
-    bottom: 250,
-    left: 200,
+    bottom: 133,
+    left: 40,
+  },
+  visibility: {
+    position: 'relative',
+    bottom: 290,
+    left: 198,
     backgroundColor: 'white',
-    scaleX: .75,
-    scaleY: .75,
-    },
+    scaleX: 0.75,
+    scaleY: 0.75,
+  },
 });

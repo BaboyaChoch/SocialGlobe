@@ -2,13 +2,15 @@ import React, {useEffect, useState} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, View, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {PermissionsAndroid, Platform, Button} from 'react-native';
+import {PermissionsAndroid, Platform, Button, Text} from 'react-native';
 //import DeviceInfo from 'react-native-device-info';
-import {getAllEvents} from '../api/mapsApi';
+import {getAllEvents, getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
 import MapFilterOptions from '../components/MapFilterOptions';
 import getMapStyles from '../components/MapsStyles';
+import AutocompleteInput from 'react-native-autocomplete-input';
+import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -34,7 +36,7 @@ export default function Map({route, navigation}) {
   const [locationPermissionResult, setLocationPermissionResult] =
     useState('not_granted');
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
-
+  const [filterQuery, setFilterQuery] = useState();
   function geoSuccess(position) {
     const coordinates = {
       latitude: position.coords.latitude,
@@ -90,47 +92,33 @@ export default function Map({route, navigation}) {
       console.warn(err);
     }
   }
-
-  const filterOutByEventType = filterOption => {
-    setFilteredEventsList([]);
-    eventsList.forEach(event => {
-      if (event.eventType === filterOption) {
-        setFilteredEventsList([...filteredEventsList, event]);
-      }
-    });
+  const onFilteringEventsRecieved = events => {
+    setFilteredEventsList(events);
+    setFocusRegion(events[0].event_coordinates);
+    setApplyFilter(true);
   };
-
   const filterMapByFilterOption = filterOption => {
-    setFilteredEventsList([]);
-    eventsList.forEach(event => {
-      if (event.eventType === filterOption) {
-        setFilteredEventsList([...filteredEventsList, event]);
-      }
-    });
-    if (filteredEventsList.length > 0) {
-      setFilteredEventsList(filterOutByEventType);
-      setApplyFilter(true);
-      setFocusRegion(filteredEventsList[0].coordinates);
-      console.log(filteredEventsList);
-    } else {
-      console.log('SnackBar:', `Currently No Events of Type '${filterOption}'`);
-    }
+    getAllEventsByEventType(filterOption, onFilteringEventsRecieved);
   };
 
-  const filteredEventsListIsNotEmpty = () =>
-    filteredEventsList != null &&
-    filteredEventsList != undefined &&
-    filteredEventsList.length > 0;
-  const here = data => {
-    console.log(data);
+  const handleFilter = filterOption => {
+    filterMapByFilterOption(filterOption);
+  };
+  const handleClear = () => {
+    setFilteredEventsList([]);
+    setApplyFilter(false);
+    setFocusRegion(currentUserLocation);
   };
   useEffect(() => {
     requestLocationPermission();
     getAllEventsByVisiblity('public', onEventsRecieved);
   }, [isFocused]);
 
+  useEffect(() => {
+    console.log(filterQuery);
+  }, [filterQuery]);
   return (
-    <View style={{flex: 1}}>
+    <>
       <MapView
         style={styles.map}
         region={focusRegion}
@@ -158,10 +146,23 @@ export default function Map({route, navigation}) {
                 }}></Marker>
             ))}
       </MapView>
-      <View>
-        <MapFilterOptions onPress={filterMapByFilterOption}></MapFilterOptions>
+
+      <View style={styles.autocompleteContainer}>
+        <AutocompleteDropdown
+          clearOnFocus={false}
+          closeOnBlur={true}
+          closeOnSubmit={false}
+          onSelectItem={item => {
+            if (item && item.title) {
+              handleFilter(item.title);
+            }
+          }}
+          textInputProps={textinput_props}
+          dataSet={autocomplete_data}
+          onClear={handleClear}
+        />
       </View>
-    </View>
+    </>
   );
 }
 
@@ -169,6 +170,18 @@ const GREEN = '#19a86a';
 const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
+
+const autocomplete_data = [
+  {id: '1', title: 'fair'},
+  {id: '2', title: 'sport'},
+  {id: '3', title: 'seminar'},
+  {id: '4', title: 'fundraiser'},
+];
+
+const textinput_props = {
+  placeholder: 'Enter an event type',
+};
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -187,5 +200,11 @@ const styles = StyleSheet.create({
     position: 'absolute', //use absolute position to show button on top of the map
     alignSelf: 'flex-start',
     flexDirection: 'row',
+  },
+  autocompleteContainer: {
+    position: 'absolute',
+    top: '0%', //for center align
+    alignSelf: 'flex-start', //for align to right
+    width: '100%',
   },
 });

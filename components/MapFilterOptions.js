@@ -11,7 +11,7 @@ export default function MapFilterOptions({onPress}) {
   const [isGamingSelected, setIsGamingSelected] = useState(false);
   const [isSeminarsSelected, setIsSeminarsSelected] = useState(false);
 
-  useEffect(() => {});
+  useEffect(() => console.log(isFairsSelected), [isFairsSelected]);
   return (
     <ScrollView
       horizontal
@@ -21,7 +21,11 @@ export default function MapFilterOptions({onPress}) {
         icon="string-lights"
         mode={CHIP_TYPE}
         style={styles.chipStyle}
-        selected={isFairsSelected}
+        selected={false}
+        selectedColor="red"
+        onLongPress={() => setIsFairsSelected(false)}
+        onClose={() => setIsFairsSelected(false)}
+        closeIcon={CLOSE_ICON}
         onPress={() => {
           chipActionOnPress('fair');
           setIsFairsSelected(true);
@@ -70,6 +74,7 @@ const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 const CHIP_TYPE = 'outlined';
+const CLOSE_ICON = 'close';
 styles = StyleSheet.create({
   container: {
     position: 'absolute', //use absolute position to show button on top of the map

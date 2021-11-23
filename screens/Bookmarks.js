@@ -36,17 +36,16 @@ export default function Bookmarks() {
     getUserBookmarks(onBookmarksRecieved);
   }, [isFocused]);
 
-  console.log(eventsInfo);
-
   return (
     <SafeAreaView>
       <ScrollView>
-        {eventsInfo.map((bookmark, index) => (
-          <Text key={index} style={{fontSize: 30}}>
-            {bookmark.title}
-          </Text>
-        ))}
-        {/* <InfoCard /> */}
+        {isBookmarkReady &&
+          eventsInfo.map(
+            (details, index) => (
+              console.log(details),
+              (<InfoCard key={index} eventDetails={details} />)
+            ),
+          )}
       </ScrollView>
     </SafeAreaView>
   );

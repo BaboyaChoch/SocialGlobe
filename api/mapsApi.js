@@ -77,3 +77,21 @@ export async function getAllEventsByVisiblity(type, eventsRecieved) {
     console.log('Error while retrieving events: ', err);
   }
 }
+
+export async function getAllEventsByEventType(type, eventsRecieved) {
+  try {
+    let eventsList = [];
+    let snapshot = await db
+      .collection('Events')
+      .where('event_type', '==', type)
+      .get();
+
+    snapshot.forEach(res => {
+      eventsList.push(res.data());
+    });
+    console.log('events:', eventsList);
+    eventsRecieved(eventsList);
+  } catch (err) {
+    console.log('Error while retrieving events: ', err);
+  }
+}

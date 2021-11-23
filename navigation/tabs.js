@@ -116,6 +116,7 @@ const BLUE = '#002f4c';
 const ICON_SIZE = 32;
 const ICON_COLOR = '#e29e21';
 const WHITE = '#f9f9f9';
+const LIGHTBLUE = '#e2eaf0';
 
 const styles = StyleSheet.create({
   iconStyles: {width: 15, height: 15},

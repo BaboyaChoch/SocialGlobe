@@ -4,13 +4,12 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button, Text} from 'react-native';
 //import DeviceInfo from 'react-native-device-info';
-import {getAllEvents, getAllEventsByEventType} from '../api/mapsApi';
+import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
-import MapFilterOptions from '../components/MapFilterOptions';
+
 import getMapStyles from '../components/MapsStyles';
-import AutocompleteInput from 'react-native-autocomplete-input';
-import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
+import EventTypeSearch from '../components/EventTypeSearch';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -148,18 +147,9 @@ export default function Map({route, navigation}) {
       </MapView>
 
       <View style={styles.autocompleteContainer}>
-        <AutocompleteDropdown
-          clearOnFocus={false}
-          closeOnBlur={true}
-          closeOnSubmit={false}
-          onSelectItem={item => {
-            if (item && item.title) {
-              handleFilter(item.title);
-            }
-          }}
-          textInputProps={textinput_props}
-          dataSet={autocomplete_data}
-          onClear={handleClear}
+        <EventTypeSearch
+          handleFilter={handleFilter}
+          handleClear={handleClear}
         />
       </View>
     </>
@@ -170,17 +160,6 @@ const GREEN = '#19a86a';
 const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
-
-const autocomplete_data = [
-  {id: '1', title: 'fair'},
-  {id: '2', title: 'sport'},
-  {id: '3', title: 'seminar'},
-  {id: '4', title: 'fundraiser'},
-];
-
-const textinput_props = {
-  placeholder: 'Enter an event type',
-};
 
 const styles = StyleSheet.create({
   container: {

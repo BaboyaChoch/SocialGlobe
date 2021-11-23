@@ -1,14 +1,17 @@
 import React, {useState, useRef} from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {IconButton} from 'react-native-paper';
 import {Fumi} from 'react-native-textinput-effects';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Slider} from '@miblanchard/react-native-slider';
+import EventDatePicker from '../components/EventDatePicker';
 
 export default function createEventOverlay({navigation}) {
-  const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState(new Date(1));
-  const [endDate, setEndDate] = useState(new Date(1));
+  const [title, setTitle] = useState();
+  const [link, setLink] = useState();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [capacity, setCapacity] = useState(0);
   const [open, setOpen] = useState(false);
   const [eventVisibility, setEventVisibility] = useState('public');
@@ -23,7 +26,7 @@ export default function createEventOverlay({navigation}) {
       event_start_datetime: startDate,
       event_end_datetime: endDate,
       event_visiblity: eventVisibility,
-      event_capacity: capacity,
+      event_capacity: capacity[0],
     };
   };
 
@@ -36,8 +39,14 @@ export default function createEventOverlay({navigation}) {
         justifyContent: 'center',
         backgroundColor: WHITE,
       }}>
-      <Text style={{color: TEXT_COLOR, fontSize: 20, marginBottom: 30}}>
-        Create Event
+      <Text
+        style={{
+          color: ORANGE,
+          fontSize: 20,
+          marginBottom: 30,
+          fontWeight: '500',
+        }}>
+        Enter Event Details Below
       </Text>
       <View style={styles.rowStyle}>
         <Fumi
@@ -46,7 +55,7 @@ export default function createEventOverlay({navigation}) {
             setTitle(text);
           }}
           label={'Title'}
-          style={{flex: 1, margin: 15}}
+          style={{flex: 1, marginBottom: 5, marginTop: 0}}
           iconClass={MaterialCommunityIcons}
           iconName={'tag-text-outline'}
           iconColor={ICON_COLOR}
@@ -54,7 +63,71 @@ export default function createEventOverlay({navigation}) {
           iconWidth={40}
           inputPadding={16}
           style={styles.inputContainer}
+          labelStyle={styles.textStyle}
+          inputStyle={styles.textInputStyle}
         />
+      </View>
+      <View style={styles.rowStyle}>
+        <Fumi
+          value={link}
+          inputStyle={styles.textInputStyle}
+          onChangeText={text => {
+            setLink(text);
+          }}
+          label={'Link'}
+          style={{flex: 1, margin: 15, marginBottom: 5, marginTop: 0}}
+          iconClass={MaterialCommunityIcons}
+          iconName={'link'}
+          iconColor={ICON_COLOR}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+          style={styles.inputContainer}
+          labelStyle={styles.textStyle}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 0,
+          marginLeft: 35,
+          marginRight: 25,
+          marginBottom: 15,
+        }}>
+        <EventDatePicker dateValue={startDate} handleDateValue={setStartDate} />
+        <View style={{width: 10}}></View>
+        <EventDatePicker dateValue={endDate} handleDateValue={setEndDate} />
+      </View>
+      <View style={styles.rowStyle}></View>
+      <View style={styles.rowStyle}>
+        <View>
+          <Slider
+            trackStyle={{width: 330, backgroundColor: ORANGE}}
+            value={capacity}
+            onValueChange={value => setCapacity(value)}
+            minimumValue={0}
+            maximumValue={5000}
+            animationType="spring"
+            trackMarks={[500, 1500, 2500, 3500, 4500]}
+            step={2}
+            animateTransitions={true}
+            thumbTintColor={BLUE}
+            thumbStyle={{width: 15, height: 15}}
+            trackClickable={true}
+            renderTrackMarkComponent={() => (
+              <IconButton icon="circle" size={12} color={'black'}></IconButton>
+            )}
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              color: BLUE,
+              textAlign: 'center',
+              fontWeight: '500',
+            }}>
+            Event Expected Capacity: {capacity}
+          </Text>
+        </View>
       </View>
       <View style={styles.rowStyle}>
         <DropDownPicker
@@ -66,7 +139,14 @@ export default function createEventOverlay({navigation}) {
           setOpen={setOpen}
           setValue={setEventVisibility}
           setItems={setVisibilityOptions}
+          textStyle={styles.textStyle}
+          containerStyle={{borderWidth: 0}}
+          labelStyle={{marginTop: 5}}
+          defaultValue="Public"
         />
+      </View>
+      <View style={styles.rowStyle}>
+        {/* <EventDatePicker dateValue={startDate} handleDateValue={setStartDate} /> */}
       </View>
       <View style={styles.rowStyle}>
         <IconButton
@@ -93,7 +173,13 @@ const BORDER_COLOR = '#000000';
 const TEXT_COLOR = 'black';
 
 const styles = StyleSheet.create({
-  rowStyle: {flexDirection: 'row', marginTop: 10},
+  rowStyle: {
+    flexDirection: 'row',
+    marginTop: 0,
+    marginLeft: 35,
+    marginRight: 25,
+    marginBottom: 15,
+  },
   inputStyle: {
     height: 50,
     flex: 1,
@@ -104,17 +190,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   textStyle: {
-    marginLeft: 10,
-    color: TEXT_COLOR,
-    fontSize: 15,
-    height: 50,
-    //borderColor: '#5bff33',
-    //borderWidth: 2,
-    //borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 5,
-    paddingRight: 5,
+    fontWeight: '500',
+    fontSize: 17,
+    color: BLUE,
   },
   buttonStyle: {
     borderRadius: 20,
@@ -130,8 +208,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 8,
-    margin: 15,
-    marginBottom: 5,
     flex: 1,
   },
   dropdown: {
@@ -140,13 +216,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 8,
-    margin: 15,
-    marginBottom: 5,
-    marginTop: 0,
-    width: 100,
+    width: 110,
     height: 35,
     borderRadius: 0,
     borderColor: 'black',
     borderWidth: 0.1,
   },
+  datesContainer: {
+    flexDirection: 'row',
+    marginTop: 0,
+    marginLeft: 35,
+    marginRight: 25,
+    marginBottom: 15,
+    justifyContent: 'space-between',
+  },
+  textInputStyle: {color: BLUE, fontSize: 14, fontWeight: '300'},
 });

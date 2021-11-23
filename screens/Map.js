@@ -308,14 +308,6 @@ const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 const styles = StyleSheet.create({
-  createEventWindowStyles: {
-    position: 'absolute',
-    flex: 1,
-    backgroundColor: 'white',
-    width: '100%',
-    height: '80%',
-    borderRadius: 20,
-  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',

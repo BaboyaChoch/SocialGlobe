@@ -1,12 +1,11 @@
 import {useIsFocused} from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {IconButton, Button} from 'react-native-paper';
+import {IconButton, Button, Snackbar} from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import getMapStyles from '../components/MapsStyles';
 import AddressLookUp from '../components/AddressLookup';
-import {set} from 'react-native-reanimated';
 const defaultLocation = {
   latitude: 0,
   longitude: 0,
@@ -21,6 +20,8 @@ export default function EventAddressSelection({route, navigation}) {
   const [address, setAddress] = useState(null);
   const [coordinates, setCoordinates] = useState(null);
   const [isLocationReady, setIsLocationReady] = useState(false);
+  const [showAddressMissingSnackbar, setShowAddressMissingSnackbar] =
+    useState(false);
   const screenIsFocused = useIsFocused();
 
   const handleData = () => {
@@ -31,9 +32,10 @@ export default function EventAddressSelection({route, navigation}) {
         eventDetails: eventDetails,
       });
     } else {
-      Alert.alert('Event Location Details Missing', 'Please choose a location');
+      setShowAddressMissingSnackbar(true);
     }
   };
+
   const geoSuccess = position => {
     const coordinates = {
       latitude: position.coords.latitude,
@@ -65,6 +67,10 @@ export default function EventAddressSelection({route, navigation}) {
     coordinates.longitudeDelta = 0.009;
     setLocation(coordinates);
   };
+
+  const handleSnackbarDismiss = () => {
+    setShowAddressMissingSnackbar(false);
+  };
   useEffect(() => {
     console.log('current event details: ', eventDetails);
     getUserLocation();
@@ -75,39 +81,52 @@ export default function EventAddressSelection({route, navigation}) {
   }, [address]);
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.search}>
-        {isLocationReady && (
-          <AddressLookUp
-            location={currentUserLocation}
-            setAddress={setAddress}
-            setCoordinates={setCoordinates}
-            handleLocation={setLocation}
-          />
-        )}
+    <>
+      <View style={{flex: 1}}>
+        <View style={styles.search}>
+          {isLocationReady && (
+            <AddressLookUp
+              location={currentUserLocation}
+              setAddress={setAddress}
+              setCoordinates={setCoordinates}
+              handleLocation={setLocation}
+            />
+          )}
+        </View>
+        <MapView
+          customMapStyle={getMapStyles()}
+          style={styles.map}
+          region={location}
+          showsUserLocation={true}
+          onPress={data => {
+            handleOnpress(data.nativeEvent.coordinate);
+          }}>
+          <Marker coordinate={location}></Marker>
+        </MapView>
+        <View style={styles.nav}>
+          <Button
+            icon="arrow-right"
+            mode="text"
+            style={styles.button}
+            color={BLUE}
+            onPress={handleData}
+            labelStyle={{fontSize: 20}}>
+            Continue
+          </Button>
+        </View>
       </View>
-      <MapView
-        customMapStyle={getMapStyles()}
-        style={styles.map}
-        region={location}
-        showsUserLocation={true}
-        onPress={data => {
-          handleOnpress(data.nativeEvent.coordinate);
+      <Snackbar
+        visible={showAddressMissingSnackbar}
+        onDismiss={handleSnackbarDismiss}
+        action={{
+          label: 'Ok',
+          onPress: () => {
+            setShowAddressMissingSnackbar(false);
+          },
         }}>
-        <Marker coordinate={location}></Marker>
-      </MapView>
-      <View style={styles.nav}>
-        <Button
-          icon="arrow-right"
-          mode="text"
-          style={styles.button}
-          color={BLUE}
-          onPress={handleData}
-          labelStyle={{fontSize: 20}}>
-          Continue
-        </Button>
-      </View>
-    </View>
+        Please Enter A Valid Address
+      </Snackbar>
+    </>
   );
 }
 

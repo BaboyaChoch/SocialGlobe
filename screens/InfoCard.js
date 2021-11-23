@@ -34,7 +34,7 @@ export default function InfoCard(props) {
           <Card.Title
             style={styles.header}
             title={eventDetails.event_title}
-            subtitle={eventDetails.event_user_id}
+            subtitle={eventDetails.event_creater}
             titleStyle={{color: Colors.green500}}
             subtitleStyle={{paddingLeft: 4}}
           />

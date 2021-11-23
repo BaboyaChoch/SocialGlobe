@@ -6,7 +6,12 @@ const db = fb_firestore.firestore();
 let bookmarkedEventsList = [];
 let current_event = null;
 const handleBookMarks = list => {
-  addToBookmark([...list, current_event]);
+  if (list.includes(current_event)) {
+    return 'Event Already Bookmarked';
+  }
+  {
+    return addToBookmark([...list, current_event]);
+  }
 };
 
 export function getUserBookmarks(bookmarksRecived) {
@@ -53,11 +58,12 @@ export function addToBookmark(bookmark) {
       user_bookmarks: bookmark,
     });
   }
+  return 'Bookmarked Event!';
 }
 
 export function addToUserBookmarks(eventId) {
   current_event = eventId;
-  getUserBookmarks(handleBookMarks);
+  return getUserBookmarks(handleBookMarks);
 }
 
 // export async function getUserBookmarks(bookmarksRecieved, eventId = null) {

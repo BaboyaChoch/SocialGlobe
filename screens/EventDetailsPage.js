@@ -1,23 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-  Modal,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, Modal, Alert} from 'react-native';
 import {
   Avatar,
-  Button,
   Card,
-  Title,
   Paragraph,
   Divider,
   IconButton,
   Colors,
-  Chip,
+  Snackbar,
 } from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -36,9 +27,9 @@ export default function EventDetailsPage({route, navigation}) {
   const [reportVisible, setReportVisible] = useState(false);
   const [images, setImages] = useState([]);
   const isFocused = useIsFocused();
-  {
-    /* <ActivityIndicator size="large" color="#00ff00" /> */
-  }
+  const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
+    useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('Hello!');
   const title_icon = props => <Avatar.Icon {...props} icon="folder" />;
   const location_icon = props => <Avatar.Icon {...props} icon="folder" />;
   const date_icon = props => <Avatar.Icon {...props} icon="folder" />;
@@ -48,7 +39,9 @@ export default function EventDetailsPage({route, navigation}) {
     console.log('Image Recieved: ', image);
     setImages([image]);
   };
-
+  const handleDismissSnackbar = () => {
+    setShowBookmarkAddedSnackbar(false);
+  };
   useEffect(() => {
     getEventPhoto(eventDetails.event_id, onImageRecieved);
   }, [isFocused]);
@@ -96,7 +89,7 @@ export default function EventDetailsPage({route, navigation}) {
               color={GREEN}
               size={40}
               onPress={() => {
-                navigation.navigate('Map', {eventToAdd: details});
+                navigation.navigate('Map', {eventToAdd: eventDetails});
               }}
             />
             <IconButton
@@ -113,6 +106,8 @@ export default function EventDetailsPage({route, navigation}) {
               size={40}
               onPress={() => {
                 addToUserBookmarks(eventDetails.event_id);
+                setSnackbarMessage('Bookmarked Evented!');
+                setShowBookmarkAddedSnackbar(true);
               }}
             />
             <IconButton
@@ -140,7 +135,7 @@ export default function EventDetailsPage({route, navigation}) {
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
               title={eventDetails.event_title}
-              subtitle={eventDetails.event_user_id}></Card.Title>
+              subtitle={eventDetails.event_creater}></Card.Title>
           </Card>
         </View>
         <Divider />
@@ -193,6 +188,17 @@ export default function EventDetailsPage({route, navigation}) {
           </ScrollView>
         </SafeAreaView>
       </View>
+      <Snackbar
+        visible={showBookmarkAddedSnackbar}
+        onDismiss={handleDismissSnackbar}
+        action={{
+          label: 'Thanks!',
+          onPress: () => {
+            handleDismissSnackbar();
+          },
+        }}>
+        {snackbarMessage}
+      </Snackbar>
     </>
   );
 }

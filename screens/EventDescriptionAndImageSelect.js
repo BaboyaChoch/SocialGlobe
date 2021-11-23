@@ -20,6 +20,7 @@ import {
   Paragraph,
   Button,
   Avatar,
+  Snackbar,
 } from 'react-native-paper';
 import storage from '@react-native-firebase/storage';
 import {firebase} from '@react-native-firebase/firestore';
@@ -43,6 +44,8 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
   ]);
   const [eventType, setEventType] = useState('None');
   const [openEventTypeSelect, setOpenEventTypeSelect] = useState(false);
+  const [showEventCreatedSnackbar, setShowEventCreatedSnackbar] =
+    useState(false);
   const LAUCH_IMAGE_PICKER_OPTIONS = {
     selectionLimit: 5,
     includeBase64: true,
@@ -84,8 +87,10 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     });
   };
 
-  const savePhoto = async (source, eventId, userId) => {
-    const image_ref = storage().ref(`images/${userId}/${eventId}/event_photo1`);
+  const savePhoto = async (source, eventId, user) => {
+    const image_ref = storage().ref(
+      `images/${user.uid}/${eventId}/event_photo1`,
+    );
     setIsUploading(true);
     try {
       await image_ref.putFile(source.uri);
@@ -96,8 +101,9 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     setImages(defaultImage);
   };
 
-  const saveEventDetails = (eventId, userId) => {
-    eventDetails.event_user_id = userId;
+  const saveEventDetails = (eventId, user) => {
+    eventDetails.event_creater = user.displayName;
+    eventDetails.event_user_id = user.uid;
     eventDetails.event_id = eventId;
     eventDetails.event_description = description;
     eventDetails.event_type = eventType;
@@ -111,14 +117,17 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   const handleData = () => {
     if (authenticator.auth().currentUser != null) {
-      const currentUserId = authenticator.auth().currentUser.uid;
+      const currentUser = authenticator.auth().currentUser;
       const eventId = firebase.firestore().collection('tmp').doc().id;
-      savePhoto(images[0], eventId, currentUserId);
-      saveEventDetails(eventId, currentUserId);
+      savePhoto(images[0], eventId, currentUser);
+      saveEventDetails(eventId, currentUser);
       navigation.navigate('Map');
     } else {
       Alert.alert('Unauthorized User', 'Please Sign In');
     }
+  };
+  const handleSnackbarDismiss = () => {
+    setShowEventCreatedSnackbar(false);
   };
 
   useEffect(() => {
@@ -126,102 +135,109 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <SliderBox
-        images={images}
-        sliderBoxHeight={300}
-        onCurrentImagePressed={selectFile}
-      />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          backgroundColor: WHITE,
-          width: '100%',
-        }}>
-        <Button
-          icon="pencil"
-          color={ORANGE}
-          onPress={selectFile}
-          style={styles.button}
-          labelStyle={{color: WHITE}}
-          mode="contained">
-          Edit
-        </Button>
-        <Button
-          icon="upload"
-          color={ORANGE}
-          onPress={selectFile}
-          style={styles.button}
-          labelStyle={{color: WHITE}}
-          mode="contained">
-          Upload
-        </Button>
-      </View>
-      <View style={{margin: 5}}>
-        <DropDownPicker
-          key={'eventTypeDropDown'}
-          style={styles.eventTypeDropDown}
-          open={openEventTypeSelect}
-          value={eventType}
-          items={eventTypeOptions}
-          setOpen={setOpenEventTypeSelect}
-          setValue={setEventType}
-          setItems={setEventTypeOptions}
-          textStyle={styles.textStyle}
-          containerStyle={{borderWidth: 0}}
-          labelStyle={{marginTop: 2}}
-          defaultValue="None"
-          placeholder="Select an event type"
-          dropDownDirection="BOTTOM"
-          zIndex={100}
+    <>
+      <View style={styles.container}>
+        <SliderBox
+          images={images}
+          sliderBoxHeight={300}
+          onCurrentImagePressed={selectFile}
         />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            backgroundColor: WHITE,
+            width: '100%',
+          }}>
+          <Button
+            icon="pencil"
+            color={ORANGE}
+            onPress={selectFile}
+            style={styles.button}
+            labelStyle={{color: WHITE}}
+            mode="contained">
+            Edit
+          </Button>
+          <Button
+            icon="upload"
+            color={ORANGE}
+            onPress={selectFile}
+            style={styles.button}
+            labelStyle={{color: WHITE}}
+            mode="contained">
+            Upload
+          </Button>
+        </View>
+        <View style={{margin: 5}}>
+          <DropDownPicker
+            key={'eventTypeDropDown'}
+            style={styles.eventTypeDropDown}
+            open={openEventTypeSelect}
+            value={eventType}
+            items={eventTypeOptions}
+            setOpen={setOpenEventTypeSelect}
+            setValue={setEventType}
+            setItems={setEventTypeOptions}
+            textStyle={styles.textStyle}
+            containerStyle={{borderWidth: 0}}
+            labelStyle={{marginTop: 2}}
+            defaultValue="None"
+            placeholder="Select an event type"
+            dropDownDirection="BOTTOM"
+            zIndex={100}
+          />
+        </View>
+        <View style={{margin: 10, marginBottom: 5, marginTop: 5}}>
+          <Text style={{fontSize: 20, color: BLUE, fontWeight: '500'}}>
+            Enter Event Description Below:
+          </Text>
+        </View>
+        <SafeAreaView
+          style={{
+            marginLeft: 5,
+            marginRight: 5,
+            borderWidth: 1,
+            borderColor: BLUE,
+            borderRadius: 2,
+            height: 260,
+          }}>
+          <ScrollView style={{marginHorizontal: 2}}>
+            <TextInput
+              value={description}
+              onChangeText={text => {
+                setDescription(text);
+              }}
+              style={styles.textInputStyle}
+              multiline={true}
+              numberOfLines={30}
+              placeholder="Enter Here"
+              placeholderTextColor="gray"></TextInput>
+          </ScrollView>
+        </SafeAreaView>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            backgroundColor: WHITE,
+            width: '100%',
+            marginTop: 10,
+          }}>
+          <Button
+            icon="content-save"
+            mode="contained"
+            color={ORANGE}
+            onPress={handleData}
+            labelStyle={{color: WHITE}}>
+            Create Event
+          </Button>
+        </View>
       </View>
-      <View style={{margin: 10, marginBottom: 5, marginTop: 5}}>
-        <Text style={{fontSize: 20, color: BLUE, fontWeight: '500'}}>
-          Enter Event Description Below:
-        </Text>
-      </View>
-      <SafeAreaView
-        style={{
-          marginLeft: 5,
-          marginRight: 5,
-          borderWidth: 1,
-          borderColor: BLUE,
-          borderRadius: 2,
-          height: 260,
-        }}>
-        <ScrollView style={{marginHorizontal: 2}}>
-          <TextInput
-            value={description}
-            onChangeText={text => {
-              setDescription(text);
-            }}
-            style={styles.textInputStyle}
-            multiline={true}
-            numberOfLines={30}
-            placeholder="Enter Here"
-            placeholderTextColor="gray"></TextInput>
-        </ScrollView>
-      </SafeAreaView>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: WHITE,
-          width: '100%',
-          marginTop: 10,
-        }}>
-        <Button
-          icon="content-save"
-          mode="contained"
-          color={ORANGE}
-          onPress={handleData}
-          labelStyle={{color: WHITE}}>
-          Create Event
-        </Button>
-      </View>
-    </View>
+      <Snackbar
+        visible={showEventCreatedSnackbar}
+        onDismiss={handleSnackbarDismiss}>
+        Event created!
+      </Snackbar>
+    </>
   );
 }
 const GREEN = '#19a86a';

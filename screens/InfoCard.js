@@ -1,10 +1,8 @@
-import React, {useState} from 'react';
-import {SliderBox} from 'react-native-image-slider-box';
+import React from 'react';
 import {
   StyleSheet,
   View,
   SafeAreaView,
-  Image,
 } from 'react-native';
 import {
   Avatar,
@@ -15,82 +13,46 @@ import {
   Button,
   Colors,
 } from 'react-native-paper';
-import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
-
-
 
 export default function InfoCard() {
 
-  const [images, setImages] = useState([
-    'https://source.unsplash.com/1024x768/?nature',
-    'https://source.unsplash.com/1024x768/?water',
-    'https://source.unsplash.com/1024x768/?girl',
-    'https://source.unsplash.com/1024x768/?tree',
-  ]);
-const getrows = {
-
-}
-  return InfoCard.map(rows) (
+  return (
     <SafeAreaView style={styles.container}>
       
         <View>
         <Card style={styles.card}>
-        <Image 
-          source={{uri: "https://source.unsplash.com/1024x768/?nature"}}
-          style={{
-            width: 300,
-            height: 200,
-          }}
-        />
             <Card.Title 
-                style={styles.title}
-                title={`${eventDetails.title}`}
+                style={styles.header}
+                title='Robotics Competition'
             />
             <Card.Content style={styles.content}>
             <Paragraph 
+                style={styles.location}>
+                {'Patrick F. Taylor Hall'}
+              </Paragraph>
+              <Paragraph 
                 style={styles.address}>
-                {`${eventDetails.address.description}`}
+                {'123 WherePFTIs Dr'}
               </Paragraph>
               <Paragraph 
-                style={styles.date}>
-                {`${new Date(eventDetails.date).toDateString()}`}
+                style={styles.subaddress}>
+                {'Baton Rouge, LA 70803'}
               </Paragraph>
               <Paragraph 
-                style={styles.time}>
-                {`${new Date(
-                eventDetails.date,
-              ).toLocaleTimeString()}`}
-              </Paragraph>
-              <Paragraph 
-                style={styles.description}>
-                {`${eventDetails.description}`}
+                style={styles.category}>
+                {'Robotics'}
               </Paragraph>
                 <Card.Content style={{flexDirection: 'row'}}>
                 <IconButton
-                icon="plus"
-                color={GREEN}
-                //add event to destinations
-                onPress={() => {
-                  navigation.navigate('Map', {eventToAdd: details});
-                }}
+                icon="map-marker"
                 size={40}
               />
              <IconButton
-                icon="information"
-                color={Colors.cyan400}
-                //more info, redirect to details page
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage');
-                }}
+                icon="map-search"
                 size={40}
               />
               <IconButton
-                icon="navigation"
-                color={ORANGE}
-                //get directions to event
-                onPress={() => {
-                  console.log('reported');
-                }}
+                icon="information-outline"
                 size={40}
               />
                 </Card.Content>
@@ -98,9 +60,140 @@ const getrows = {
                 <IconButton style={styles.heart}
                 icon="lock-open-outline" //lock-outline if private
                 size={40}
-                //color={GREEN} //Colors.red900 if private
+                />
+                </Card.Content>
+            </Card.Content>
+          </Card>
+          <Card style={styles.card}>
+            <Card.Title 
+                style={styles.header}
+                title='Robotics Competition'
+            />
+            <Card.Content style={styles.content}>
+            <Paragraph 
+                style={styles.location}>
+                {'Patrick F. Taylor Hall'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.address}>
+                {'123 WherePFTIs Dr'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.subaddress}>
+                {'Baton Rouge, LA 70803'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.category}>
+                {'Robotics'}
+              </Paragraph>
+                <Card.Content style={{flexDirection: 'row'}}>
+                <IconButton
+                icon="map-marker"
+                size={40}
               />
-              </Card.Content>
+             <IconButton
+                icon="map-search"
+                size={40}
+              />
+              <IconButton
+                icon="information-outline"
+                size={40}
+              />
+                </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-outline" //lock-outline if private
+                size={40}
+                />
+                </Card.Content>
+            </Card.Content>
+          </Card>
+          <Card style={styles.card}>
+            <Card.Title 
+                style={styles.header}
+                title='Robotics Competition'
+            />
+            <Card.Content style={styles.content}>
+            <Paragraph 
+                style={styles.location}>
+                {'Patrick F. Taylor Hall'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.address}>
+                {'123 WherePFTIs Dr'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.subaddress}>
+                {'Baton Rouge, LA 70803'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.category}>
+                {'Robotics'}
+              </Paragraph>
+                <Card.Content style={{flexDirection: 'row'}}>
+                <IconButton
+                icon="map-marker"
+                size={40}
+              />
+             <IconButton
+                icon="map-search"
+                size={40}
+              />
+              <IconButton
+                icon="information-outline"
+                size={40}
+              />
+                </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-open-outline" //lock-outline if private
+                size={40}
+                />
+                </Card.Content>
+            </Card.Content>
+          </Card>
+          <Card style={styles.card}>
+            <Card.Title 
+                style={styles.header}
+                title='Robotics Competition'
+            />
+            <Card.Content style={styles.content}>
+            <Paragraph 
+                style={styles.location}>
+                {'Patrick F. Taylor Hall'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.address}>
+                {'123 WherePFTIs Dr'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.subaddress}>
+                {'Baton Rouge, LA 70803'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.category}>
+                {'Robotics'}
+              </Paragraph>
+                <Card.Content style={{flexDirection: 'row'}}>
+                <IconButton
+                icon="map-marker"
+                size={40}
+              />
+             <IconButton
+                icon="map-search"
+                size={40}
+              />
+              <IconButton
+                icon="information-outline"
+                size={40}
+              />
+                </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-outline" //lock-outline if private
+                size={40}
+                />
+                </Card.Content>
             </Card.Content>
           </Card>
         </View>
@@ -109,6 +202,7 @@ const getrows = {
 }
 
 const GREEN = '#19a86a';
+const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
@@ -144,33 +238,36 @@ const styles = StyleSheet.create({
     position: 'relative',
     bottom: 8,
   },
-  title: {
+  header: {
     fontSize: 14,
     width: 230,
     padding: 0,
-    margin: 0,
-    position: 'relative',
-    textAlign: 'left',
+    left: 25,
   },
-  address: {
+  location: {
     bottom: 1,
     fontSize: 15,
-    textAlign: 'left',
+    textAlign: 'center',
   },
-  date: {
+  address: {
     top: 1,
-    fontSize: 15,
-    textAlign: 'left',
+    fontSize: 18,
+    textAlign: 'center',
   },
-  time: {
+  subaddress: {
     bottom: 8,
     fontSize: 12,
-    textAlign: 'left',
+    textAlign: 'center',
   },
-  description: {
+  category: {
     bottom: 3,
-    fontSize: 15,
-    textAlign: 'left',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  pin: {
+      position: 'relative',
+      bottom: 133,
+      left: 40,
   },
   heart: {
     position: 'relative',
@@ -180,13 +277,4 @@ const styles = StyleSheet.create({
     scaleX: .75,
     scaleY: .75,
     },
-    privacyicon:{
-      position: 'relative',
-      left: 30,
-    },
-    privacy: {
-      position: 'relative',
-      top: 13,
-      left: 25,
-    }
 });

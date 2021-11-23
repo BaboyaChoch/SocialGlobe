@@ -43,7 +43,8 @@ export default function Route(props) {
   function fitRouteToScreen(origin, destination) {
     const tempDestination = destination;
     tempDestination[0] = origin;
-    const destinationWithOrigin = [origin].concat(tempDestination);
+    const destinationWithTwoOrigin = [origin].concat(tempDestination);
+    const destinationWithOrigin = destinationWithTwoOrigin.slice(1);
     props.mapRef.current.fitToCoordinates(destinationWithOrigin, {
       edgePadding: {
         right: width / 20,
@@ -65,7 +66,7 @@ export default function Route(props) {
   useEffect(() => {
     setTimeout(function () {
       fitRouteToScreen(props.origin, props.destinations);
-    }, 250);
+    }, 500);
   }, [props.origin, props.destinations, props.modeOfTransport]);
 
   return (

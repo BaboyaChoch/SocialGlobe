@@ -67,7 +67,6 @@ export default function Map({route, navigation}) {
     useState(false);
   const mapRef = useRef(null);
 
-  const {width, height} = Dimensions.get('window');
   function closeCreatEvent() {
     setCreateEventIsVisiblility(false);
   }
@@ -205,7 +204,6 @@ export default function Map({route, navigation}) {
               handleNavigate={setIsChooseTravelModeVisible}
             />
           ))}
-
         {routeIsReady && (
           <Route
             origin={currentUserLocation}

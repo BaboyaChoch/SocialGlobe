@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, View, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -10,6 +10,9 @@ import {useIsFocused} from '@react-navigation/core';
 
 import getMapStyles from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
+import SelectTravelModeModal from '../components/SelectTravelModeModal';
+import Route from '../components/Route';
+import CreateEventEventMarker from '../components/CreateEventMarker';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -18,6 +21,21 @@ if (Platform.OS == 'ios') {
   Geolocation.requestAuthorization();
 }
 
+const coordinateForDestinations = [
+  {},
+  {
+    longitude: -91.181757,
+    latitude: 30.419881,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.0009,
+  },
+  {
+    longitude: -91.181757,
+    latitude: 30.412411,
+    latitudeDelta: 0.009,
+    longitudeDelta: 0.0009,
+  },
+];
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
   //console.log('Maps Pags: ', eventToAdd);
@@ -36,6 +54,17 @@ export default function Map({route, navigation}) {
     useState('not_granted');
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
   const [filterQuery, setFilterQuery] = useState();
+
+  const [userDestinations, setUserDestinations] = useState([{}]);
+  const [modeOfTransport, setModeOfTransport] = useState();
+  const [routeResult, setRouteResult] = useState();
+  const [routeIsReady, setRouteIsReady] = useState(false);
+  const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
+  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
+    useState(false);
+  const mapRef = useRef(null);
+  const [currentUserSelection, setCurrentUserSelection] = useState();
+
   function geoSuccess(position) {
     const coordinates = {
       latitude: position.coords.latitude,
@@ -116,14 +145,85 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     console.log(filterQuery);
   }, [filterQuery]);
+
+  useEffect(() => {
+    if (routeResult != undefined) {
+      //console.log('map.js', routeResult);
+      setRouteDetailsIsReady(true);
+    }
+  }, [routeResult]);
+
+  useEffect(() => {
+    if (currentUserSelection != undefined) {
+      console.log('selection:', currentUserSelection);
+    }
+  }, [currentUserSelection]);
+
+  useEffect(() => {
+    console.log({
+      currentPage: 'map.js',
+      dest: userDestinations,
+      selection: currentUserSelection,
+      origin: currentUserLocation,
+      mode: modeOfTransport,
+    });
+  }, [routeIsReady]);
+
   return (
     <>
       <MapView
         style={styles.map}
         region={focusRegion}
         customMapStyle={getMapStyles()}
-        showsUserLocation={true}>
+        showsUserLocation={true}
+        ref={mapRef}>
         {applyFilter
+          ? filteredEventsList.map(eventInfo => (
+              <CreateEventEventMarker
+                onPress={() => setCurrentUserSelection(eventInfo)}
+                key={eventInfo.event_id}
+                eventInfo={eventInfo}
+                origin={currentUserLocation}
+                modeOfTransport={modeOfTransport}
+                currentOrigin={currentUserLocation}
+                handleNavigate={setIsChooseTravelModeVisible}
+                // openEventDetailsPage={navigation.navigate('EventDetailsPage', {
+                //   eventDetails: eventInfo,
+                // })}
+              />
+            ))
+          : eventsList.map(eventInfo => (
+              <CreateEventEventMarker
+                onPress={() => setCurrentUserSelection(eventInfo)}
+                key={eventInfo.event_id}
+                eventInfo={eventInfo}
+                origin={currentUserLocation}
+                modeOfTransport={modeOfTransport}
+                currentOrigin={currentUserLocation}
+                handleNavigate={setIsChooseTravelModeVisible}
+                // openEventDetailsPage={navigation.navigate('EventDetailsPage', {
+                //   eventDetails: eventInfo,
+                // })}
+              />
+            ))}
+
+        {/* {
+          !routeIsReady &&
+            eventsList.map(eventInfo => (
+              <CreateEventEventMarker
+                onPress={() => setCurrentUserSelection(eventInfo)}
+                key={eventInfo.event_id}
+                eventInfo={eventInfo}
+                origin={currentUserLocation}
+                modeOfTransport={modeOfTransport}
+                currentOrigin={currentUserLocation}
+                handleNavigate={setIsChooseTravelModeVisible}
+                openEventDetailsPage={navigation.navigate('EventDetailsPage', {
+                  eventDetails: eventInfo,
+                })}
+              />
+            )) 
+           {applyFilter
           ? filteredEventsList.map(eventInfo => (
               <Marker
                 key={eventInfo.event_id}
@@ -142,14 +242,56 @@ export default function Map({route, navigation}) {
                   navigation.navigate('EventDetailsPage', {
                     eventDetails: eventInfo,
                   });
+                  
                 }}></Marker>
-            ))}
+            ))} 
+        } */}
+
+        {/* {routeIsReady && (
+          <Route
+            origin={currentUserLocation}
+            destinations={coordinateForDestinations}
+            modeOfTransport={modeOfTransport}
+            mapRef={mapRef}
+            handleRouteResult={param => setRouteResult(param)}
+          />
+        )} */}
       </MapView>
 
       <View style={styles.autocompleteContainer}>
         <EventTypeSearch
           handleFilter={handleFilter}
           handleClear={handleClear}
+        />
+      </View>
+      {routeIsReady && routeDetailsIsReady && (
+        <View style={styles.nav}>
+          <Text
+            style={
+              styles.routeDetails
+            }>{`   ${routeResult.estimatedDistance} miles  ${routeResult.estimatedDuration} mins`}</Text>
+        </View>
+      )}
+      {routeIsReady && (
+        <View style={styles.endRouteButton}>
+          <Button
+            onPress={() => {
+              setRouteIsReady(false);
+            }}
+            title="End Route"
+          />
+        </View>
+      )}
+      <View>
+        <SelectTravelModeModal
+          selectionOnclick={setModeOfTransport}
+          visible={isChooseTravelModeVisible}
+          handleVisisble={setIsChooseTravelModeVisible}
+          handleRouteReady={setRouteIsReady}
+          destinations={userDestinations}
+          currentOrigin={currentUserSelection}
+          handleDestinations={setUserDestinations}
+          currentDestination={currentUserSelection}
         />
       </View>
     </>
@@ -185,5 +327,18 @@ const styles = StyleSheet.create({
     top: '0%', //for center align
     alignSelf: 'flex-start', //for align to right
     width: '100%',
+  },
+  endRouteButton: {
+    position: 'absolute',
+    top: '95%',
+    alignSelf: 'flex-start',
+  },
+  routeDetails: {
+    fontSize: 15,
+    height: 50,
+    borderColor: 'red',
+    borderWidth: 5,
+    width: 200,
+    color: 'red',
   },
 });

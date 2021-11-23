@@ -19,7 +19,7 @@ import {firebase} from '@react-native-firebase/auth';
 import {addToUserBookmarks} from '../api/bookmarksApi';
 import getEventPhoto from '../api/imagesApi';
 
-export default function EventDetailsPage({route, navigation}) {
+export default function EventDetailsPage({route, navigation}, props) {
   const user = firebase.auth().currentUser;
   const {eventDetails} = route.params;
   console.log('Details Page: ', eventDetails);
@@ -96,9 +96,7 @@ export default function EventDetailsPage({route, navigation}) {
               icon="navigation"
               color={ORANGE}
               size={40}
-              onPress={() => {
-                console.log('reported');
-              }}
+              onPress={() => {}}
             />
             <IconButton
               icon="bookmark"

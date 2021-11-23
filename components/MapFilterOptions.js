@@ -37,18 +37,7 @@ export default function MapFilterOptions({onPress}) {
           chipActionOnPress('sport');
           setIsSportsSelected(true);
         }}>
-        Sport
-      </Chip>
-      <Chip
-        icon="google-controller"
-        mode={CHIP_TYPE}
-        style={styles.chipStyle}
-        selected={isGamingSelected}
-        onPress={() => {
-          chipActionOnPress('gaming');
-          setIsGamingSelected(true);
-        }}>
-        Gaming
+        Sports
       </Chip>
       <Chip
         icon="presentation"

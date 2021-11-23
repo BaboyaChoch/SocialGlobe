@@ -1,6 +1,13 @@
 import React, {useState, useEffect} from 'react';
 
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -18,7 +25,7 @@ import storage from '@react-native-firebase/storage';
 import {firebase} from '@react-native-firebase/firestore';
 import {firebase as authenticator} from '@react-native-firebase/auth';
 import {addEvent} from '../api/mapsApi';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 const defaultImage = [
   'https://images.unsplash.com/photo-1569511502671-8c1bbf96fc8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1466&q=80',
 ];
@@ -28,7 +35,14 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
   const [images, setImages] = useState(defaultImage);
   const [isUploading, setIsUploading] = useState(false);
   const [description, setDescription] = useState();
-
+  const [eventTypeOptions, setEventTypeOptions] = useState([
+    {label: 'Fair', value: 'fair'},
+    {label: 'Sport', value: 'sport'},
+    {label: 'Seminar', value: 'seminar'},
+    {label: 'Fundraiser', value: 'fundraiser'},
+  ]);
+  const [eventType, setEventType] = useState('None');
+  const [openEventTypeSelect, setOpenEventTypeSelect] = useState(false);
   const LAUCH_IMAGE_PICKER_OPTIONS = {
     selectionLimit: 5,
     includeBase64: true,
@@ -86,6 +100,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     eventDetails.event_user_id = userId;
     eventDetails.event_id = eventId;
     eventDetails.event_description = description;
+    eventDetails.event_type = eventType;
     addEvent(eventDetails);
   };
 
@@ -101,6 +116,8 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
       savePhoto(images[0], eventId, currentUserId);
       saveEventDetails(eventId, currentUserId);
       navigation.navigate('Map');
+    } else {
+      Alert.alert('Unauthorized User', 'Please Sign In');
     }
   };
 
@@ -124,22 +141,41 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
         }}>
         <Button
           icon="pencil"
-          color={BLUE}
+          color={ORANGE}
           onPress={selectFile}
           style={styles.button}
-          labelStyle={{color: BLUE}}
-          mode="outlined">
+          labelStyle={{color: WHITE}}
+          mode="contained">
           Edit
         </Button>
         <Button
           icon="upload"
-          color={BLUE}
+          color={ORANGE}
           onPress={selectFile}
           style={styles.button}
-          labelStyle={{color: BLUE}}
-          mode="outlined">
+          labelStyle={{color: WHITE}}
+          mode="contained">
           Upload
         </Button>
+      </View>
+      <View style={{margin: 5}}>
+        <DropDownPicker
+          key={'eventTypeDropDown'}
+          style={styles.eventTypeDropDown}
+          open={openEventTypeSelect}
+          value={eventType}
+          items={eventTypeOptions}
+          setOpen={setOpenEventTypeSelect}
+          setValue={setEventType}
+          setItems={setEventTypeOptions}
+          textStyle={styles.textStyle}
+          containerStyle={{borderWidth: 0}}
+          labelStyle={{marginTop: 2}}
+          defaultValue="None"
+          placeholder="Select an event type"
+          dropDownDirection="BOTTOM"
+          zIndex={100}
+        />
       </View>
       <View style={{margin: 10, marginBottom: 5, marginTop: 5}}>
         <Text style={{fontSize: 20, color: BLUE, fontWeight: '500'}}>
@@ -153,7 +189,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
           borderWidth: 1,
           borderColor: BLUE,
           borderRadius: 2,
-          height: 310,
+          height: 260,
         }}>
         <ScrollView style={{marginHorizontal: 2}}>
           <TextInput
@@ -179,7 +215,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
         <Button
           icon="content-save"
           mode="contained"
-          color={BLUE}
+          color={ORANGE}
           onPress={handleData}
           labelStyle={{color: WHITE}}>
           Create Event
@@ -227,5 +263,22 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginTop: 0,
     paddingLeft: 16,
+  },
+  eventTypeDropDown: {
+    shadowColor: '#5cb85c',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 8,
+    width: 205,
+    height: 35,
+    borderRadius: 0,
+    borderColor: 'black',
+    borderWidth: 0.1,
+  },
+  textStyle: {
+    fontWeight: '500',
+    fontSize: 17,
+    color: BLUE,
   },
 });

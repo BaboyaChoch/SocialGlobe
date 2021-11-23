@@ -51,7 +51,7 @@ const Tabs = () => {
           tabBarIcon: () => {
             return (
               <IconButton
-                icon="calendar-plus"
+                icon="map-marker-plus-outline"
                 color={ICON_COLOR}
                 size={ICON_SIZE}
               />

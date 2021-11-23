@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
-import {View, Text, ActivityIndicator, StyleSheet, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  Modal,
+  Alert,
+} from 'react-native';
 import {
   Avatar,
   Button,
@@ -27,9 +34,7 @@ export default function EventDetailsPage({route, navigation}) {
   console.log('Details Page: ', eventDetails);
   const [state, setState] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
-  const [images, setImages] = useState([
-    'https://source.unsplash.com/1024x768/?nature',
-  ]);
+  const [images, setImages] = useState([]);
   const isFocused = useIsFocused();
   {
     /* <ActivityIndicator size="large" color="#00ff00" /> */
@@ -39,8 +44,12 @@ export default function EventDetailsPage({route, navigation}) {
   const date_icon = props => <Avatar.Icon {...props} icon="folder" />;
   const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
 
+  const onImageRecieved = image => {
+    console.log('Image Recieved: ', image);
+    setImages([image]);
+  };
   useEffect(() => {
-    setImages([getEventPhoto(eventDetails.event_id)]);
+    getEventPhoto(eventDetails.event_id, onImageRecieved);
   }, [isFocused]);
 
   return (
@@ -102,7 +111,7 @@ export default function EventDetailsPage({route, navigation}) {
               color={Colors.blue500}
               size={40}
               onPress={() => {
-                addToUserBookmarks(eventDetails.eventId);
+                addToUserBookmarks(eventDetails.event_id);
               }}
             />
             <IconButton
@@ -110,7 +119,10 @@ export default function EventDetailsPage({route, navigation}) {
               color={Colors.red500}
               size={40}
               onPress={() => {
-                console.log('reported');
+                Alert.alert(
+                  'Event Report',
+                  'Thank you for reporting the event. Our staff will look into it',
+                );
               }}
             />
           </View>
@@ -126,8 +138,8 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title={eventDetails.title}
-              subtitle="USER"></Card.Title>
+              title={eventDetails.event_title}
+              subtitle={eventDetails.event_user_id}></Card.Title>
           </Card>
         </View>
         <Divider />
@@ -141,8 +153,8 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title={eventDetails.address.description}
-              subtitle="CITY, STATE ZIPCODE"></Card.Title>
+              title={eventDetails.event_address.main_text}
+              subtitle={eventDetails.event_address.secondary_text}></Card.Title>
           </Card>
         </View>
         <Divider />
@@ -156,10 +168,8 @@ export default function EventDetailsPage({route, navigation}) {
             <Card.Title
               titleStyle={styles.title}
               subtitleStyle={styles.subititle}
-              title={new Date(eventDetails.date).toDateString()}
-              subtitle={new Date(
-                eventDetails.date,
-              ).toLocaleTimeString()}></Card.Title>
+              title={eventDetails.event_start_datetime.date}
+              subtitle={eventDetails.event_start_datetime.time}></Card.Title>
           </Card>
         </View>
         <Divider />
@@ -174,7 +184,7 @@ export default function EventDetailsPage({route, navigation}) {
               <Card style={{backgroundColor: BACKGROUND_COLOR, height: 300}}>
                 <Card.Content>
                   <Paragraph style={{color: SUBTITLE_COLOR}}>
-                    {eventDetails.description}
+                    {eventDetails.event_description}
                   </Paragraph>
                 </Card.Content>
               </Card>

@@ -85,7 +85,8 @@ export default function EventAddressSelection({route, navigation}) {
       <MapView
         customMapStyle={getMapStyles()}
         style={styles.map}
-        region={location}>
+        region={location}
+        showsUserLocation={true}>
         <Marker coordinate={location}></Marker>
       </MapView>
       <View style={styles.nav}>

@@ -49,7 +49,7 @@ function checkLocationAvailability() {
    */
 }
 
-export async function getEvents(eventsRecieved) {
+export async function getAllEvents(eventsRecieved) {
   let eventsList = [];
   let snapshot = await db.collection('Events').orderBy('eventId').get();
 
@@ -58,4 +58,22 @@ export async function getEvents(eventsRecieved) {
   });
   //console.log('events:', eventsList);
   eventsRecieved(eventsList);
+}
+
+export async function getAllEventsByVisiblity(type, eventsRecieved) {
+  try {
+    let eventsList = [];
+    let snapshot = await db
+      .collection('Events')
+      .where('event_visibility', '==', type)
+      .get();
+
+    snapshot.forEach(res => {
+      eventsList.push(res.data());
+    });
+    console.log('events:', eventsList);
+    eventsRecieved(eventsList);
+  } catch (err) {
+    console.log('Error while retrieving events: ', err);
+  }
 }

@@ -4,7 +4,8 @@ import {StyleSheet, View, ScrollView} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Button} from 'react-native';
 //import DeviceInfo from 'react-native-device-info';
-import {getEvents} from '../api/mapsApi';
+import {getAllEvents} from '../api/mapsApi';
+import {getAllEventsByVisiblity} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
 import MapFilterOptions from '../components/MapFilterOptions';
 import getMapStyles from '../components/MapsStyles';
@@ -41,7 +42,6 @@ export default function Map({route, navigation}) {
       latitudeDelta: 0.009,
       longitudeDelta: 0.0009,
     };
-
     setCurrentUserLocation(coordinates);
     setFocusRegion(coordinates);
   }
@@ -121,10 +121,12 @@ export default function Map({route, navigation}) {
     filteredEventsList != null &&
     filteredEventsList != undefined &&
     filteredEventsList.length > 0;
-
+  const here = data => {
+    console.log(data);
+  };
   useEffect(() => {
     requestLocationPermission();
-    getEvents(onEventsRecieved);
+    getAllEventsByVisiblity('public', onEventsRecieved);
   }, [isFocused]);
 
   return (
@@ -132,30 +134,29 @@ export default function Map({route, navigation}) {
       <MapView
         style={styles.map}
         region={focusRegion}
-        customMapStyle={getMapStyles()}>
-        {!applyFilter &&
-          eventsList.map(eventInfo => (
-            <Marker
-              key={eventInfo.eventId}
-              coordinate={eventInfo.coordinates}
-              onPress={() => {
-                navigation.navigate('EventDetailsPage', {
-                  eventDetails: eventInfo,
-                });
-              }}></Marker>
-          ))}
-        {applyFilter &&
-          filteredEventsListIsNotEmpty() &&
-          filteredEventsList.map(eventInfo => (
-            <Marker
-              key={eventInfo.eventId}
-              coordinate={eventInfo.coordinates}
-              onPress={() => {
-                navigation.navigate('EventDetailsPage', {
-                  eventDetails: eventInfo,
-                });
-              }}></Marker>
-          ))}
+        customMapStyle={getMapStyles()}
+        showsUserLocation={true}>
+        {applyFilter
+          ? filteredEventsList.map(eventInfo => (
+              <Marker
+                key={eventInfo.event_id}
+                coordinate={eventInfo.event_coordinates}
+                onPress={() => {
+                  navigation.navigate('EventDetailsPage', {
+                    eventDetails: eventInfo,
+                  });
+                }}></Marker>
+            ))
+          : eventsList.map(eventInfo => (
+              <Marker
+                key={eventInfo.event_id}
+                coordinate={eventInfo.event_coordinates}
+                onPress={() => {
+                  navigation.navigate('EventDetailsPage', {
+                    eventDetails: eventInfo,
+                  });
+                }}></Marker>
+            ))}
       </MapView>
       <View>
         <MapFilterOptions onPress={filterMapByFilterOption}></MapFilterOptions>

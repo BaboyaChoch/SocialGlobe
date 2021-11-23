@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {IconButton} from 'react-native-paper';
@@ -13,7 +13,8 @@ export default function createEventOverlay({navigation}) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [capacity, setCapacity] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [openEventVisibilitySelect, setOpenEventVisibilitySelect] =
+    useState(false);
   const [eventVisibility, setEventVisibility] = useState('public');
   const [visibilityOptions, setVisibilityOptions] = useState([
     {label: 'Public', value: 'public'},
@@ -26,7 +27,7 @@ export default function createEventOverlay({navigation}) {
       event_link: link == null ? 'N/A' : link,
       event_start_datetime: startDate == null ? 'N/A' : startDate,
       event_end_datetime: endDate == null ? 'N/A' : endDate,
-      event_visiblity: eventVisibility,
+      event_visibility: eventVisibility,
       event_capacity:
         capacity[0] == undefined
           ? 'capacity limits not specified'
@@ -102,7 +103,7 @@ export default function createEventOverlay({navigation}) {
         <View style={{width: 10}}></View>
         <EventDatePicker dateValue={endDate} handleDateValue={setEndDate} />
       </View>
-      <View style={styles.rowStyle}></View>
+      <View style={{flexDirection: 'row'}}></View>
       <View style={styles.rowStyle}>
         <View>
           <Slider
@@ -137,21 +138,20 @@ export default function createEventOverlay({navigation}) {
         <DropDownPicker
           key={1}
           style={styles.dropdown}
-          open={open}
+          open={openEventVisibilitySelect}
           value={eventVisibility}
           items={visibilityOptions}
-          setOpen={setOpen}
+          setOpen={setOpenEventVisibilitySelect}
           setValue={setEventVisibility}
           setItems={setVisibilityOptions}
           textStyle={styles.textStyle}
           containerStyle={{borderWidth: 0}}
           labelStyle={{marginTop: 5}}
+          placeholder="Select Event Visibility"
           defaultValue="Public"
         />
       </View>
-      <View style={styles.rowStyle}>
-        {/* <EventDatePicker dateValue={startDate} handleDateValue={setStartDate} /> */}
-      </View>
+      <View style={styles.rowStyle}></View>
       <View style={styles.rowStyle}>
         <IconButton
           icon="arrow-right"

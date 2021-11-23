@@ -8,10 +8,10 @@ import {Slider} from '@miblanchard/react-native-slider';
 import EventDatePicker from '../components/EventDatePicker';
 
 export default function createEventOverlay({navigation}) {
-  const [title, setTitle] = useState();
-  const [link, setLink] = useState();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [title, setTitle] = useState(null);
+  const [link, setLink] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [capacity, setCapacity] = useState(0);
   const [open, setOpen] = useState(false);
   const [eventVisibility, setEventVisibility] = useState('public');
@@ -22,11 +22,15 @@ export default function createEventOverlay({navigation}) {
 
   const getEventDetails = () => {
     return {
-      event_title: title,
-      event_start_datetime: startDate,
-      event_end_datetime: endDate,
+      event_title: title == null ? 'N/A' : title,
+      event_link: link == null ? 'N/A' : link,
+      event_start_datetime: startDate == null ? 'N/A' : startDate,
+      event_end_datetime: endDate == null ? 'N/A' : endDate,
       event_visiblity: eventVisibility,
-      event_capacity: capacity[0],
+      event_capacity:
+        capacity[0] == undefined
+          ? 'capacity limits not specified'
+          : capacity[0],
     };
   };
 
@@ -154,7 +158,7 @@ export default function createEventOverlay({navigation}) {
           size={ICON_SIZE}
           color={ORANGE}
           onPress={() => {
-            navigation.navigate('EventDescriptionAndImageSelect', {
+            navigation.navigate('EventAddressSelection', {
               eventDetails: getEventDetails(),
             });
           }}></IconButton>

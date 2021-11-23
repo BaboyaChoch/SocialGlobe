@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/core';
 import {useIsFocused} from '@react-navigation/core';
 import {firebase} from '@react-native-firebase/auth';
 import {addToUserBookmarks} from '../api/bookmarksApi';
+import getEventPhoto from '../api/imagesApi';
 
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
@@ -28,9 +29,6 @@ export default function EventDetailsPage({route, navigation}) {
   const [reportVisible, setReportVisible] = useState(false);
   const [images, setImages] = useState([
     'https://source.unsplash.com/1024x768/?nature',
-    'https://source.unsplash.com/1024x768/?water',
-    'https://source.unsplash.com/1024x768/?girl',
-    'https://source.unsplash.com/1024x768/?tree',
   ]);
   const isFocused = useIsFocused();
   {
@@ -41,8 +39,9 @@ export default function EventDetailsPage({route, navigation}) {
   const date_icon = props => <Avatar.Icon {...props} icon="folder" />;
   const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
 
-  useEffect(() => {}, [isFocused]);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setImages([getEventPhoto(eventDetails.event_id)]);
+  }, [isFocused]);
 
   return (
     <>

@@ -23,12 +23,9 @@ export function getAnEvent(eventId, eventRecieved) {
 }
 
 export function addEvent(event, eventAdded) {
-  event.eventId = firebase.firestore().collection('tmp').doc().id;
-  firebase
-    .firestore()
-    .collection('Events')
-    .doc(event.eventId)
-    .add(event)
+  db.collection('Events')
+    .doc(event.event_id)
+    .set(event)
     .then(snapshot => snapshot.get())
     .then(eventData => eventAdded(eventData.data()))
     .catch(err => console.log(err));

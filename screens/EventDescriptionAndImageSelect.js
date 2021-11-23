@@ -14,11 +14,20 @@ import {
   Button,
   Avatar,
 } from 'react-native-paper';
+import storage from '@react-native-firebase/storage';
+import {firebase} from '@react-native-firebase/firestore';
+import {firebase as authenticator} from '@react-native-firebase/auth';
+import {addEvent} from '../api/mapsApi';
+
+const defaultImage = [
+  'https://images.unsplash.com/photo-1569511502671-8c1bbf96fc8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1466&q=80',
+];
 
 export default function EventDescriptionAndImageSelect({route, navigation}) {
-  const [images, setImages] = useState([
-    'https://images.unsplash.com/photo-1569511502671-8c1bbf96fc8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1466&q=80',
-  ]);
+  const {eventDetails} = route.params;
+  const [images, setImages] = useState(defaultImage);
+  const [isUploading, setIsUploading] = useState(false);
+  const [description, setDescription] = useState();
 
   const LAUCH_IMAGE_PICKER_OPTIONS = {
     selectionLimit: 5,
@@ -28,7 +37,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   const LAUNCH_CAMERA_OPTIONS = {
     saveToPhotos: true,
-    selectionLimit: 5,
+    selectionLimit: 1,
     includeBase64: true,
     mediaType: 'photo',
     cameraType: 'back',
@@ -36,6 +45,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   const handleImage = selectImages => {
     setImages(selectImages);
+    console.log(selectImages);
   };
 
   const getAllUri = () => {
@@ -48,8 +58,6 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   const selectFile = () => {
     ImagePicker.launchImageLibrary(LAUCH_IMAGE_PICKER_OPTIONS, res => {
-      console.log('Response = ', res);
-
       if (res.didCancel) {
         console.log('User cancelled image picker');
       } else if (res.errorCode) {
@@ -61,13 +69,43 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
       }
     });
   };
+
+  const savePhoto = async (source, eventId, userId) => {
+    const image_ref = storage().ref(`images/${userId}/${eventId}/event_photo1`);
+    setIsUploading(true);
+    try {
+      await image_ref.putFile(source.uri);
+      setIsUploading(false);
+    } catch (err) {
+      console.log('Error: ', err);
+    }
+    setImages(defaultImage);
+  };
+
+  const saveEventDetails = (eventId, userId) => {
+    eventDetails.event_user_id = userId;
+    eventDetails.event_id = eventId;
+    eventDetails.event_description = description;
+    addEvent(eventDetails);
+  };
+
   const imagesUpLoaded = images.length > 0 && images != null;
   const LeftContent = props => (
     <Avatar.Icon {...props} icon="folder" style={{backgroundColor: WHITE}} />
   );
 
+  const handleData = () => {
+    if (authenticator.auth().currentUser != null) {
+      const currentUserId = authenticator.auth().currentUser.uid;
+      const eventId = firebase.firestore().collection('tmp').doc().id;
+      savePhoto(images[0], eventId, currentUserId);
+      saveEventDetails(eventId, currentUserId);
+      navigation.navigate('Map');
+    }
+  };
+
   useEffect(() => {
-    console.log(route.params.eventDetails);
+    console.log('Current Event Details: ', eventDetails);
   }, []);
 
   return (
@@ -86,20 +124,20 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
         }}>
         <Button
           icon="pencil"
-          color={ORANGE}
+          color={BLUE}
           onPress={selectFile}
           style={styles.button}
-          labelStyle={{color: WHITE}}
-          mode="contained">
+          labelStyle={{color: BLUE}}
+          mode="outlined">
           Edit
         </Button>
         <Button
           icon="upload"
-          color={ORANGE}
+          color={BLUE}
           onPress={selectFile}
           style={styles.button}
-          labelStyle={{color: WHITE}}
-          mode="contained">
+          labelStyle={{color: BLUE}}
+          mode="outlined">
           Upload
         </Button>
       </View>
@@ -119,6 +157,10 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
         }}>
         <ScrollView style={{marginHorizontal: 2}}>
           <TextInput
+            value={description}
+            onChangeText={text => {
+              setDescription(text);
+            }}
             style={styles.textInputStyle}
             multiline={true}
             numberOfLines={30}
@@ -137,12 +179,8 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
         <Button
           icon="content-save"
           mode="contained"
-          color={ORANGE}
-          onPress={() => {
-            navigation.navigate('EventDescriptionAndImageSelect', {
-              eventDetails: getEventDetails(),
-            });
-          }}
+          color={BLUE}
+          onPress={handleData}
           labelStyle={{color: WHITE}}>
           Create Event
         </Button>

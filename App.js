@@ -6,21 +6,24 @@ import EventDetailsPage from './screens/EventDetailsPage';
 import Tabs from './navigation/tabs';
 import Login from './screens/Login';
 import EventDescriptionAndImageSelect from './screens/EventDescriptionAndImageSelect';
-import createEventOverlay from './screens/createEventOverlay';
+import EventAddressSelection from './screens/EventAddressSelection';
 
 const Stack = createStackNavigator();
 function App({navigation}) {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="create" component={createEventOverlay} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="home" component={Tabs} />
+        <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
         <Stack.Screen
           name="EventDescriptionAndImageSelect"
           component={EventDescriptionAndImageSelect}
         />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="home" component={Tabs} />
-        <Stack.Screen name="EventDetailsPage" component={EventDetailsPage} />
+        <Stack.Screen
+          name="EventAddressSelection"
+          component={EventAddressSelection}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

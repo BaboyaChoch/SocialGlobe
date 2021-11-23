@@ -7,6 +7,7 @@ import {PermissionsAndroid, Platform, Button} from 'react-native';
 import {getEvents} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
 import MapFilterOptions from '../components/MapFilterOptions';
+import getMapStyles from '../components/MapsStyles';
 
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
@@ -128,7 +129,10 @@ export default function Map({route, navigation}) {
 
   return (
     <View style={{flex: 1}}>
-      <MapView style={styles.map} region={focusRegion}>
+      <MapView
+        style={styles.map}
+        region={focusRegion}
+        customMapStyle={getMapStyles()}>
         {!applyFilter &&
           eventsList.map(eventInfo => (
             <Marker
@@ -160,149 +164,6 @@ export default function Map({route, navigation}) {
   );
 }
 
-const MAP_STYLES = [
-  {
-    featureType: 'all',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#ffffff',
-      },
-    ],
-  },
-  {
-    featureType: 'all',
-    elementType: 'labels.text.stroke',
-    stylers: [
-      {
-        color: '#000000',
-      },
-      {
-        lightness: 13,
-      },
-    ],
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        color: '#19a86a',
-      },
-    ],
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry.stroke',
-    stylers: [
-      {
-        color: '#000000',
-      },
-      {
-        lightness: 14,
-      },
-      {
-        weight: 1.4,
-      },
-    ],
-  },
-  {
-    featureType: 'landscape',
-    elementType: 'all',
-    stylers: [
-      {
-        color: '#19a86a',
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'geometry',
-    stylers: [
-      {
-        lightness: 5,
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        color: '#19a86a',
-      },
-    ],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        color: '#002f4c',
-      },
-    ],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry.stroke',
-    stylers: [
-      {
-        lightness: '100',
-      },
-      {
-        color: '#000000',
-      },
-    ],
-  },
-  {
-    featureType: 'road.arterial',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        color: '#002f4c',
-      },
-    ],
-  },
-  {
-    featureType: 'road.arterial',
-    elementType: 'geometry.stroke',
-    stylers: [
-      {
-        color: '#000000',
-      },
-      {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: 'road.local',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#002f4c',
-      },
-    ],
-  },
-  {
-    featureType: 'transit',
-    elementType: 'all',
-    stylers: [
-      {
-        color: '#000000',
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'all',
-    stylers: [
-      {
-        color: '#04111a',
-      },
-    ],
-  },
-];
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';
 const ORANGE = '#e29e21';

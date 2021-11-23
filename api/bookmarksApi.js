@@ -1,12 +1,10 @@
 import {firebase as fb_firestore} from '@react-native-firebase/firestore';
 import {firebase as fb_authenticator} from '@react-native-firebase/auth';
 import {getAnEvent} from './mapsApi';
-import {isFor} from '@babel/types';
 const current_user = fb_authenticator.auth().currentUser;
 const db = fb_firestore.firestore();
 let bookmarkedEventsList = [];
 let current_event = null;
-
 const handleBookMarks = list => {
   if (list.length == 0) {
     addToBookmark([current_event]);
@@ -31,6 +29,7 @@ export function getUserBookmarks(bookmarksRecived) {
             bookmarksRecived(results);
           }
         } else {
+          // doc.data() will be undefined in this case
           bookmarksRecived([]);
         }
       })
@@ -41,20 +40,16 @@ export function getUserBookmarks(bookmarksRecived) {
 }
 
 export async function getAllBookmarkEvents(bookmarks, eventsRecieved) {
-  try {
-    let eventsList = [];
+  let eventsList = [];
 
-    let snapshot = await db
-      .collection('Events')
-      .where(fb_firestore.firestore.FieldPath.documentId(), 'in', bookmarks)
-      .get();
+  let snapshot = await db
+    .collection('Events')
+    .where(fb_firestore.firestore.FieldPath.documentId(), 'in', bookmarks)
+    .get();
 
-    snapshot.forEach(res => eventsList.push(res.data()));
+  snapshot.forEach(res => eventsList.push(res.data()));
 
-    eventsRecieved(eventsList);
-  } catch (err) {
-    eventsRecieved([current_event]);
-  }
+  eventsRecieved(eventsList);
 }
 
 export function addToBookmark(bookmark) {

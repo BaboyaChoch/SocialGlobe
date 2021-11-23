@@ -56,43 +56,11 @@ export default function InfoCard() {
                 size={40}
               />
                 </Card.Content>
-            </Card.Content>
-          </Card>
-          <Card style={styles.card}>
-            <Card.Title 
-                style={styles.header}
-                title='Robotics Competition'
-            />
-            <Card.Content style={styles.content}>
-            <Paragraph 
-                style={styles.location}>
-                {'Patrick F. Taylor Hall'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.address}>
-                {'123 WherePFTIs Dr'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.subaddress}>
-                {'Baton Rouge, LA 70803'}
-              </Paragraph>
-              <Paragraph 
-                style={styles.category}>
-                {'Robotics'}
-              </Paragraph>
-                <Card.Content style={{flexDirection: 'row'}}>
-                <IconButton
-                icon="map-marker"
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-open-outline" //lock-outline if private
                 size={40}
-              />
-             <IconButton
-                icon="map-search"
-                size={40}
-              />
-              <IconButton
-                icon="information-outline"
-                size={40}
-              />
+                />
                 </Card.Content>
             </Card.Content>
           </Card>
@@ -132,6 +100,12 @@ export default function InfoCard() {
                 size={40}
               />
                 </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-outline" //lock-outline if private
+                size={40}
+                />
+                </Card.Content>
             </Card.Content>
           </Card>
           <Card style={styles.card}>
@@ -169,6 +143,56 @@ export default function InfoCard() {
                 icon="information-outline"
                 size={40}
               />
+                </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-open-outline" //lock-outline if private
+                size={40}
+                />
+                </Card.Content>
+            </Card.Content>
+          </Card>
+          <Card style={styles.card}>
+            <Card.Title 
+                style={styles.header}
+                title='Robotics Competition'
+            />
+            <Card.Content style={styles.content}>
+            <Paragraph 
+                style={styles.location}>
+                {'Patrick F. Taylor Hall'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.address}>
+                {'123 WherePFTIs Dr'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.subaddress}>
+                {'Baton Rouge, LA 70803'}
+              </Paragraph>
+              <Paragraph 
+                style={styles.category}>
+                {'Robotics'}
+              </Paragraph>
+                <Card.Content style={{flexDirection: 'row'}}>
+                <IconButton
+                icon="map-marker"
+                size={40}
+              />
+             <IconButton
+                icon="map-search"
+                size={40}
+              />
+              <IconButton
+                icon="information-outline"
+                size={40}
+              />
+                </Card.Content>
+                <Card.Content  style={{height: 0}}>
+                <IconButton style={styles.heart}
+                icon="lock-outline" //lock-outline if private
+                size={40}
+                />
                 </Card.Content>
             </Card.Content>
           </Card>
@@ -244,5 +268,13 @@ const styles = StyleSheet.create({
       position: 'relative',
       bottom: 133,
       left: 40,
-  }
+  },
+  heart: {
+    position: 'relative',
+    bottom: 250,
+    left: 200,
+    backgroundColor: 'white',
+    scaleX: .75,
+    scaleY: .75,
+    },
 });

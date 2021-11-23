@@ -5,21 +5,33 @@ import {
   Text,
   Modal,
   TouchableWithoutFeedback,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import MapView, {Marker} from 'react-native-maps';
 import {IconButton, Colors, Divider} from 'react-native-paper';
+import InfoCard from '../screens/InfoCard';
+import {useIsFocused} from '@react-navigation/core';
+import {firebase} from '@react-native-firebase/auth';
 
 export default function CreateEventEventMarker(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const [isEventInfoReady, setisEventInfoReady] = useState(false);
+  const isFocused = useIsFocused();
+  const user = firebase.auth().currentUser;
+  const [eventsInfo, setEventsInfo] = useState([]);
 
   useEffect(() => {
     setisEventInfoReady(
       props.eventInfo != null && props.eventInfo != undefined,
     );
   });
+  const onEventInfoRecieved = events => {
+    setEventsInfo(events);
+    setIsBookmarkReady(true);
+  };
 
   return (
     isEventInfoReady && (
@@ -39,69 +51,11 @@ export default function CreateEventEventMarker(props) {
               onPressOut={() => {
                 setModalVisible(!modalVisible);
               }}>
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={[styles.modalText, styles.modalTitle]}>
-                    {props.eventInfo.event_title}
-                  </Text>
-
-                  <Text style={[styles.modalText, {fontSize: 16}]}>
-                    Event Type: {props.eventInfo.event_type}
-                    {'\n'}
-                    <View style={styles.divider} />
-                    Date:
-                    {'\n'}
-                    {props.eventInfo.event_start_datetime.date} -
-                    {props.eventInfo.event_end_datetime.date}
-                    {'\n'}
-                    {props.eventInfo.event_start_datetime.time} -
-                    {props.eventInfo.event_end_datetime.date}
-                    {'\n'}
-                    <View style={styles.divider} />
-                    Address:
-                    {'\n'}
-                    {props.eventInfo.event_address.full_address}
-                  </Text>
-                  <Divider />
-                  <View style={styles.alignButton}>
-                    <IconButton
-                      icon="bookmark"
-                      color={Colors.black}
-                      size={40}
-                      onPress={() => {
-                        addToUserBookmarks(eventDetails.eventId);
-                      }}
-                    />
-                    <IconButton
-                      icon="plus"
-                      color={Colors.black}
-                      size={40}
-                      onPress={() => {
-                        props.openEventDetailsPage;
-                      }}
-                    />
-                    <IconButton
-                      icon="information"
-                      color={Colors.blue300}
-                      size={40}
-                      onPress={() => {
-                        navigation.navigate('EventDetailsPage', {
-                          eventDetails: props.route.eventDetails,
-                        });
-                      }}
-                    />
-                    <IconButton
-                      icon="navigation"
-                      color={Colors.green500}
-                      size={40}
-                      onPress={() => {
-                        props.handleNavigate(true);
-                        setModalVisible(false);
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
+              <SafeAreaView>
+                <ScrollView>
+                  <InfoCard key={props.key} eventDetails={props.eventInfo} />
+                </ScrollView>
+              </SafeAreaView>
             </TouchableWithoutFeedback>
           </Modal>
         </View>

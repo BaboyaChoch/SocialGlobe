@@ -40,6 +40,20 @@ export default function Route(props) {
       estimatedDuration: durationEstimate,
     };
   }
+  function fitRouteToScreen(origin, destination) {
+    const tempDestination = destination;
+    tempDestination[0] = origin;
+    const destinationWithTwoOrigin = [origin].concat(tempDestination);
+    const destinationWithOrigin = destinationWithTwoOrigin.slice(1);
+    props.mapRef.current.fitToCoordinates(destinationWithOrigin, {
+      edgePadding: {
+        right: width / 20,
+        bottom: height / 15,
+        left: width / 20,
+        top: height / 20,
+      },
+    });
+  }
 
   useEffect(() => {
     const info = {
@@ -47,9 +61,13 @@ export default function Route(props) {
       origin: props.origin,
       mode: props.modeOfTransport,
     };
-
     console.log(info);
   });
+  useEffect(() => {
+    setTimeout(function () {
+      fitRouteToScreen(props.origin, props.destinations);
+    }, 500);
+  }, [props.origin, props.destinations, props.modeOfTransport]);
 
   return (
     <MapViewDirections
@@ -66,17 +84,8 @@ export default function Route(props) {
       optimizeWaypoints={true}
       strokeWidth={10}
       strokeColor="steelblue"
-      onStart={() => console.log('')}
       onReady={result => {
         props.handleRouteResult(getRouteEstimates(result));
-        props.mapRef.current.fitToCoordinates(props.destinations, {
-          edgePadding: {
-            right: width / 20,
-            bottom: height / 20,
-            left: width / 20,
-            top: height / 20,
-          },
-        });
       }}
       onError={error => {
         return;

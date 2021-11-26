@@ -11,7 +11,8 @@ import {useIsFocused} from '@react-navigation/core';
 import getMapStyles from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
 import Route from '../components/Route';
-
+import SelectTravelModeModal from '../components/SelectTravelModeModal';
+import CreateEventEventMarker from '../components/CreateEventMarker';
 if (Platform.OS == 'ios') {
   Geolocation.setRNConfiguration({
     authorizationLevel: 'always',
@@ -46,7 +47,7 @@ export default function Map({route, navigation}) {
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
   const mapRef = useRef(null);
-  const [currentUserSelection, setCurrentUserSelection] = useState();
+
   function geoSuccess(position) {
     const coordinates = {
       latitude: position.coords.latitude,

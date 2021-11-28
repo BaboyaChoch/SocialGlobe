@@ -12,13 +12,6 @@ import getMapStyles from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
 import Route from '../components/Route';
 
-if (Platform.OS == 'ios') {
-  Geolocation.setRNConfiguration({
-    authorizationLevel: 'always',
-  });
-  Geolocation.requestAuthorization();
-}
-
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
   //console.log('Maps Pags: ', eventToAdd);
@@ -47,7 +40,7 @@ export default function Map({route, navigation}) {
     useState(false);
   const mapRef = useRef(null);
 
-  function geoSuccess(position) {
+  const geoSuccess = position => {
     const coordinates = {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,
@@ -56,9 +49,9 @@ export default function Map({route, navigation}) {
     };
     setCurrentUserLocation(coordinates);
     setFocusRegion(coordinates);
-  }
+  };
 
-  function getUserLocation() {
+  const getUserLocation = () => {
     Geolocation.getCurrentPosition(
       geoSuccess,
       err => {
@@ -70,38 +63,45 @@ export default function Map({route, navigation}) {
         maximumAge: 0,
       },
     );
-  }
+  };
 
-  function watchUserLocation() {
+  const watchUserLocation = () => {
     geolocation.watchPosition(info => console.log(info));
-  }
+  };
 
-  function oncurrentUserLocationChange(location) {
+  const oncurrentUserLocationChange = location => {
     setCurrentUserLocation({location});
-  }
+  };
 
   const onEventsRecieved = eventsList => {
     setEventsList(eventsList);
   };
 
-  async function requestLocationPermission() {
+  const requestLocationPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'SocialGlobe',
-        },
-      );
-      setLocationPermissionResult(granted);
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        getUserLocation();
+      if (Platform.OS == 'ios') {
+        Geolocation.setRNConfiguration({
+          authorizationLevel: 'always',
+        });
+        Geolocation.requestAuthorization();
       } else {
-        console.log('Location denied');
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'SocialGlobe',
+          },
+        );
+        setLocationPermissionResult(granted);
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          getUserLocation();
+        } else {
+          console.log('Location denied');
+        }
       }
     } catch (err) {
       console.warn(err);
     }
-  }
+  };
   const onFilteringEventsRecieved = events => {
     setFilteredEventsList(events);
     setFocusRegion(events[0].event_coordinates);
@@ -114,12 +114,14 @@ export default function Map({route, navigation}) {
   const handleFilter = filterOption => {
     filterMapByFilterOption(filterOption);
   };
+
   const handleClear = () => {
     setFilteredEventsList([]);
     setApplyFilter(false);
     setFocusRegion(currentUserLocation);
   };
 
+  const getEventMarker = eventType => {};
   useEffect(() => {
     requestLocationPermission();
     getAllEventsByVisiblity('public', onEventsRecieved);
@@ -128,6 +130,7 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     console.log(filterQuery);
   }, [filterQuery]);
+
   return (
     <>
       <MapView

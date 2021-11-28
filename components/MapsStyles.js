@@ -382,6 +382,16 @@ const MAP_STYLES = [
   },
 ];
 
+const MARKER_STYLES = {
+  fair: './asssets/Fa',
+  seminar: '',
+  fundraiser: '',
+  sports: '',
+  multiple_events: '',
+  private_eveents: '',
+};
 export default function getMapStyles() {
   return MAP_STYLES;
 }
+
+export function getMarkerIconByEventType(eventType) {}

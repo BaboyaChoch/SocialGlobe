@@ -13,6 +13,7 @@ import getMarkerIconByEventType from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
 import Route from '../components/Route';
 import EventMarker from '../components/EventMarker';
+import AppActionCenter from '../components/AppActionCenter';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
@@ -40,6 +41,7 @@ export default function Map({route, navigation}) {
   const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
+  const [showFilterSearchBar, setShowFilterSearchBar] = useState(false);
   const mapRef = useRef(null);
 
   const geoSuccess = position => {
@@ -165,36 +167,17 @@ export default function Map({route, navigation}) {
         )}
       </MapView>
       <View style={styles.autocompleteContainer}>
-        <EventTypeSearch
-          handleFilter={handleFilter}
-          handleClear={handleClear}
-        />
-      </View>
-      <View>
-        <IconButton 
-        icon="bell" 
-        size={40}
-        style={{
-          position: 'relative',
-          left: 320,
-          top: 40,
-          backgroundColor: 'white',
-          scaleX: 0.75,
-          scaleY: 0.75,
-        }}
-        />
-        <IconButton
-          icon='exclamation-thick'
-          size={10}
-          color={'white'}
-          style={{
-            position: 'relative',
-            backgroundColor: 'red',
-            left: 350,
-            bottom: 20,
-          }}
+        {showFilterSearchBar && (
+          <EventTypeSearch
+            handleFilter={handleFilter}
+            handleClear={handleClear}
           />
+        )}
       </View>
+      <AppActionCenter
+        style={styles.actionButton}
+        handleSearch={setShowFilterSearchBar}
+      />
       <View style={styles.nav}>
         {routeIsReady && (
           <Button
@@ -238,19 +221,27 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   nav: {
-    position: 'absolute', //use absolute position to show button on top of the map
-    top: '90%', //for center align
-    alignSelf: 'flex-end', //for align to right
+    position: 'absolute',
+    top: '80%',
+    alignSelf: 'flex-end',
+  },
+  actionButton: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    alignSelf: 'flex-end',
+    top: '78%',
+    left: 265,
   },
   filterOptionsContainer: {
-    position: 'absolute', //use absolute position to show button on top of the map
+    position: 'absolute',
     alignSelf: 'flex-start',
     flexDirection: 'row',
   },
   autocompleteContainer: {
     position: 'absolute',
-    top: '0%', //for center align
-    alignSelf: 'flex-start', //for align to right
+    top: '0%',
+    alignSelf: 'flex-start',
     width: '100%',
   },
 });

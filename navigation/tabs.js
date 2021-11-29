@@ -91,32 +91,16 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="UserProfile"
-        component={UserProfile}
-        options={{
-          tabBarIcon: () => {
-            return (
-              <IconButton icon="account" color={ICON_COLOR} size={ICON_SIZE} />
-            );
-          },
-          tabBarLabel: () => {
-            return null;
-          },
-          headerShown: false,
-          tabBarLabelStyle: {
-            color: '#F9F9F9',
-            fontSize: 13,
-          },
-          unmountOnBlur: true,
-        }}
-      />
-      <Tab.Screen
         name="Agenda"
         component={agenda}
         options={{
           tabBarIcon: () => {
             return (
-              <IconButton icon="view-agenda-outline" color={ICON_COLOR} size={ICON_SIZE} />
+              <IconButton
+                icon="view-agenda-outline"
+                color={ICON_COLOR}
+                size={ICON_SIZE}
+              />
             );
           },
           tabBarLabel: () => {
@@ -136,7 +120,11 @@ const Tabs = () => {
         options={{
           tabBarIcon: () => {
             return (
-              <IconButton icon="calendar-month" color={ICON_COLOR} size={ICON_SIZE} />
+              <IconButton
+                icon="calendar-month"
+                color={ICON_COLOR}
+                size={ICON_SIZE}
+              />
             );
           },
           tabBarLabel: () => {

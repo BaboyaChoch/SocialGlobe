@@ -5,6 +5,8 @@ import UserProfile from '../screens/UserProfile';
 import Map from '../screens/Map';
 import createEventOverlay from '../screens/createEventOverlay';
 import Bookmarks from '../screens/Bookmarks';
+import agenda from '../screens/agenda';
+import calendar from '../screens/calendar';
 
 import {IconButton} from 'react-native-paper';
 const Tab = createBottomTabNavigator();
@@ -95,6 +97,46 @@ const Tabs = () => {
           tabBarIcon: () => {
             return (
               <IconButton icon="account" color={ICON_COLOR} size={ICON_SIZE} />
+            );
+          },
+          tabBarLabel: () => {
+            return null;
+          },
+          headerShown: false,
+          tabBarLabelStyle: {
+            color: '#F9F9F9',
+            fontSize: 13,
+          },
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
+        name="Agenda"
+        component={agenda}
+        options={{
+          tabBarIcon: () => {
+            return (
+              <IconButton icon="view-agenda-outline" color={ICON_COLOR} size={ICON_SIZE} />
+            );
+          },
+          tabBarLabel: () => {
+            return null;
+          },
+          headerShown: false,
+          tabBarLabelStyle: {
+            color: '#F9F9F9',
+            fontSize: 13,
+          },
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
+        name="Calendar"
+        component={calendar}
+        options={{
+          tabBarIcon: () => {
+            return (
+              <IconButton icon="calendar-month" color={ICON_COLOR} size={ICON_SIZE} />
             );
           },
           tabBarLabel: () => {

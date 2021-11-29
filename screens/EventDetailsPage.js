@@ -111,7 +111,7 @@ export default function EventDetailsPage({route, navigation}) {
               size={40}
               onPress={() => {
                 addToUserBookmarks(eventDetails.event_id);
-                setSnackbarMessage('Bookmarked Evented!');
+                setSnackbarMessage('Bookmarked Event!');
                 setShowBookmarkAddedSnackbar(true);
               }}
             />

@@ -6,12 +6,14 @@ import {StyleSheet} from 'react-native';
 export default function EventMarker({event}) {
   const navigation = useNavigation();
   const eventType = event.event_type;
-
+  const MARKER_ANCHOR = {x: 0.51, y: 0.57};
   const renderEventMarkerByType = () => {
     switch (eventType) {
       case 'fair':
         return (
           <Marker
+            anchor={MARKER_ANCHOR}
+            centerOffset={MARKER_ANCHOR}
             style={styles.marker}
             resizeMode="contain"
             key={event.event_id}
@@ -26,6 +28,8 @@ export default function EventMarker({event}) {
       case 'seminar':
         return (
           <Marker
+            anchor={MARKER_ANCHOR}
+            centerOffset={MARKER_ANCHOR}
             style={styles.marker}
             resizeMode="contain"
             key={event.event_id}
@@ -40,6 +44,8 @@ export default function EventMarker({event}) {
       case 'sport':
         return (
           <Marker
+            anchor={MARKER_ANCHOR}
+            centerOffset={MARKER_ANCHOR}
             resizeMode="contain"
             key={event.event_id}
             coordinate={event.event_coordinates}
@@ -53,6 +59,8 @@ export default function EventMarker({event}) {
       case 'fundraiser':
         return (
           <Marker
+            anchor={MARKER_ANCHOR}
+            centerOffset={MARKER_ANCHOR}
             style={styles.marker}
             resizeMode="contain"
             key={event.event_id}
@@ -67,6 +75,8 @@ export default function EventMarker({event}) {
       default:
         return (
           <Marker
+            anchor={MARKER_ANCHOR}
+            centerOffset={MARKER_ANCHOR}
             style={styles.marker}
             resizeMode="contain"
             key={event.event_id}

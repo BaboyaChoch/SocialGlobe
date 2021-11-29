@@ -70,7 +70,7 @@ export default function UserProfile({navigation}) {
               <IconButton
                 icon="logout"
                 size={30}
-                color={ORANGE}
+                color={Colors.red500}
                 onPress={() => {
                   signUserOut();
                   navigation.navigate('Login');
@@ -83,12 +83,15 @@ export default function UserProfile({navigation}) {
   );
 }
 
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
+// const GREEN = '#19a86a';
+// const BLUE = '#002f4c';
+
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
-const TEXT_COLOR = ORANGE;
+const TEXT_COLOR = BLUE;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',

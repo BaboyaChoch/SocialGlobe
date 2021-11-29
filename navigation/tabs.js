@@ -15,7 +15,7 @@ const Tabs = () => {
       screenOptions={{
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: WHITE,
+          backgroundColor: BLUE,
           borderRadius: 0,
           height: 40,
         },
@@ -111,11 +111,12 @@ const Tabs = () => {
     </Tab.Navigator>
   );
 };
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
-const ICON_SIZE = 32;
-const ICON_COLOR = '#e29e21';
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
+const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
+const ICON_SIZE = 32;
+const ICON_COLOR = WHITE;
 const LIGHTBLUE = '#e2eaf0';
 
 const styles = StyleSheet.create({

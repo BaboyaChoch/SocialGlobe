@@ -151,20 +151,20 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
           }}>
           <Button
             icon="pencil"
-            color={ORANGE}
+            color={GREEN}
             onPress={selectFile}
             style={styles.button}
-            labelStyle={{color: WHITE}}
-            mode="contained">
+            labelStyle={{color: BLUE}}
+            mode={BUTTON_MODE}>
             Edit
           </Button>
           <Button
             icon="upload"
-            color={ORANGE}
+            color={GREEN}
             onPress={selectFile}
             style={styles.button}
-            labelStyle={{color: WHITE}}
-            mode="contained">
+            labelStyle={{color: BLUE}}
+            mode={BUTTON_MODE}>
             Upload
           </Button>
         </View>
@@ -180,7 +180,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
             setItems={setEventTypeOptions}
             textStyle={styles.textStyle}
             containerStyle={{borderWidth: 0}}
-            labelStyle={{marginTop: 2}}
+            labelStyle={{marginTop: 2, color: GREEN}}
             defaultValue="None"
             placeholder="Select an event type"
             dropDownDirection="BOTTOM"
@@ -188,8 +188,8 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
           />
         </View>
         <View style={{margin: 10, marginBottom: 5, marginTop: 5}}>
-          <Text style={{fontSize: 20, color: BLUE, fontWeight: '500'}}>
-            Enter Event Description Below:
+          <Text style={{fontSize: 15, color: BLUE, fontWeight: '500'}}>
+            Enter event description below:
           </Text>
         </View>
         <SafeAreaView
@@ -197,7 +197,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
             marginLeft: 5,
             marginRight: 5,
             borderWidth: 1,
-            borderColor: BLUE,
+            borderColor: 'black',
             borderRadius: 2,
             height: 260,
           }}>
@@ -224,10 +224,10 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
           }}>
           <Button
             icon="content-save"
-            mode="contained"
-            color={ORANGE}
+            mode={BUTTON_MODE}
+            color={GREEN}
             onPress={handleData}
-            labelStyle={{color: WHITE}}>
+            labelStyle={{color: BLUE}}>
             Create Event
           </Button>
         </View>
@@ -240,14 +240,17 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     </>
   );
 }
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
+// const GREEN = '#19a86a';
+// const BLUE = '#002f4c';
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 const GRAY = '#d7d7d7';
-
 const TITLE_COLOR = BLUE;
 const ICON_SIZE = 27;
+const ICON_COLOR = GREEN;
+const BUTTON_MODE = 'text';
 
 const styles = StyleSheet.create({
   main_container: {

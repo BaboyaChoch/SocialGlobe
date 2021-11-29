@@ -208,13 +208,15 @@ export default function EventDetailsPage({route, navigation}) {
   );
 }
 
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
+// const GREEN = '#19a86a';
+// const BLUE = '#002f4c';
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
 const TITLE_COLOR = BLUE;
-const SUBTITLE_COLOR = Colors.grey700;
+const SUBTITLE_COLOR = Colors.black;
 const ICON_SIZE = 27;
 const BACKGROUND_COLOR = WHITE;
 

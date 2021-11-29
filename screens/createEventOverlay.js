@@ -46,7 +46,7 @@ export default function createEventOverlay({navigation}) {
       }}>
       <Text
         style={{
-          color: ORANGE,
+          color: BLUE,
           fontSize: 20,
           marginBottom: 30,
           fontWeight: '500',
@@ -107,7 +107,7 @@ export default function createEventOverlay({navigation}) {
       <View style={styles.rowStyle}>
         <View>
           <Slider
-            trackStyle={{width: 330, backgroundColor: ORANGE}}
+            trackStyle={{width: 330, backgroundColor: BLUE}}
             value={capacity}
             onValueChange={value => setCapacity(value)}
             minimumValue={0}
@@ -120,7 +120,7 @@ export default function createEventOverlay({navigation}) {
             thumbStyle={{width: 15, height: 15}}
             trackClickable={true}
             renderTrackMarkComponent={() => (
-              <IconButton icon="circle" size={12} color={'black'}></IconButton>
+              <IconButton icon="circle" size={12} color={GREEN}></IconButton>
             )}
           />
           <Text
@@ -156,7 +156,7 @@ export default function createEventOverlay({navigation}) {
         <IconButton
           icon="arrow-right"
           size={ICON_SIZE}
-          color={ORANGE}
+          color={BLUE}
           onPress={() => {
             navigation.navigate('EventAddressSelection', {
               eventDetails: getEventDetails(),
@@ -167,12 +167,15 @@ export default function createEventOverlay({navigation}) {
   );
 }
 
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
+// const GREEN = '#19a86a';
+// const BLUE = '#002f4c';
+
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 const ICON_SIZE = 32;
-const ICON_COLOR = '#e29e21';
+const ICON_COLOR = GREEN;
 const BORDER_COLOR = '#000000';
 const TEXT_COLOR = 'black';
 

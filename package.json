@@ -26,6 +26,7 @@
     "axios": "^0.24.0",
     "react": "17.0.2",
     "react-native": "0.65.1",
+    "react-native-action-button": "^2.8.5",
     "react-native-autocomplete-dropdown": "^1.1.5",
     "react-native-autocomplete-input": "^5.0.2",
     "react-native-date-picker": "^4.1.1",

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Text, Linking} from 'react-native';
 import {Button} from 'react-native-paper';
@@ -9,8 +9,10 @@ import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
 import {useIsFocused} from '@react-navigation/core';
 import getMapStyles from '../components/MapsStyles';
+import getMarkerIconByEventType from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
 import Route from '../components/Route';
+import EventMarker from '../components/EventMarker';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
@@ -141,25 +143,9 @@ export default function Map({route, navigation}) {
         showsUserLocation={true}>
         {applyFilter
           ? filteredEventsList.map(eventInfo => (
-              <Marker
-                key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                }}></Marker>
+              <EventMarker event={eventInfo} />
             ))
-          : eventsList.map(eventInfo => (
-              <Marker
-                key={eventInfo.event_id}
-                coordinate={eventInfo.event_coordinates}
-                onPress={() => {
-                  navigation.navigate('EventDetailsPage', {
-                    eventDetails: eventInfo,
-                  });
-                }}></Marker>
-            ))}
+          : eventsList.map(eventInfo => <EventMarker event={eventInfo} />)}
         {routeIsReady && (
           <Route
             origin={currentUserLocation}
@@ -202,6 +188,15 @@ const url = Platform.select({
   ios: 'maps:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
   android: 'geo:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
 });
+
+const MARKER_STYLES = {
+  fair: '../asssets/fair_marker.png',
+  seminar: '../asssets/seminar_marker.png',
+  fundraiser: '../asssets/fundraiser_marker.png',
+  sports: '../asssets/sports_marker.png',
+  multiple_events: '../asssets/multiple_events_marker.png',
+  private_events: '../asssets/private_event_marker.png',
+};
 
 const GREEN = '#19a86a';
 const BLUE = '#002f4c';

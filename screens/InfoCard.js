@@ -45,7 +45,7 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
       <SafeAreaView style={styles.container}>
         <View>
           <Card style={styles.card}>
-            <Card.Cover source={eventImage} style={{marginTop: 5}} />
+            <Card.Cover source={eventImage} /*style={{marginTop: 0}}*/ />
             <Card.Title
               style={styles.header}
               title={eventDetails.event_title}
@@ -57,9 +57,14 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
               <Paragraph style={styles.date}>
                 {eventDetails.event_start_datetime.date}
               </Paragraph>
-              <Paragraph style={styles.subDate}>
-                {'@ ' + eventDetails.event_start_datetime.time}
+              <Card.Content style={{flexDirection:"column"}}>
+              <Paragraph style={styles.subDate}>Start time: 
+                {' ' + eventDetails.event_start_datetime.time}
               </Paragraph>
+              <Paragraph style={styles.subDate}>End time: 
+                {' ' + eventDetails.event_end_datetime.time}
+              </Paragraph>
+              </Card.Content>
               <Paragraph style={styles.address}>
                 {eventDetails.event_address.main_text}
               </Paragraph>
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
   },
   visibility: {
     position: 'relative',
-    bottom: 290,
+    bottom: 310,
     left: 198,
     backgroundColor: 'white',
     scaleX: 0.75,

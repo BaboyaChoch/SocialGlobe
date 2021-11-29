@@ -3,7 +3,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PR
 import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {PermissionsAndroid, Platform, Text, Linking} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Button, IconButton} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
@@ -169,6 +169,31 @@ export default function Map({route, navigation}) {
           handleFilter={handleFilter}
           handleClear={handleClear}
         />
+      </View>
+      <View>
+        <IconButton 
+        icon="bell" 
+        size={40}
+        style={{
+          position: 'relative',
+          left: 320,
+          top: 40,
+          backgroundColor: 'white',
+          scaleX: 0.75,
+          scaleY: 0.75,
+        }}
+        />
+        <IconButton
+          icon='exclamation-thick'
+          size={10}
+          color={'white'}
+          style={{
+            position: 'relative',
+            backgroundColor: 'red',
+            left: 350,
+            bottom: 20,
+          }}
+          />
       </View>
       <View style={styles.nav}>
         {routeIsReady && (

@@ -28,7 +28,7 @@ import {firebase as authenticator} from '@react-native-firebase/auth';
 import {addEvent} from '../api/mapsApi';
 import DropDownPicker from 'react-native-dropdown-picker';
 const defaultImage = [
-  'https://images.unsplash.com/photo-1569511502671-8c1bbf96fc8d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1466&q=80',
+  'https://forwomen.org/wp-content/uploads/2015/09/default-placeholder-300x300.png',
 ];
 
 export default function EventDescriptionAndImageSelect({route, navigation}) {

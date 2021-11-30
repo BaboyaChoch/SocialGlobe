@@ -100,7 +100,7 @@ export default function Login({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoadingUser && <ActivityIndicator color={ORANGE} size="large" />}
+      {isLoadingUser && <ActivityIndicator color={BLUE} size="large" />}
       {!isLoadingUser && locationPermissionGranted && (
         <View>
           <View

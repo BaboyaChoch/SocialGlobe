@@ -84,7 +84,7 @@ export default function EventDetailsPage({route, navigation}) {
             }}>
             <IconButton
               icon="arrow-left"
-              color={BLUE}
+              color='#3366ff'
               size={40}
               onPress={() => {
                 navigation.navigate('Map');
@@ -108,7 +108,7 @@ export default function EventDetailsPage({route, navigation}) {
             />
             <IconButton
               icon="bookmark"
-              color={Colors.blue500}
+              color='#ff0eb5'
               size={40}
               onPress={() => {
                 addToUserBookmarks(eventDetails.event_id);

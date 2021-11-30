@@ -97,7 +97,7 @@ return (
             }}>
             <IconButton
               icon="arrow-left"
-              color={BLUE}
+              color='#3366ff'
               size={40}
               onPress={() => {
                 navigation.navigate('Map');
@@ -124,6 +124,25 @@ return (
         onDayPress={() => { navigation.navigate('Agenda')}}
         markingType={'multi-dot'}
         markedDates={{
+            '2021-11-01': {dots: [fair, seminar], marked: true,},
+            '2021-11-03': {dots: [fundraiser], marked: true,},
+            '2021-11-04': {dots: [privateEvent], marked: true,},
+            '2021-11-05': {dots: [privateEvent], marked: true,},
+            '2021-11-05': {dots: [privateEvent], marked: true,},
+            '2021-11-08': {dots: [fair, fundraiser, seminar], marked: true, selectedColor: 'blue'},
+            '2021-11-09': {dots: [fundraiser], marked: true},
+            '2021-11-10': {dots: [fair, privateEvent], marked: true, dotColor: 'red', activeOpacity: 0},
+            '2021-11-11': {dots: [privateEvent, seminar], marked: true, dotColor: 'red'},
+            '2021-11-14': {dots: [fundraiser], marked: true},
+            '2021-11-18': {dots: [fundraiser], marked: true},
+            '2021-11-19': {dots: [fair], marked: true},
+            '2021-11-21': {dots: [fundraiser], marked: true},
+            '2021-11-22': {dots: [fundraiser, fair], marked: true},
+            '2021-11-23': {dots: [privateEvent], marked: true},
+            '2021-11-26': {dots: [fundraiser], marked: true},
+            '2021-11-28': {dots: [seminar], marked: true},
+            '2021-11-29': {dots: [fundraiser], marked: true},
+            '2021-11-30': {dots: [fundraiser, fair, privateEvent], marked: true},
             '2021-12-01': {dots: [fair, seminar], marked: true,},
             '2021-12-03': {dots: [fundraiser], marked: true,},
             '2021-12-04': {dots: [privateEvent], marked: true,},
@@ -143,6 +162,25 @@ return (
             '2021-12-28': {dots: [seminar], marked: true},
             '2021-12-29': {dots: [fundraiser], marked: true},
             '2021-12-30': {dots: [fundraiser], marked: true},
+            '2022-01-01': {dots: [fair, seminar], marked: true,},
+            '2022-01-03': {dots: [fundraiser], marked: true,},
+            '2022-01-04': {dots: [privateEvent], marked: true,},
+            '2022-01-05': {dots: [privateEvent], marked: true,},
+            '2022-01-05': {dots: [privateEvent], marked: true,},
+            '2022-01-08': {dots: [fair, fundraiser, privateEvent, seminar], marked: true, selectedColor: 'blue'},
+            '2022-01-09': {dots: [fundraiser], marked: true},
+            '2022-01-10': {dots: [fair, privateEvent], marked: true, dotColor: 'red', activeOpacity: 0},
+            '2022-01-11': {dots: [privateEvent, seminar], marked: true, dotColor: 'red'},
+            '2022-01-14': {dots: [fundraiser], marked: true},
+            '2022-01-18': {dots: [fundraiser], marked: true},
+            '2022-01-19': {dots: [fair], marked: true},
+            '2022-01-21': {dots: [fundraiser], marked: true},
+            '2022-01-22': {dots: [fundraiser], marked: true},
+            '2022-01-23': {dots: [privateEvent], marked: true},
+            '2022-01-26': {dots: [fundraiser], marked: true},
+            '2022-01-28': {dots: [seminar], marked: true},
+            '2022-01-29': {dots: [fundraiser], marked: true},
+            '2022-01-30': {dots: [fundraiser], marked: true},
         }}
         />
         </View>

@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
             }}>
             <IconButton
               icon="arrow-left"
-              color={BLUE}
+              color='#3366ff'
               size={40}
               onPress={() => {
                 navigation.navigate('Map');

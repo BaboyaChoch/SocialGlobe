@@ -1,24 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {SliderBox} from 'react-native-image-slider-box';
-import {View, StyleSheet, Modal, Alert, Text} from 'react-native';
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
 import {
-  Avatar,
   Card,
   Paragraph,
   Divider,
   IconButton,
   Colors,
-  Snackbar,
 } from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/core';
-// import ReportEvent from '../components/ReportEvent';
-import {useIsFocused} from '@react-navigation/core';
-import {firebase} from '@react-native-firebase/auth';
-import {addToUserBookmarks} from '../api/bookmarksApi';
-import getEventPhoto from '../api/imagesApi';
-import { Header } from 'react-native/Libraries/NewAppScreen';
+import AppColors from '../components/AppColors'
 
 export default function messages({route, navigation}) {
 
@@ -80,7 +70,7 @@ const styles = StyleSheet.create({
             }}>
             <IconButton
               icon="arrow-left"
-              color={BLUE}
+              color='#3366ff'
               size={40}
               onPress={() => {
                 navigation.navigate('Map');
@@ -119,7 +109,7 @@ const styles = StyleSheet.create({
             </Card.Content >    
              <Card.Content style={{
                flexDirection:'column',
-               backgroundColor: 'gray',
+               backgroundColor: AppColors.GREEN,
                width: 220,
                borderRadius: 30,
                marginLeft: 10,
@@ -129,6 +119,7 @@ const styles = StyleSheet.create({
              style={{
                  marginTop: 10,
                  marginLeft: 5,
+                 color: AppColors.WHITE,
              }}
              >How many people can I expect to see there?</Paragraph>
               </Card.Content>
@@ -149,7 +140,7 @@ const styles = StyleSheet.create({
             </Card.Content >    
              <Card.Content style={{
                flexDirection:'column',
-               backgroundColor: 'gray',
+               backgroundColor: AppColors.GREEN,
                width: 220,
                borderRadius: 30,
                marginLeft: 10,
@@ -159,6 +150,7 @@ const styles = StyleSheet.create({
              style={{
                  marginTop: 10,
                  marginLeft: 5,
+                 color: AppColors.WHITE,
              }}
              >I plan on getting there at the very least 15 minutes early</Paragraph>
               </Card.Content>
@@ -179,7 +171,7 @@ const styles = StyleSheet.create({
             </Card.Content >    
              <Card.Content style={{
                flexDirection:'column',
-               backgroundColor: 'gray',
+               backgroundColor: AppColors.GREEN,
                width: 220,
                borderRadius: 30,
                marginLeft: 10,
@@ -189,6 +181,7 @@ const styles = StyleSheet.create({
              style={{
                  marginTop: 10,
                  marginLeft: 5,
+                 color: AppColors.WHITE,
              }}
              >I can't wait!</Paragraph>
               </Card.Content>
@@ -213,7 +206,7 @@ const styles = StyleSheet.create({
             </Card.Content >    
              <Card.Content style={{
                flexDirection:'row',
-               backgroundColor: '#ADD8E6',
+               backgroundColor: AppColors.BLUE,
                width: 220,
                borderRadius: 30,
                marginLeft: 10,
@@ -225,6 +218,7 @@ const styles = StyleSheet.create({
              style={{
                  marginTop: 10,
                  marginLeft: 5,
+                 color: AppColors.WHITE,
              }}
              >I'll see all of you there</Paragraph>
               </Card.Content>
@@ -246,7 +240,7 @@ const styles = StyleSheet.create({
             </Card.Content >    
              <Card.Content style={{
                flexDirection:'column',
-               backgroundColor: 'gray',
+               backgroundColor: AppColors.GREEN,
                width: 220,
                borderRadius: 30,
                marginLeft: 10,
@@ -256,6 +250,7 @@ const styles = StyleSheet.create({
              style={{
                  marginTop: 10,
                  marginLeft: 5,
+                 color: AppColors.WHITE,
              }}
              >Honestly I thought this event already happened...</Paragraph>   
               </Card.Content>
@@ -271,12 +266,13 @@ const styles = StyleSheet.create({
             <View
             style={{
                 marginTop: 90,
+                backgroudColor: 'gray',
             }}>
             <Divider/><Divider/><Divider/><Divider/><Divider/><Divider/>
             </View>
              <Card.Content style={{
                flexDirection:'column',
-               backgroundColor: 'gray',
+               backgroundColor: AppColors.BLUE,
                width: 370,
                borderRadius: 10,
                marginTop: 5,
@@ -290,6 +286,7 @@ const styles = StyleSheet.create({
                  fontSize: 18,
                  position: 'relative',
                  top: 3,
+                 color: AppColors.WHITE,
              }}
              >Type your next message</Paragraph>   
               </Card.Content>

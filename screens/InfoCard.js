@@ -122,7 +122,7 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
                     style={styles.visibility}
                     icon="bookmark" //if not bookmark, show boomkar instead
                     size={40}
-                    color={Colors.blue500}
+                    color='#ff0eb5'
                     onPress={() => {
                       addToUserBookmarks(eventDetails.event_id);
                       Alert.alert(

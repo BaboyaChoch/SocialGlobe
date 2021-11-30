@@ -24,7 +24,7 @@ import SelectTravelModeModal from '../components/SelectTravelModeModal';
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
   const {eventDetails} = route.params;
-
+  const [isTour, setIsTour] = useState(false);
   const [state, setState] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -32,14 +32,18 @@ export default function EventDetailsPage({route, navigation}) {
   const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
     useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('Hello!');
-  const [travelMode, setTravelMode] = useState('DRIVING');
-  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] = useState();
+  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
+    useState(false);
 
   const onImageRecieved = image => {
     setImages([image]);
   };
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
+  };
+  const handleChooseTravelMode = isTour => {
+    setIsTour(isTour);
+    setIsChooseTravelModeVisible(true);
   };
 
   useEffect(() => {
@@ -52,11 +56,6 @@ export default function EventDetailsPage({route, navigation}) {
 
   return (
     <>
-      {/* <SelectTravelModeModal
-        isSingleDestination={true}
-        handleVisible={setIsChooseTravelModeVisible}
-        handleSelection={setTravelMode}
-      /> */}
       <View
         style={{
           flexDirection: 'column',
@@ -88,11 +87,7 @@ export default function EventDetailsPage({route, navigation}) {
               color={GREEN}
               size={40}
               onPress={() => {
-                navigation.navigate('Map', {
-                  eventToAdd: eventDetails,
-                  createRoute: true,
-                  createTour: true,
-                });
+                handleChooseTravelMode(true);
               }}
             />
             <IconButton
@@ -100,12 +95,7 @@ export default function EventDetailsPage({route, navigation}) {
               color={ORANGE}
               size={40}
               onPress={() => {
-                navigation.navigate('Map', {
-                  eventToAdd: eventDetails,
-                  createRoute: true,
-                  createTour: false,
-                  travelMode: travelMode,
-                });
+                handleChooseTravelMode(false);
               }}
             />
             <IconButton
@@ -204,6 +194,12 @@ export default function EventDetailsPage({route, navigation}) {
         }}>
         {snackbarMessage}
       </Snackbar>
+      <SelectTravelModeModal
+        handleVisible={setIsChooseTravelModeVisible}
+        visible={isChooseTravelModeVisible}
+        event={eventDetails}
+        isTour={isTour}
+      />
     </>
   );
 }

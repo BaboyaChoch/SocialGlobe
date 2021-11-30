@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -10,81 +11,90 @@ import {
 
 import {IconButton, Colors, Divider} from 'react-native-paper';
 
-export default function SelectTravelModeModal(props) {
-  console.log('in modes modal');
+{
+  /* <SelectTravelModeModal
+isSingleDestination={true}
+handleVisible={setIsChooseTravelModeVisible}
+visible={isChooseTravelModeVisible}
+event={eventDetails}
+isTour={isTour}]
 
-  const setTravelModeAndShowRoute = travelMode => {
-    if (!props.isSingleDestination) {
-      props.handleDestinations([
-        ...props.destinations,
-        props.currentDestination,
-      ]);
-      props.handleRouteReady(true);
-    }
-    props.selectionOnclick(travelMode);
-    props.handleVisisble(false);
+/> */
+}
+export default function SelectTravelModeModal({
+  handleVisible,
+  visible,
+  event,
+  isTour,
+}) {
+  console.log('in modes modal');
+  const navigation = useNavigation();
+  const passRouteDetailsIsTour = travelMode => {
+    navigation.navigate('Map', {
+      eventToAdd: event,
+      createRoute: true,
+      createTour: isTour,
+      travelMode: travelMode,
+    });
+  };
+
+  const handleSelection = selection => {
+    passRouteDetailsIsTour(selection);
   };
 
   useEffect(() => {
-    console.log({1: props.destinations, 2: props.currentDestination});
-  }, [props.destinations]);
+    return () => {};
+  }, []);
 
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={props.visible}
-        style={styles.centeredView}
-        onRequestClose={() => {
-          props.handleVisisble(false);
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      style={styles.centeredView}
+      onRequestClose={() => {
+        handleVisible(false);
+      }}>
+      <TouchableWithoutFeedback
+        onPressOut={() => {
+          handleVisible(false);
         }}>
-        <TouchableWithoutFeedback
-          onPressOut={() => {
-            props.handleVisisble(false);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={[styles.modalText, styles.modalTitle]}>
-                Gerald's Castle
-              </Text>
-              <Text style={[styles.modalText, , {fontSize: 16}]}>
-                Distance: {props.distance}
-                {'\n'}
-                Duration: {props.duration}
-              </Text>
-              <Divider />
-              <View style={styles.alignButton}>
-                <IconButton
-                  icon="walk"
-                  color={Colors.black}
-                  size={40}
-                  onPress={() => {
-                    setTravelModeAndShowRoute('WALKING');
-                  }}
-                />
-                <IconButton
-                  icon="bike"
-                  color={Colors.blue300}
-                  size={40}
-                  onPress={() => {
-                    setTravelModeAndShowRoute('BICYCLING');
-                  }}
-                />
-                <IconButton
-                  icon="car"
-                  color={Colors.green500}
-                  size={40}
-                  onPress={() => {
-                    setTravelModeAndShowRoute('DRIVING');
-                  }}
-                />
-              </View>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={[styles.modalText, styles.modalTitle]}>
+              Select Mode of Transportation
+            </Text>
+            <Divider />
+            <View style={styles.alignButton}>
+              <IconButton
+                icon="walk"
+                color={Colors.black}
+                size={40}
+                onPress={() => {
+                  handleSelection('WALKING');
+                }}
+              />
+              <IconButton
+                icon="bike"
+                color={Colors.blue300}
+                size={40}
+                onPress={() => {
+                  handleSelection('BICYCLING');
+                }}
+              />
+              <IconButton
+                icon="car"
+                color={Colors.green500}
+                size={40}
+                onPress={() => {
+                  handleSelection('DRIVING');
+                }}
+              />
             </View>
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
 }
 
@@ -100,7 +110,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: 'white',
-    borderRadius: 30,
+    borderRadius: 2,
     padding: 9,
     shadowColor: '#000',
     shadowOffset: {
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   button: {
-    borderRadius: 20,
+    borderRadius: 2,
     padding: 10,
     elevation: 2,
   },
@@ -124,6 +134,9 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'left',
+    color: Colors.black,
+    paddingLeft: 5,
+    fontSize: 15,
   },
   alignButton: {
     flexDirection: 'row',
@@ -133,9 +146,5 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  modalTitle: {
-    fontWeight: 'bold',
-    fontSize: 24,
   },
 });

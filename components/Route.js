@@ -1,4 +1,5 @@
 import MapViewDirections from 'react-native-maps-directions';
+import MapView from 'react-native-maps';
 import {
   Dimensions,
   Text,
@@ -8,6 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import AppColors from './AppColors';
 // import getDirections from 'react-native-google-maps-directions';
 
 export default function Route(props) {
@@ -33,7 +35,8 @@ export default function Route(props) {
   }
 
   function getRouteEstimates(result) {
-    const distanceEstimate = result.distance / 1.609;
+    console.log(result);
+    const distanceEstimate = (result.distance / 1.60934).toFixed(2);
     const durationEstimate = result.duration.toFixed(0);
     return {
       estimatedDistance: distanceEstimate,
@@ -65,18 +68,23 @@ export default function Route(props) {
       precision={'high'}
       optimizeWaypoints={true}
       strokeWidth={10}
-      strokeColor="steelblue"
+      strokeColor={AppColors.GREEN}
       onStart={() => console.log('')}
       onReady={result => {
         props.handleRouteResult(getRouteEstimates(result));
-        props.mapRef.current.fitToCoordinates(props.destinations, {
-          edgePadding: {
-            right: width / 20,
-            bottom: height / 20,
-            left: width / 20,
-            top: height / 20,
+        props.handleShowDetails(true);
+        console.log('coords:  ', [props.origin, ...props.destinations]);
+        props.mapRef.current.fitToCoordinates(
+          [props.origin, ...props.destinations],
+          {
+            edgePadding: {
+              right: 10,
+              bottom: 10,
+              left: 10,
+              top: 10,
+            },
           },
-        });
+        );
       }}
       onError={error => {
         return;

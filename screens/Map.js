@@ -24,20 +24,19 @@ import {Animated} from 'react-native';
 import MiniEventInfoCard from './MiniEventInfoCard';
 import {RotationGestureHandler, State} from 'react-native-gesture-handler';
 import AppColors from '../components/AppColors';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default function Map({route}) {
   let createRoute = false;
   let createTour = false;
   let eventToAdd = null;
-  let transportMode = null;
+  let transportMode = 'DRIVING';
 
   if (route.params != undefined) {
     eventToAdd = route.params.eventToAdd;
     createRoute = route.params.createRoute;
     createTour = route.params.createTour;
-    if (createRoute) {
-      transportMode = route.params.transportMode;
-    }
+    transportMode = route.params.travelMode;
   }
 
   const [currentUserLocation, setCurrentUserLocation] = useState({
@@ -56,7 +55,7 @@ export default function Map({route}) {
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
   const [filterQuery, setFilterQuery] = useState();
   const [currentUserSelection, setCurrentUserSelection] = useState();
-  const [userDestinations, setUserDestinations] = useState([{}]);
+  const [userDestinations, setUserDestinations] = useState([]);
   const [modeOfTransport, setModeOfTransport] = useState();
   const [routeResult, setRouteResult] = useState();
   const [routeIsReady, setRouteIsReady] = useState(false);
@@ -237,6 +236,7 @@ export default function Map({route}) {
   const handleCloseRoute = () => {
     setRouteIsReady(false);
     setRouteMarkers([]);
+    setRouteDetailsIsReady(false);
   };
 
   const getDirectionsFromNativeMapsApp = () => {
@@ -271,15 +271,18 @@ export default function Map({route}) {
 
   useEffect(() => {
     if (createRoute && !createTour) {
-      console.log(route.params);
       const destinationCoordinates = eventToAdd.event_coordinates;
       const waypoints = [currentUserLocation, destinationCoordinates];
-      setUserDestinations([...userDestinations, destinationCoordinates]);
+      setUserDestinations([destinationCoordinates]);
       setModeOfTransport(transportMode);
       setRouteMarkers(waypoints);
       setRouteIsReady(true);
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    console.log('RouteResults: ', routeResult);
+  }, [routeResult]);
 
   const isFilteredListFilled =
     filteredEventsList.length > 0 &&
@@ -323,9 +326,10 @@ export default function Map({route}) {
           <Route
             origin={currentUserLocation}
             destinations={userDestinations}
-            modeOfTransport={'DRIVING'}
+            modeOfTransport={transportMode}
             mapRef={mapRef}
-            handleRouteResult={param => setRouteResult(param)}
+            handleRouteResult={setRouteResult}
+            handleShowDetails={setRouteDetailsIsReady}
           />
         )}
       </MapView>
@@ -366,6 +370,18 @@ export default function Map({route}) {
             handleFilter={handleFilter}
             handleClear={handleClear}
           />
+        )}
+      </View>
+      <View style={styles.routeDetailsCont}>
+        {routeDetailsIsReady && (
+          <View style={styles.routeDetails}>
+            <Text style={styles.routeDetailsText}>
+              {`Distance: ${routeResult.estimatedDistance}`} mile(s)
+            </Text>
+            <Text style={styles.routeDetailsText}>
+              {`Duration: ${routeResult.estimatedDuration}`} min(s)
+            </Text>
+          </View>
         )}
       </View>
       {!applyFilter && !routeIsReady && (
@@ -456,6 +472,16 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     width: '100%',
   },
+  routeDetails: {
+    position: 'absolute',
+    width: '100%',
+    top: '5%',
+    alignSelf: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  routeDetailsText: {fontSize: 18, color: Colors.black},
   eventScrollView: {
     position: 'absolute',
     top: '67%',

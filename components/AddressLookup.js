@@ -10,7 +10,6 @@ export default function AddressLookUp({
   style,
 }) {
   const handleResult = (data, details = null) => {
-    console.log({data: data, details: details});
     const coordinates = {
       latitude: details.geometry.location.lat,
       longitude: details.geometry.location.lng,

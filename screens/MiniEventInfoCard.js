@@ -23,8 +23,6 @@ export default function MiniEventInfoCard({eventDetails, isBookmark = false}) {
   const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
     useState(false);
 
-  console.log('event details: ', eventDetails);
-
   const onImageRecieved = image => {
     setEventImage({uri: image});
   };

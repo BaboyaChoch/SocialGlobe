@@ -62,7 +62,6 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
 
   const handleImage = selectImages => {
     setImages(selectImages);
-    console.log(selectImages);
   };
 
   const getAllUri = () => {
@@ -130,9 +129,7 @@ export default function EventDescriptionAndImageSelect({route, navigation}) {
     setShowEventCreatedSnackbar(false);
   };
 
-  useEffect(() => {
-    console.log('Current Event Details: ', eventDetails);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>

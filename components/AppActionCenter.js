@@ -6,10 +6,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function AppActionCenter({style, handleSearch}) {
   const navigation = useNavigation();
+  const handleShowSearch = () => {
+    console.log('here');
+    handleSearch(true);
+  };
   return (
     <ActionButton
       buttonColor={BLUE}
-      style={style}
+      style={styles.actionButton}
       size={45}
       useNativeFeedback={true}
       useNativeDriver={true}>
@@ -45,5 +49,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     height: 22,
     color: 'white',
+  },
+  actionButton: {
+    marginBottom: 20,
   },
 });

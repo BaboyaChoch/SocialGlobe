@@ -26,7 +26,7 @@ import {State} from 'react-native-gesture-handler';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
-  //console.log('Maps Pags: ', eventToAdd);
+
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
     longitude: -91.1794054,
@@ -60,8 +60,8 @@ export default function Map({route, navigation}) {
   const mapScrollAnimation = markerList => {
     scrollViewAnimation.addListener(({value}) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3);
-      if (index > eventsList.length) {
-        index = eventsList.length = 1;
+      if (index > filteredEventsList.length) {
+        index = filteredEventsList.length = 1;
       }
       if (index <= 0) {
         index = 0;
@@ -71,16 +71,22 @@ export default function Map({route, navigation}) {
       const mapRegionTimeOut = setTimeout(() => {
         if (mapIndex !== index) {
           mapIndex = index;
-          if (eventsList[index] != undefined && eventsList[index] != null) {
-            const coordinates = eventsList[index].event_coordinates;
+          if (
+            filteredEventsList[index] != undefined &&
+            filteredEventsList[index] != null
+          ) {
+            const coordinates = filteredEventsList[index].event_coordinates;
             mapRef.current.animateToRegion(coordinates, duration);
+            console.log(filteredEventsList[index]);
+          } else {
+            console.log('Err: Undefined Event');
           }
         }
       }, 10);
     });
   };
 
-  const interpolations = eventsList.map((marker, index) => {
+  const interpolations = filteredEventsList.map((marker, index) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -99,19 +105,22 @@ export default function Map({route, navigation}) {
   useEffect(() => {
     scrollViewAnimation.addListener(({value}) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3);
-      if (index > eventsList.length) {
-        index = eventsList.length = 1;
+      if (index > filteredEventsList.length) {
+        index = filteredEventsList.length = 1;
       }
       if (index <= 0) {
         index = 0;
       }
-      const duration = 350;
+      const duration = 500;
       clearTimeout(mapRegionTimeOut);
       const mapRegionTimeOut = setTimeout(() => {
         if (mapIndex !== index) {
           mapIndex = index;
-          if (eventsList[index] != undefined && eventsList[index] != null) {
-            const coordinates = eventsList[index].event_coordinates;
+          if (
+            filteredEventsList[index] != undefined &&
+            filteredEventsList[index] != null
+          ) {
+            const coordinates = filteredEventsList[index].event_coordinates;
             mapRef.current.animateToRegion(coordinates, duration);
           } else {
           }
@@ -128,7 +137,11 @@ export default function Map({route, navigation}) {
       longitudeDelta: 0.0009,
     };
     setCurrentUserLocation(coordinates);
-    setFocusRegion(coordinates);
+    if (applyFilter) {
+      setFocusRegion(filteredEventsList[0].event_coordinates);
+    } else {
+      setFocusRegion(coordinates);
+    }
   };
 
   const getUserLocation = () => {
@@ -183,22 +196,27 @@ export default function Map({route, navigation}) {
       console.warn(err);
     }
   };
+
   const onFilteringEventsRecieved = events => {
     setFilteredEventsList(events);
+    console.log(events);
     setFocusRegion(events[0].event_coordinates);
     setApplyFilter(true);
   };
+
   const filterMapByFilterOption = filterOption => {
     getAllEventsByEventType(filterOption, onFilteringEventsRecieved);
   };
 
   const handleFilter = filterOption => {
+    setFilteredEventsList([]);
     filterMapByFilterOption(filterOption);
   };
 
   const handleClear = () => {
     setFilteredEventsList([]);
     setApplyFilter(false);
+    setShowFilterSearchBar(false);
     setFocusRegion(currentUserLocation);
   };
 
@@ -208,9 +226,10 @@ export default function Map({route, navigation}) {
     setScrollViewAnimation(new Animated.Value(0));
   }, [isFocused]);
 
-  useEffect(() => {
-    mapScrollAnimation();
-  });
+  const isFilteredListFilled =
+    filteredEventsList.length > 0 &&
+    filteredEventsList != null &&
+    filteredEventsList != undefined;
 
   return (
     <>
@@ -221,11 +240,9 @@ export default function Map({route, navigation}) {
         customMapStyle={getMapStyles()}
         showsUserLocation={true}>
         {applyFilter
-          ? filteredEventsList.map(eventInfo => (
-              <EventMarker event={eventInfo} />
-            ))
-          : eventsList.map((eventInfo, index) => (
+          ? filteredEventsList.map((eventInfo, index) => (
               <EventMarker
+                key={index}
                 event={eventInfo}
                 scaleStyle={{
                   transform: [
@@ -235,6 +252,9 @@ export default function Map({route, navigation}) {
                   ],
                 }}
               />
+            ))
+          : eventsList.map((eventInfo, index) => (
+              <EventMarker key={index} event={eventInfo} />
             ))}
         {routeIsReady && (
           <Route
@@ -254,7 +274,7 @@ export default function Map({route, navigation}) {
           />
         )}
       </MapView>
-      {true && (
+      {applyFilter && isFilteredListFilled && (
         <Animated.ScrollView
           horizontal
           pagingEnabled
@@ -271,13 +291,18 @@ export default function Map({route, navigation}) {
             [{nativeEvent: {contentOffset: {x: scrollViewAnimation}}}],
             {useNativeDriver: true},
           )}>
-          {eventsList.map((details, index) => (
-            <MiniEventInfoCard
-              key={index}
-              eventDetails={details}
-              isBookmark={true}
-            />
-          ))}
+          {filteredEventsList.map(
+            (details, index) => (
+              console.log(filteredEventsList),
+              (
+                <MiniEventInfoCard
+                  key={index}
+                  eventDetails={details}
+                  isBookmark={true}
+                />
+              )
+            ),
+          )}
         </Animated.ScrollView>
       )}
       <View style={styles.autocompleteContainer}>
@@ -288,10 +313,9 @@ export default function Map({route, navigation}) {
           />
         )}
       </View>
-      <AppActionCenter
-        style={styles.actionButton}
-        handleSearch={setShowFilterSearchBar}
-      />
+      {!applyFilter && (
+        <AppActionCenter handleSearch={setShowFilterSearchBar} />
+      )}
       <View style={styles.nav}>
         {routeIsReady && (
           <Button
@@ -344,14 +368,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '80%',
     alignSelf: 'flex-end',
-  },
-  actionButton: {
-    position: 'absolute',
-    width: 150,
-    height: 150,
-    alignSelf: 'flex-end',
-    top: '78%',
-    left: 265,
   },
   filterOptionsContainer: {
     position: 'absolute',

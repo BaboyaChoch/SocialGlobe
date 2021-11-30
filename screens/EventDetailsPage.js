@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
-import {View, StyleSheet, Modal, Alert} from 'react-native';
+import {View, StyleSheet, Modal, Alert, Linking} from 'react-native';
 import {
   Avatar,
   Card,
@@ -23,7 +23,7 @@ import messages from '../screens/messages';
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
   const {eventDetails} = route.params;
-  console.log('Details Page: ', eventDetails);
+
   const [state, setState] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -37,11 +37,34 @@ export default function EventDetailsPage({route, navigation}) {
   const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
 
   const onImageRecieved = image => {
-    console.log('Image Recieved: ', image);
     setImages([image]);
   };
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
+  };
+
+  const getDirectionsFromNativeMapsApp = () => {
+    const latitude = eventDetails.event_coordinates.latitude;
+    const longitude = eventDetails.event_coordinates.longitude;
+
+    const url = Platform.select({
+      ios:
+        'maps:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventDetails.event_address.full_address,
+      android:
+        'geo:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventDetails.event_address.full_address,
+    });
+
+    Linking.openURL(url);
   };
 
   useEffect(() => {
@@ -103,7 +126,7 @@ export default function EventDetailsPage({route, navigation}) {
               color={ORANGE}
               size={40}
               onPress={() => {
-                console.log('reported');
+                getDirectionsFromNativeMapsApp();
               }}
             />
             <IconButton

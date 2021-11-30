@@ -11,7 +11,6 @@ export default function MapFilterOptions({onPress}) {
   const [isGamingSelected, setIsGamingSelected] = useState(false);
   const [isSeminarsSelected, setIsSeminarsSelected] = useState(false);
 
-  useEffect(() => console.log(isFairsSelected), [isFairsSelected]);
   return (
     <ScrollView
       horizontal

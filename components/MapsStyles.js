@@ -383,20 +383,14 @@ const MAP_STYLES = [
 ];
 
 const MARKER_STYLES = {
-  'fair': '../asssets/fair_marker.png',
-  'seminar': '../asssets/seminar_marker.png',
-  'fundraiser': '../asssets/fundraiser_marker.png',
-  'sports': '../asssets/sports_marker.png',
-  'multiple_events': '../asssets/multiple_events_marker.png',
-  'private_events': '../asssets/private_event_marker.png',
+  fair: '../asssets/fair_marker.png',
+  seminar: '../asssets/seminar_marker.png',
+  fundraiser: '../asssets/fundraiser_marker.png',
+  sports: '../asssets/sports_marker.png',
+  multiple_events: '../asssets/multiple_events_marker.png',
+  private_events: '../asssets/private_event_marker.png',
 };
 
 export default function getMapStyles() {
   return MAP_STYLES;
-}
-
-export function getMarkerIconByEventType(eventType) {
-  console.log(eventType);
-  console.log(MARKER_STYLES[eventType]);
-  //return MARKER_STYLES[eventType];
 }

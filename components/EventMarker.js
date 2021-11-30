@@ -1,9 +1,9 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Animated} from 'react-native';
 
-export default function EventMarker({event}) {
+export default function EventMarker({event, scaleStyle}) {
   const navigation = useNavigation();
   const eventType = event.event_type;
   const MARKER_ANCHOR = {x: 0.51, y: 0.57};
@@ -22,8 +22,15 @@ export default function EventMarker({event}) {
               navigation.navigate('EventDetailsPage', {
                 eventDetails: event,
               });
-            }}
-            image={require('../assets/icons/map_markers/fair_marker.png')}></Marker>
+            }}>
+            <Animated.View style={[styles.markerWrap]}>
+              <Animated.Image
+                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                style={[styles.marker, scaleStyle]}
+                resizeMode="cover"
+              />
+            </Animated.View>
+          </Marker>
         );
       case 'seminar':
         return (
@@ -38,8 +45,15 @@ export default function EventMarker({event}) {
               navigation.navigate('EventDetailsPage', {
                 eventDetails: event,
               });
-            }}
-            image={require('../assets/icons/map_markers/seminar_marker.png')}></Marker>
+            }}>
+            <Animated.View style={[styles.markerWrap]}>
+              <Animated.Image
+                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                style={[styles.marker, scaleStyle]}
+                resizeMode="cover"
+              />
+            </Animated.View>
+          </Marker>
         );
       case 'sport':
         return (
@@ -53,8 +67,15 @@ export default function EventMarker({event}) {
               navigation.navigate('EventDetailsPage', {
                 eventDetails: event,
               });
-            }}
-            image={require('../assets/icons/map_markers/sport_marker.png')}></Marker>
+            }}>
+            <Animated.View style={[styles.markerWrap]}>
+              <Animated.Image
+                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                style={[styles.marker, scaleStyle]}
+                resizeMode="cover"
+              />
+            </Animated.View>
+          </Marker>
         );
       case 'fundraiser':
         return (
@@ -69,8 +90,15 @@ export default function EventMarker({event}) {
               navigation.navigate('EventDetailsPage', {
                 eventDetails: event,
               });
-            }}
-            image={require('../assets/icons/map_markers/fundraiser_marker.png')}></Marker>
+            }}>
+            <Animated.View style={[styles.markerWrap]}>
+              <Animated.Image
+                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                style={[styles.marker, scaleStyle]}
+                resizeMode="cover"
+              />
+            </Animated.View>
+          </Marker>
         );
       default:
         return (
@@ -94,5 +122,11 @@ export default function EventMarker({event}) {
 }
 
 const styles = StyleSheet.create({
-  marker: {width: 10, height: 28},
+  marker: {width: 90, height: 90},
+  markerWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+  },
 });

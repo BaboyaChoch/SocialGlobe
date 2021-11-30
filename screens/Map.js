@@ -2,7 +2,13 @@ import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {PermissionsAndroid, Platform, Text, Linking} from 'react-native';
+import {
+  PermissionsAndroid,
+  Platform,
+  Text,
+  Linking,
+  Dimensions,
+} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';
@@ -16,6 +22,7 @@ import EventMarker from '../components/EventMarker';
 import AppActionCenter from '../components/AppActionCenter';
 import {Animated} from 'react-native';
 import MiniEventInfoCard from './MiniEventInfoCard';
+import {State} from 'react-native-gesture-handler';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
@@ -44,7 +51,74 @@ export default function Map({route, navigation}) {
   const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
     useState(false);
   const [showFilterSearchBar, setShowFilterSearchBar] = useState(false);
+  const [scrollViewAnimation, setScrollViewAnimation] = useState(
+    new Animated.Value(0),
+  );
   const mapRef = useRef(null);
+  let mapIndex = 0;
+
+  const mapScrollAnimation = markerList => {
+    scrollViewAnimation.addListener(({value}) => {
+      let index = Math.floor(value / CARD_WIDTH + 0.3);
+      if (index > eventsList.length) {
+        index = eventsList.length = 1;
+      }
+      if (index <= 0) {
+        index = 0;
+      }
+      const duration = 350;
+      clearTimeout(mapRegionTimeOut);
+      const mapRegionTimeOut = setTimeout(() => {
+        if (mapIndex !== index) {
+          mapIndex = index;
+          if (eventsList[index] != undefined && eventsList[index] != null) {
+            const coordinates = eventsList[index].event_coordinates;
+            mapRef.current.animateToRegion(coordinates, duration);
+          }
+        }
+      }, 10);
+    });
+  };
+
+  const interpolations = eventsList.map((marker, index) => {
+    const inputRange = [
+      (index - 1) * CARD_WIDTH,
+      index * CARD_WIDTH,
+      (index + 1) * CARD_WIDTH,
+    ];
+
+    const scale = scrollViewAnimation.interpolate({
+      inputRange,
+      outputRange: [1, 1.5, 1],
+      extrapolate: 'clamp',
+    });
+
+    return {scale};
+  });
+
+  useEffect(() => {
+    scrollViewAnimation.addListener(({value}) => {
+      let index = Math.floor(value / CARD_WIDTH + 0.3);
+      if (index > eventsList.length) {
+        index = eventsList.length = 1;
+      }
+      if (index <= 0) {
+        index = 0;
+      }
+      const duration = 350;
+      clearTimeout(mapRegionTimeOut);
+      const mapRegionTimeOut = setTimeout(() => {
+        if (mapIndex !== index) {
+          mapIndex = index;
+          if (eventsList[index] != undefined && eventsList[index] != null) {
+            const coordinates = eventsList[index].event_coordinates;
+            mapRef.current.animateToRegion(coordinates, duration);
+          } else {
+          }
+        }
+      }, 10);
+    });
+  });
 
   const geoSuccess = position => {
     const coordinates = {
@@ -100,6 +174,7 @@ export default function Map({route, navigation}) {
         setLocationPermissionResult(granted);
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           getUserLocation();
+          getAllEventsByVisiblity('public', onEventsRecieved);
         } else {
           console.log('Location denied');
         }
@@ -130,12 +205,12 @@ export default function Map({route, navigation}) {
   const getEventMarker = eventType => {};
   useEffect(() => {
     requestLocationPermission();
-    getAllEventsByVisiblity('public', onEventsRecieved);
+    setScrollViewAnimation(new Animated.Value(0));
   }, [isFocused]);
 
   useEffect(() => {
-    console.log(filterQuery);
-  }, [filterQuery]);
+    mapScrollAnimation();
+  });
 
   return (
     <>
@@ -149,7 +224,18 @@ export default function Map({route, navigation}) {
           ? filteredEventsList.map(eventInfo => (
               <EventMarker event={eventInfo} />
             ))
-          : eventsList.map(eventInfo => <EventMarker event={eventInfo} />)}
+          : eventsList.map((eventInfo, index) => (
+              <EventMarker
+                event={eventInfo}
+                scaleStyle={{
+                  transform: [
+                    {
+                      scale: interpolations[index].scale,
+                    },
+                  ],
+                }}
+              />
+            ))}
         {routeIsReady && (
           <Route
             origin={currentUserLocation}
@@ -168,20 +254,32 @@ export default function Map({route, navigation}) {
           />
         )}
       </MapView>
-      <Animated.ScrollView
-        horizontal
-        scrollEventThrottle={1}
-        snapToInterval={50}
-        style={styles.eventScrollView}
-        contentContainerStyle={styles.cont}>
-        {eventsList.map((details, index) => (
-          <MiniEventInfoCard
-            key={index}
-            eventDetails={details}
-            isBookmark={true}
-          />
-        ))}
-      </Animated.ScrollView>
+      {true && (
+        <Animated.ScrollView
+          horizontal
+          pagingEnabled
+          scrollEventThrottle={1}
+          snapToInterval={CARD_WIDTH + 10}
+          snapToAlignment="center"
+          style={styles.eventScrollView}
+          contentContainerStyle={styles.cont}
+          contentContainerStyle={{
+            paddingHorizontal:
+              Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0,
+          }}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: scrollViewAnimation}}}],
+            {useNativeDriver: true},
+          )}>
+          {eventsList.map((details, index) => (
+            <MiniEventInfoCard
+              key={index}
+              eventDetails={details}
+              isBookmark={true}
+            />
+          ))}
+        </Animated.ScrollView>
+      )}
       <View style={styles.autocompleteContainer}>
         {showFilterSearchBar && (
           <EventTypeSearch
@@ -227,6 +325,12 @@ const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
+const {width, height} = Dimensions.get('window');
+const CARD_WIDTH = 320;
+
+const CARD_HEIGHT = 190;
+const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -263,6 +367,9 @@ const styles = StyleSheet.create({
   eventScrollView: {
     position: 'absolute',
     top: '67%',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   cont: {},
 });

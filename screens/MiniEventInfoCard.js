@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, SafeAreaView, Alert} from 'react-native';
+import {StyleSheet, View, SafeAreaView, Alert, Dimensions} from 'react-native';
 import {
   Avatar,
   Card,
@@ -46,7 +46,12 @@ export default function MiniEventInfoCard({eventDetails, isBookmark = false}) {
       <Card style={styles.card}>
         <Card.Cover
           source={eventImage}
-          style={{marginTop: 0, height: 110, width: 220, aspectRatio: 2 / 1}}
+          style={{
+            marginTop: 0,
+            height: 110,
+            width: CARD_WIDTH,
+            aspectRatio: CARD_WIDTH / 110,
+          }}
         />
         <Card.Title
           style={styles.header}
@@ -71,6 +76,9 @@ const BLUE = '#002f4c';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 
+const {width, height} = Dimensions.get('window');
+const CARD_WIDTH = width * 0.8;
+
 const TEXT_COLOR = ORANGE;
 const styles = StyleSheet.create({
   container: {
@@ -91,7 +99,7 @@ const styles = StyleSheet.create({
   },
   card: {
     margin: 10,
-    width: 220,
+    width: CARD_WIDTH,
     height: 190,
     alignItems: 'center',
     justifyContent: 'center',

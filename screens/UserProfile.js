@@ -21,6 +21,7 @@ import {
   IconButton,
   Button,
   Colors,
+  Divider,
 } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 
@@ -52,8 +53,42 @@ export default function UserProfile({navigation}) {
   );
   return (
     <SafeAreaView style={styles.container}>
+      <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              height: 60,
+              position: 'relative',
+              bottom: 260,
+              paddingBottom: 0,
+              }}>
+            <IconButton
+              icon="arrow-left"
+              color={BLUE}
+              size={40}
+              onPress={() => {
+                navigation.navigate('Map');
+              }}
+              style={{
+                position: 'relative',
+                right: 100,
+              }}
+            />
+            <Paragraph
+            style={{
+              fontSize: 20,
+              position: 'relative',
+              top: 25,
+              right: 100,
+            }}
+            >Return to Map</Paragraph>
+          </View>     
       {user && (
-        <View>
+        <View style={{
+          flexDirection: 'row',
+          position: 'relative',
+          bottom: 50,
+        }}>
           <Card style={styles.card}>
             <Card.Title
               title={user.displayName}
@@ -92,7 +127,7 @@ const TEXT_COLOR = ORANGE;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     padding: 34,
     flex: 1,

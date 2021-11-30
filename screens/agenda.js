@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
+              height: 60,
             }}>
             <IconButton
               icon="arrow-left"

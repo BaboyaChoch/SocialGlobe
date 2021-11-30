@@ -18,6 +18,7 @@ import {useIsFocused} from '@react-navigation/core';
 import {firebase} from '@react-native-firebase/auth';
 import {addToUserBookmarks} from '../api/bookmarksApi';
 import getEventPhoto from '../api/imagesApi';
+import messages from '../screens/messages';
 
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
@@ -116,14 +117,11 @@ export default function EventDetailsPage({route, navigation}) {
               }}
             />
             <IconButton
-              icon="alert-octagon"
-              color={Colors.red500}
+              icon="message-text"
+              color={Colors.blue500}
               size={40}
               onPress={() => {
-                Alert.alert(
-                  'Event Report',
-                  'Thank you for reporting the event. Our staff will look into it',
-                );
+                navigation.navigate('Messages');
               }}
             />
           </View>

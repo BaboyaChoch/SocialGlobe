@@ -7,6 +7,7 @@ import Tabs from './navigation/tabs';
 import Login from './screens/Login';
 import EventDescriptionAndImageSelect from './screens/EventDescriptionAndImageSelect';
 import EventAddressSelection from './screens/EventAddressSelection';
+import messages from './screens/messages';
 
 const Stack = createStackNavigator();
 function App({navigation}) {
@@ -24,6 +25,7 @@ function App({navigation}) {
           name="EventAddressSelection"
           component={EventAddressSelection}
         />
+        <Stack.Screen name="Messages" component={messages} />
       </Stack.Navigator>
     </NavigationContainer>
   );

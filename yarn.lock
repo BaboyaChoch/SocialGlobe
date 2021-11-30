@@ -6261,6 +6261,13 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
+"react-native-action-button@^2.8.5":
+  "integrity" "sha512-BvGZpzuGeuFR2Y6j93+vKiSqDhsF87VHvNXFs/qEYKfzT4b1ASAT/GQbgS6gNt4jRJCUnJWYrIwlBzRjesZQmQ=="
+  "resolved" "https://registry.npmjs.org/react-native-action-button/-/react-native-action-button-2.8.5.tgz"
+  "version" "2.8.5"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-autocomplete-dropdown@^1.1.5":
   "integrity" "sha512-BRb80c/5UHExmCF2tUZlsakA5dAnfg2zkxckgfEKZkQg/LT+nsIpp6DLVHAenlS5c+13LosonSaWCf7q6CevrA=="
   "resolved" "https://registry.npmjs.org/react-native-autocomplete-dropdown/-/react-native-autocomplete-dropdown-1.1.5.tgz"
@@ -6472,7 +6479,7 @@
     "prop-types" "^15.6.0"
     "react-timer-mixin" "^0.13.4"
 
-"react-native@*", "react-native@>= 0.51", "react-native@>= 0.59", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.65.0", "react-native@0.65.1":
+"react-native@*", "react-native@>= 0.51", "react-native@>= 0.59", "react-native@>=0.11", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.65.0", "react-native@0.65.1":
   "integrity" "sha512-0UOVSnlssweQZjuaUtzViCifE/4tXm8oRbxwakopc8GavPu9vLulde145GOw6QVYiOy4iL50f+2XXRdX9NmMeQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.65.1.tgz"
   "version" "0.65.1"

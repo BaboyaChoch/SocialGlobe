@@ -91,30 +91,6 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Agenda"
-        component={agenda}
-        options={{
-          tabBarIcon: () => {
-            return (
-              <IconButton
-                icon="view-agenda-outline"
-                color={ICON_COLOR}
-                size={ICON_SIZE}
-              />
-            );
-          },
-          tabBarLabel: () => {
-            return null;
-          },
-          headerShown: false,
-          tabBarLabelStyle: {
-            color: '#F9F9F9',
-            fontSize: 13,
-          },
-          unmountOnBlur: true,
-        }}
-      />
-      <Tab.Screen
         name="Calendar"
         component={calendar}
         options={{

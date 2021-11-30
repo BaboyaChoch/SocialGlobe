@@ -51,7 +51,7 @@ export default function EventDatePicker({
     const zone = date
       .toLocaleTimeString('en-us', {timeZoneName: 'short'})
       .split(' ')[2];
-
+    console.log(zone);
     return `${date.toLocaleTimeString([], timeOptions)} ${zone}`;
   };
 
@@ -86,7 +86,7 @@ export default function EventDatePicker({
             <Avatar.Icon
               size={40}
               icon="calendar"
-              color={iconColor}
+              color={ICON_COLOR}
               style={{marginLeft: 2, backgroundColor: 'white'}}
             />
           </View>
@@ -108,12 +108,14 @@ export default function EventDatePicker({
   );
 }
 
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
+// const GREEN = '#19a86a';
+// const BLUE = '#002f4c';
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
 const GRAY = '#d7d7d7';
-
+const ICON_COLOR = GREEN;
 const styles = StyleSheet.create({
   dateStyle: {
     fontWeight: '500',

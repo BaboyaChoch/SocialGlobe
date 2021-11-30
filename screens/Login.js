@@ -13,6 +13,7 @@ import {
   Platform,
   Alert,
   BackHandler,
+  Image,
 } from 'react-native';
 import {addName, getName} from '../api/userApi';
 import {GoogleSignin} from '@react-native-community/google-signin';
@@ -117,9 +118,20 @@ export default function Login({navigation}) {
             }}>
             {/* <Paragraph style={{color: BLUE, fontSize: 20}}>Sign Up</Paragraph> */}
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              style={styles.logo}
+              source={require('../assets/icons/logo.png')}
+            />
+          </View>
           <View style={{flexDirection: 'row'}}>
             <Button
-              icon="login"
+              icon="google"
               onPress={() =>
                 onGoogleButtonPress()
                   .then(() => {
@@ -130,13 +142,9 @@ export default function Login({navigation}) {
               }
               mode="contained"
               style={styles.button}
-              title="Sign In with Google"
-              color="#6beb34"
-              accessibilityLabel="Sign In with Google"
-              btnType="google"
-              color={ORANGE}
+              color={BLUE}
               labelStyle={{color: WHITE}}>
-              SignUp With Google
+              Sign In
             </Button>
           </View>
         </View>
@@ -145,10 +153,10 @@ export default function Login({navigation}) {
   );
 }
 
-const GREEN = '#19a86a';
-const BLUE = '#002f4c';
-const ORANGE = '#e29e21';
+const GREEN = '#5dca73';
+const BLUE = '#3366ff';
 const WHITE = '#f9f9f9';
+const ORANGE = '#e29e21';
 
 const TEXT_COLOR = ORANGE;
 const styles = StyleSheet.create({
@@ -174,4 +182,8 @@ const styles = StyleSheet.create({
     color: TEXT_COLOR,
   },
   card: {backgroundColor: WHITE, elevation: 15},
+  logo: {
+    width: 200,
+    height: 200,
+  },
 });

@@ -9,6 +9,7 @@ import EventDescriptionAndImageSelect from './screens/EventDescriptionAndImageSe
 import EventAddressSelection from './screens/EventAddressSelection';
 import messages from './screens/messages';
 
+import UserProfile from './screens/UserProfile';
 const Stack = createStackNavigator();
 function App({navigation}) {
   return (
@@ -26,6 +27,7 @@ function App({navigation}) {
           component={EventAddressSelection}
         />
         <Stack.Screen name="Messages" component={messages} />
+        <Stack.Screen name="UserProfile" component={UserProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

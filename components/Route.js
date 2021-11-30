@@ -44,6 +44,7 @@ export default function Route(props) {
     };
   }
 
+  console.log('here are the props: ', props);
   useEffect(() => {
     const info = {
       dest: props.destinations,
@@ -59,12 +60,8 @@ export default function Route(props) {
       apikey={GOOGLE_MAPS_APIKEY}
       origin={props.origin}
       mode={props.modeOfTransport}
-      waypoints={
-        props.destinations.length > 2
-          ? props.destinations.slice(1, -1)
-          : undefined
-      }
-      destination={props.destinations[props.destinations.length - 1]}
+      waypoints={props.destinations.length >= 2 ? [props.destinations[1]] : []}
+      destination={props.destinations[0]}
       precision={'high'}
       optimizeWaypoints={true}
       strokeWidth={10}

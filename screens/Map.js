@@ -9,7 +9,7 @@ import {
   Linking,
   Dimensions,
 } from 'react-native';
-import {Button, IconButton} from 'react-native-paper';
+import {Button, IconButton, Snackbar} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
@@ -38,7 +38,7 @@ export default function Map({route}) {
     createTour = route.params.createTour;
     transportMode = route.params.travelMode;
   }
-
+  const navigation = useNavigation();
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
     longitude: -91.1794054,
@@ -54,19 +54,23 @@ export default function Map({route}) {
     useState('not_granted');
   const [createEventIsVisible, setCreateEventIsVisiblility] = useState(false);
   const [filterQuery, setFilterQuery] = useState();
-  const [currentUserSelection, setCurrentUserSelection] = useState();
+  const [currentUserSelection, setCurrentUserSelection] = useState(
+    defaultCurrentUserSelectionValue,
+  );
   const [userDestinations, setUserDestinations] = useState([]);
   const [modeOfTransport, setModeOfTransport] = useState();
   const [routeResult, setRouteResult] = useState();
   const [routeIsReady, setRouteIsReady] = useState(false);
   const [routeDetailsIsReady, setRouteDetailsIsReady] = useState(false);
-  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] =
-    useState(false);
   const [showFilterSearchBar, setShowFilterSearchBar] = useState(false);
   const [scrollViewAnimation, setScrollViewAnimation] = useState(
     new Animated.Value(0),
   );
   const [routeMarkers, setRouteMarkers] = useState([]);
+  const [showSelectTourView, setShowSelectTourView] = useState(false);
+  const [unSelectedEventsList, setUnSelectedEventsList] = useState([]);
+  const [showAddressMissingSnackbar, setShowAddressMissingSnackbar] =
+    useState(false);
 
   const mapRef = useRef(null);
   let mapIndex = 0;
@@ -227,16 +231,20 @@ export default function Map({route}) {
     filterMapByFilterOption(filterOption);
   };
 
-  const handleClear = () => {
-    setFilteredEventsList([]);
+  const handleClearFilter = () => {
     setApplyFilter(false);
+    setFilteredEventsList([]);
     setShowFilterSearchBar(false);
     setFocusRegion(currentUserLocation);
   };
+
   const handleCloseRoute = () => {
     setRouteIsReady(false);
     setRouteMarkers([]);
+    setCurrentUserLocation({});
     setRouteDetailsIsReady(false);
+    setShowSelectTourView(false);
+    setCurrentUserLocation(defaultCurrentUserSelectionValue);
   };
 
   const getDirectionsFromNativeMapsApp = () => {
@@ -269,20 +277,62 @@ export default function Map({route}) {
     setScrollViewAnimation(new Animated.Value(0));
   }, [isFocused]);
 
+  const eventMarkerOnPress = event => {
+    navigation.navigate('EventDetailsPage', {
+      eventDetails: event,
+    });
+  };
+
+  const handleSnackbarDismiss = () => {
+    setShowAddressMissingSnackbar(false);
+  };
+
+  const handleTourSelection = () => {
+    console.log([...userDestinations, currentUserSelection]);
+    if (
+      currentUserSelection.event_title != undefined &&
+      currentUserSelection.event_title != null &&
+      currentUserSelection.event_title != 'No Selection Made'
+    ) {
+      setUserDestinations([
+        ...userDestinations,
+        currentUserSelection.event_coordinates,
+      ]);
+      setRouteIsReady(true);
+      setShowSelectTourView(false);
+      setRouteMarkers([
+        ...routeMarkers,
+        currentUserSelection.event_coordinates,
+      ]);
+    } else {
+      setShowAddressMissingSnackbar(true);
+    }
+  };
+
   useEffect(() => {
-    if (createRoute && !createTour) {
+    if (!createTour && createRoute) {
       const destinationCoordinates = eventToAdd.event_coordinates;
       const waypoints = [currentUserLocation, destinationCoordinates];
+
       setUserDestinations([destinationCoordinates]);
       setModeOfTransport(transportMode);
       setRouteMarkers(waypoints);
       setRouteIsReady(true);
+      console.log([eventToAdd, createRoute, createTour, routeIsReady]);
+    } else if (createTour && createTour) {
+      const destinationCoordinates = eventToAdd.event_coordinates;
+      const waypoints = [currentUserLocation, destinationCoordinates];
+      const newList = eventsList;
+      newList.splice(eventToAdd.event_index, 1);
+
+      setUserDestinations([destinationCoordinates]);
+      setModeOfTransport(transportMode);
+      setRouteMarkers(waypoints);
+      setShowSelectTourView(true);
+
+      setUnSelectedEventsList(newList);
     }
   }, [isFocused]);
-
-  useEffect(() => {
-    console.log('RouteResults: ', routeResult);
-  }, [routeResult]);
 
   const isFilteredListFilled =
     filteredEventsList.length > 0 &&
@@ -299,6 +349,7 @@ export default function Map({route}) {
         showsUserLocation={true}>
         {applyFilter &&
           !routeIsReady &&
+          !showSelectTourView &&
           filteredEventsList.map((eventInfo, index) => (
             <EventMarker
               key={index}
@@ -310,12 +361,34 @@ export default function Map({route}) {
                   },
                 ],
               }}
+              onPress={eventMarkerOnPress}
             />
           ))}
         {!applyFilter &&
           !routeIsReady &&
-          eventsList.map((eventInfo, index) => (
-            <EventMarker key={index} event={eventInfo} />
+          !showSelectTourView &&
+          eventsList.map(
+            (eventInfo, index) => (
+              (eventInfo.event_index = index),
+              (
+                <EventMarker
+                  key={index}
+                  event={eventInfo}
+                  onPress={eventMarkerOnPress}
+                />
+              )
+            ),
+          )}
+        {showSelectTourView &&
+          createTour &&
+          unSelectedEventsList.map((eventInfo, index) => (
+            <EventMarker
+              key={index}
+              event={eventInfo}
+              onPress={() => {
+                setCurrentUserSelection(eventInfo);
+              }}
+            />
           ))}
         {routeIsReady &&
           createRoute &&
@@ -368,11 +441,11 @@ export default function Map({route}) {
         {showFilterSearchBar && (
           <EventTypeSearch
             handleFilter={handleFilter}
-            handleClear={handleClear}
+            handleClear={handleClearFilter}
           />
         )}
       </View>
-      <View style={styles.routeDetailsCont}>
+      <View style={styles.routeDetails}>
         {routeDetailsIsReady && (
           <View style={styles.routeDetails}>
             <Text style={styles.routeDetailsText}>
@@ -381,6 +454,27 @@ export default function Map({route}) {
             <Text style={styles.routeDetailsText}>
               {`Duration: ${routeResult.estimatedDuration}`} min(s)
             </Text>
+          </View>
+        )}
+        {!routeIsReady && showSelectTourView && (
+          <View style={styles.routeDetails}>
+            <Text style={styles.routeDetailsText}>
+              {currentUserSelection.event_title}
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <IconButton
+                icon="check"
+                size={30}
+                color="green"
+                onPress={() => handleTourSelection()}
+                labelStyle={{color: AppColors.BLUE}}></IconButton>
+              <IconButton
+                icon="close-circle-outline"
+                size={30}
+                color="red"
+                onPress={() => handleCloseRoute()}
+                labelStyle={{color: AppColors.BLUE}}></IconButton>
+            </View>
           </View>
         )}
       </View>
@@ -411,22 +505,25 @@ export default function Map({route}) {
           </IconButton>
         )}
       </View>
+      <Snackbar
+        wrapperStyle={{top: '85%'}}
+        duration={1000}
+        visible={showAddressMissingSnackbar}
+        onDismiss={handleSnackbarDismiss}
+        action={{
+          label: 'Ok',
+          onPress: () => {
+            setShowAddressMissingSnackbar(false);
+          },
+        }}>
+        Please Select 1 Event to Add to your tour, or exit!
+      </Snackbar>
     </>
   );
 }
 
-const url = Platform.select({
-  ios: 'maps:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
-  android: 'geo:' + 30.41428 + ',' + -91.17700090000001 + '?q=' + 'Event Here!',
-});
-
-const MARKER_STYLES = {
-  fair: '../asssets/fair_marker.png',
-  seminar: '../asssets/seminar_marker.png',
-  fundraiser: '../asssets/fundraiser_marker.png',
-  sports: '../asssets/sports_marker.png',
-  multiple_events: '../asssets/multiple_events_marker.png',
-  private_events: '../asssets/private_event_marker.png',
+const defaultCurrentUserSelectionValue = {
+  event_title: 'No Selection Made',
 };
 
 const GREEN = '#19a86a';
@@ -481,7 +578,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  routeDetailsText: {fontSize: 18, color: Colors.black},
+  routeDetailsText: {fontSize: 18, color: Colors.black, fontWeight: '500'},
   eventScrollView: {
     position: 'absolute',
     top: '67%',

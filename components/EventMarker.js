@@ -3,10 +3,11 @@ import React from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import {StyleSheet, Animated} from 'react-native';
 
-export default function EventMarker({event, scaleStyle}) {
+export default function EventMarker({event, scaleStyle, onPress}) {
   const navigation = useNavigation();
   const eventType = event.event_type;
   const MARKER_ANCHOR = {x: 0.51, y: 0.57};
+
   const renderEventMarkerByType = () => {
     switch (eventType) {
       case 'fair':
@@ -19,9 +20,7 @@ export default function EventMarker({event, scaleStyle}) {
             key={event.event_id}
             coordinate={event.event_coordinates}
             onPress={() => {
-              navigation.navigate('EventDetailsPage', {
-                eventDetails: event,
-              });
+              onPress(event);
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
@@ -42,9 +41,7 @@ export default function EventMarker({event, scaleStyle}) {
             key={event.event_id}
             coordinate={event.event_coordinates}
             onPress={() => {
-              navigation.navigate('EventDetailsPage', {
-                eventDetails: event,
-              });
+              onPress(event);
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
@@ -64,9 +61,7 @@ export default function EventMarker({event, scaleStyle}) {
             key={event.event_id}
             coordinate={event.event_coordinates}
             onPress={() => {
-              navigation.navigate('EventDetailsPage', {
-                eventDetails: event,
-              });
+              onPress(event);
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
@@ -87,9 +82,7 @@ export default function EventMarker({event, scaleStyle}) {
             key={event.event_id}
             coordinate={event.event_coordinates}
             onPress={() => {
-              navigation.navigate('EventDetailsPage', {
-                eventDetails: event,
-              });
+              onPress(event);
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image

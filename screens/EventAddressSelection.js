@@ -71,6 +71,7 @@ export default function EventAddressSelection({route, navigation}) {
   const handleSnackbarDismiss = () => {
     setShowAddressMissingSnackbar(false);
   };
+  
   useEffect(() => {
     getUserLocation();
   }, [screenIsFocused]);

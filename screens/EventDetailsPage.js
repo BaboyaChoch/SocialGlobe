@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SliderBox} from 'react-native-image-slider-box';
-import {View, StyleSheet, Modal, Alert} from 'react-native';
+import {View, StyleSheet, Modal, Alert, Linking} from 'react-native';
 import {
   Avatar,
   Card,
@@ -40,6 +40,30 @@ export default function EventDetailsPage({route, navigation}) {
   };
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
+  };
+
+  const getDirectionsFromNativeMapsApp = () => {
+    const latitude = eventDetails.event_coordinates.latitude;
+    const longitude = eventDetails.event_coordinates.longitude;
+
+    const url = Platform.select({
+      ios:
+        'maps:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventDetails.event_address.full_address,
+      android:
+        'geo:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventDetails.event_address.full_address,
+    });
+
+    Linking.openURL(url);
   };
 
   useEffect(() => {
@@ -100,7 +124,9 @@ export default function EventDetailsPage({route, navigation}) {
               icon="navigation"
               color={ORANGE}
               size={40}
-              onPress={() => {}}
+              onPress={() => {
+                getDirectionsFromNativeMapsApp();
+              }}
             />
             <IconButton
               icon="bookmark"

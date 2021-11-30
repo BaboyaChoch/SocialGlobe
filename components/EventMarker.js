@@ -25,7 +25,7 @@ export default function EventMarker({event, scaleStyle}) {
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
-                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                source={require('../assets/icons/map_markers/fair_marker.png')}
                 style={[styles.marker, scaleStyle]}
                 resizeMode="cover"
               />
@@ -70,7 +70,7 @@ export default function EventMarker({event, scaleStyle}) {
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
-                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                source={require('../assets/icons/map_markers/sport_marker.png')}
                 style={[styles.marker, scaleStyle]}
                 resizeMode="cover"
               />
@@ -93,7 +93,7 @@ export default function EventMarker({event, scaleStyle}) {
             }}>
             <Animated.View style={[styles.markerWrap]}>
               <Animated.Image
-                source={require('../assets/icons/map_markers/seminar_marker.png')}
+                source={require('../assets/icons/map_markers/fundraiser_marker.png')}
                 style={[styles.marker, scaleStyle]}
                 resizeMode="cover"
               />

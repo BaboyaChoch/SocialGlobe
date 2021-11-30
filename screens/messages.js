@@ -9,6 +9,8 @@ import {
 } from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
 import AppColors from '../components/AppColors'
+import {LogBox} from 'react-native'
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 export default function messages({route, navigation}) {
 

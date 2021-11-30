@@ -9,6 +9,8 @@ import EventDescriptionAndImageSelect from './screens/EventDescriptionAndImageSe
 import EventAddressSelection from './screens/EventAddressSelection';
 import messages from './screens/messages';
 import agenda from './screens/agenda';
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 import UserProfile from './screens/UserProfile';
 const Stack = createStackNavigator();

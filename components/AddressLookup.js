@@ -1,7 +1,9 @@
 import React, {useEffect} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {ScrollView} from 'react-native';
+import {ScrollView,LogBox} from 'react-native';
+
 const API_KEY = 'AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 export default function AddressLookUp({
   location,
   setAddress,

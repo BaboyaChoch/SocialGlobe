@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
   TouchableWithoutFeedback,
-  Keyboard,
+  Keyboard,LogBox
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {
@@ -19,6 +19,7 @@ import {
 } from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 export default function EventDatePicker({
   dateValue,

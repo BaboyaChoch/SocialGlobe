@@ -14,6 +14,8 @@ import getEventPhoto from '../api/imagesApi';
 import {useIsFocused, useNavigation} from '@react-navigation/core';
 import {addToUserBookmarks} from '../api/bookmarksApi';
 import AppColors from '../components/AppColors';
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 export default function MiniEventInfoCard({eventDetails, isBookmark = false}) {
   const navigation = useNavigation();

@@ -6,9 +6,11 @@ import {
   StyleSheet,
   View,
   Modal,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback,LogBox
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 import AppColors from './AppColors';
 // import getDirections from 'react-native-google-maps-directions';
 

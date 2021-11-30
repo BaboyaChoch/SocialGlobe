@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {StyleSheet, Animated} from 'react-native';
+import {StyleSheet, Animated, LogBox} from 'react-native';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 export default function EventMarker({event, scaleStyle, onPress}) {
   const navigation = useNavigation();

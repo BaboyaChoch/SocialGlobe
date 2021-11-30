@@ -8,7 +8,7 @@ import {
   Text,
   SafeAreaView,
   TextInput,
-  ActivityIndicator,
+  ActivityIndicator,LogBox
 } from 'react-native';
 import {addName, getName} from '../api/userApi';
 import {GoogleSignin} from '@react-native-community/google-signin';
@@ -24,6 +24,7 @@ import {
   Divider,
 } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 export default function UserProfile({navigation}) {
   const [user, setUser] = useState();

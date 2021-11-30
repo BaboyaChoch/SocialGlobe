@@ -7,8 +7,10 @@ import {
   Platform,
   Text,
   Linking,
-  Dimensions,
+  Dimensions,LogBox
 } from 'react-native';
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 import {Button, IconButton, Snackbar} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';

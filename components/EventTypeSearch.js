@@ -1,5 +1,7 @@
 import React from 'react';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
+import {LogBox} from 'react-native'
+LogBox.ignoreAllLogs();//Ignore all log notifications
 export default function EventTypeSearch({handleFilter, handleClear}) {
   return (
     <AutocompleteDropdown

@@ -13,7 +13,7 @@ import {Button, IconButton} from 'react-native-paper';
 //import DeviceInfo from 'react-native-device-info';
 import {getAllEventsByEventType} from '../api/mapsApi';
 import {getAllEventsByVisiblity} from '../api/mapsApi';
-import {useIsFocused} from '@react-navigation/core';
+import {useIsFocused, useNavigation} from '@react-navigation/core';
 import getMapStyles from '../components/MapsStyles';
 import getMarkerIconByEventType from '../components/MapsStyles';
 import EventTypeSearch from '../components/EventTypeSearch';
@@ -22,10 +22,23 @@ import EventMarker from '../components/EventMarker';
 import AppActionCenter from '../components/AppActionCenter';
 import {Animated} from 'react-native';
 import MiniEventInfoCard from './MiniEventInfoCard';
-import {State} from 'react-native-gesture-handler';
+import {RotationGestureHandler, State} from 'react-native-gesture-handler';
+import AppColors from '../components/AppColors';
 
-export default function Map({route, navigation}) {
-  const eventToAdd = route.params;
+export default function Map({route}) {
+  let createRoute = false;
+  let createTour = false;
+  let eventToAdd = null;
+  let transportMode = null;
+
+  if (route.params != undefined) {
+    eventToAdd = route.params.eventToAdd;
+    createRoute = route.params.createRoute;
+    createTour = route.params.createTour;
+    if (createRoute) {
+      transportMode = route.params.transportMode;
+    }
+  }
 
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
@@ -54,6 +67,8 @@ export default function Map({route, navigation}) {
   const [scrollViewAnimation, setScrollViewAnimation] = useState(
     new Animated.Value(0),
   );
+  const [routeMarkers, setRouteMarkers] = useState([]);
+
   const mapRef = useRef(null);
   let mapIndex = 0;
 
@@ -219,11 +234,51 @@ export default function Map({route, navigation}) {
     setShowFilterSearchBar(false);
     setFocusRegion(currentUserLocation);
   };
+  const handleCloseRoute = () => {
+    setRouteIsReady(false);
+    setRouteMarkers([]);
+  };
+
+  const getDirectionsFromNativeMapsApp = () => {
+    const latitude = eventToAdd.event_coordinates.latitude;
+    const longitude = eventToAdd.event_coordinates.longitude;
+
+    const url = Platform.select({
+      ios:
+        'maps:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventToAdd.event_address.full_address,
+      android:
+        'geo:' +
+        latitude +
+        ',' +
+        longitude +
+        '?q=' +
+        eventToAdd.event_address.full_address,
+    });
+
+    Linking.openURL(url);
+  };
 
   const getEventMarker = eventType => {};
   useEffect(() => {
     requestLocationPermission();
     setScrollViewAnimation(new Animated.Value(0));
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (createRoute && !createTour) {
+      console.log(route.params);
+      const destinationCoordinates = eventToAdd.event_coordinates;
+      const waypoints = [currentUserLocation, destinationCoordinates];
+      setUserDestinations([...userDestinations, destinationCoordinates]);
+      setModeOfTransport(transportMode);
+      setRouteMarkers(waypoints);
+      setRouteIsReady(true);
+    }
   }, [isFocused]);
 
   const isFilteredListFilled =
@@ -239,35 +294,35 @@ export default function Map({route, navigation}) {
         region={focusRegion}
         customMapStyle={getMapStyles()}
         showsUserLocation={true}>
-        {applyFilter
-          ? filteredEventsList.map((eventInfo, index) => (
-              <EventMarker
-                key={index}
-                event={eventInfo}
-                scaleStyle={{
-                  transform: [
-                    {
-                      scale: interpolations[index].scale,
-                    },
-                  ],
-                }}
-              />
-            ))
-          : eventsList.map((eventInfo, index) => (
-              <EventMarker key={index} event={eventInfo} />
-            ))}
-        {routeIsReady && (
+        {applyFilter &&
+          !routeIsReady &&
+          filteredEventsList.map((eventInfo, index) => (
+            <EventMarker
+              key={index}
+              event={eventInfo}
+              scaleStyle={{
+                transform: [
+                  {
+                    scale: interpolations[index].scale,
+                  },
+                ],
+              }}
+            />
+          ))}
+        {!applyFilter &&
+          !routeIsReady &&
+          eventsList.map((eventInfo, index) => (
+            <EventMarker key={index} event={eventInfo} />
+          ))}
+        {routeIsReady &&
+          createRoute &&
+          routeMarkers.map((coordinates, index) => (
+            <Marker key={index} coordinate={coordinates} />
+          ))}
+        {routeIsReady && createRoute && (
           <Route
             origin={currentUserLocation}
-            destinations={[
-              {},
-              {
-                latitude: 30.41428,
-                latitudeDelta: 0.009,
-                longitude: -91.17700090000001,
-                longitudeDelta: 0.0009,
-              },
-            ]}
+            destinations={userDestinations}
             modeOfTransport={'DRIVING'}
             mapRef={mapRef}
             handleRouteResult={param => setRouteResult(param)}
@@ -313,17 +368,31 @@ export default function Map({route, navigation}) {
           />
         )}
       </View>
-      {!applyFilter && (
+      {!applyFilter && !routeIsReady && (
         <AppActionCenter handleSearch={setShowFilterSearchBar} />
       )}
-      <View style={styles.nav}>
+      <View style={styles.directions}>
         {routeIsReady && (
-          <Button
-            icon="navigation"
-            onPress={() => Linking.openURL(url)}
-            labelStyle={{color: BLUE}}>
+          <IconButton
+            icon="directions"
+            size={30}
+            color={AppColors.BLUE}
+            onPress={() => getDirectionsFromNativeMapsApp()}
+            labelStyle={{color: AppColors.BLUE}}>
             Get Directions
-          </Button>
+          </IconButton>
+        )}
+      </View>
+      <View style={styles.reset}>
+        {routeIsReady && (
+          <IconButton
+            icon="close-circle-outline"
+            size={30}
+            color="red"
+            onPress={() => handleCloseRoute()}
+            labelStyle={{color: AppColors.BLUE}}>
+            Get Directions
+          </IconButton>
         )}
       </View>
     </>
@@ -364,10 +433,17 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  nav: {
+  directions: {
     position: 'absolute',
-    top: '80%',
+    top: '78%',
     alignSelf: 'flex-end',
+    flexDirection: 'row',
+  },
+  reset: {
+    position: 'absolute',
+    top: '85%',
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
   },
   filterOptionsContainer: {
     position: 'absolute',

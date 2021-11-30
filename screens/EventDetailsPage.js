@@ -19,6 +19,7 @@ import {firebase} from '@react-native-firebase/auth';
 import {addToUserBookmarks} from '../api/bookmarksApi';
 import getEventPhoto from '../api/imagesApi';
 import messages from '../screens/messages';
+import SelectTravelModeModal from '../components/SelectTravelModeModal';
 
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
@@ -31,40 +32,14 @@ export default function EventDetailsPage({route, navigation}) {
   const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
     useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('Hello!');
-  const title_icon = props => <Avatar.Icon {...props} icon="folder" />;
-  const location_icon = props => <Avatar.Icon {...props} icon="folder" />;
-  const date_icon = props => <Avatar.Icon {...props} icon="folder" />;
-  const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
+  const [travelMode, setTravelMode] = useState('DRIVING');
+  const [isChooseTravelModeVisible, setIsChooseTravelModeVisible] = useState();
 
   const onImageRecieved = image => {
     setImages([image]);
   };
   const handleDismissSnackbar = () => {
     setShowBookmarkAddedSnackbar(false);
-  };
-
-  const getDirectionsFromNativeMapsApp = () => {
-    const latitude = eventDetails.event_coordinates.latitude;
-    const longitude = eventDetails.event_coordinates.longitude;
-
-    const url = Platform.select({
-      ios:
-        'maps:' +
-        latitude +
-        ',' +
-        longitude +
-        '?q=' +
-        eventDetails.event_address.full_address,
-      android:
-        'geo:' +
-        latitude +
-        ',' +
-        longitude +
-        '?q=' +
-        eventDetails.event_address.full_address,
-    });
-
-    Linking.openURL(url);
   };
 
   useEffect(() => {
@@ -77,16 +52,11 @@ export default function EventDetailsPage({route, navigation}) {
 
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={reportVisible}
-        onRequestClose={() => {
-          setReportVisible(!reportVisible);
-        }}
-        style={{justifyContent: 'center', position: 'absolute'}}>
-        {/* <ReportEvent eventId={{}} eventReports={{}} /> */}
-      </Modal>
+      {/* <SelectTravelModeModal
+        isSingleDestination={true}
+        handleVisible={setIsChooseTravelModeVisible}
+        handleSelection={setTravelMode}
+      /> */}
       <View
         style={{
           flexDirection: 'column',
@@ -107,7 +77,7 @@ export default function EventDetailsPage({route, navigation}) {
             }}>
             <IconButton
               icon="arrow-left"
-              color='#3366ff'
+              color="#3366ff"
               size={40}
               onPress={() => {
                 navigation.navigate('Map');
@@ -118,7 +88,11 @@ export default function EventDetailsPage({route, navigation}) {
               color={GREEN}
               size={40}
               onPress={() => {
-                navigation.navigate('Map', {eventToAdd: eventDetails});
+                navigation.navigate('Map', {
+                  eventToAdd: eventDetails,
+                  createRoute: true,
+                  createTour: true,
+                });
               }}
             />
             <IconButton
@@ -126,12 +100,17 @@ export default function EventDetailsPage({route, navigation}) {
               color={ORANGE}
               size={40}
               onPress={() => {
-                getDirectionsFromNativeMapsApp();
+                navigation.navigate('Map', {
+                  eventToAdd: eventDetails,
+                  createRoute: true,
+                  createTour: false,
+                  travelMode: travelMode,
+                });
               }}
             />
             <IconButton
               icon="bookmark"
-              color='#ff0eb5'
+              color="#ff0eb5"
               size={40}
               onPress={() => {
                 addToUserBookmarks(eventDetails.event_id);

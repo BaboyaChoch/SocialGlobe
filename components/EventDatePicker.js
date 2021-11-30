@@ -48,11 +48,13 @@ export default function EventDatePicker({
 
   const getTime = date => {
     const timeOptions = {hour: 'numeric', minute: '2-digit'};
-    const zone = date
-      .toLocaleTimeString('en-us', {timeZoneName: 'short'})
-      .split(' ')[2];
-    console.log(zone);
-    return `${date.toLocaleTimeString([], timeOptions)} ${zone}`;
+    // const zone = date
+    //   .toLocaleTimeString('en-us', {timeZoneName: 'short'})
+    //   .split(' ')[2];
+    // console.log(zone);
+    return `${date.toLocaleTimeString([], timeOptions)} ${
+      date.toLocaleTimeString('en-us', {timeZoneName: 'short'}).split(' ')[2]
+    }`;
   };
 
   const getDate = date => {

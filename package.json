@@ -42,7 +42,6 @@
     "react-native-maps-directions": "^1.8.0",
     "react-native-modal-datetime-picker": "^13.0.0",
     "react-native-paper": "^4.10.1",
-    "react-native-reanimated": "^2.2.4",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.9.0",
     "react-native-textinput-effects": "^0.6.2",

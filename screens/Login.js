@@ -155,8 +155,8 @@ export default function Login({navigation}) {
 
 const GREEN = '#5dca73';
 const BLUE = '#3366ff';
-const ORANGE = '#e29e21';
 const WHITE = '#f9f9f9';
+const ORANGE = '#e29e21';
 
 const TEXT_COLOR = ORANGE;
 const styles = StyleSheet.create({

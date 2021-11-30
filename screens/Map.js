@@ -14,6 +14,8 @@ import EventTypeSearch from '../components/EventTypeSearch';
 import Route from '../components/Route';
 import EventMarker from '../components/EventMarker';
 import AppActionCenter from '../components/AppActionCenter';
+import {Animated} from 'react-native';
+import MiniEventInfoCard from './MiniEventInfoCard';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
@@ -166,6 +168,20 @@ export default function Map({route, navigation}) {
           />
         )}
       </MapView>
+      <Animated.ScrollView
+        horizontal
+        scrollEventThrottle={1}
+        snapToInterval={50}
+        style={styles.eventScrollView}
+        contentContainerStyle={styles.cont}>
+        {eventsList.map((details, index) => (
+          <MiniEventInfoCard
+            key={index}
+            eventDetails={details}
+            isBookmark={true}
+          />
+        ))}
+      </Animated.ScrollView>
       <View style={styles.autocompleteContainer}>
         {showFilterSearchBar && (
           <EventTypeSearch
@@ -244,4 +260,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     width: '100%',
   },
+  eventScrollView: {
+    position: 'absolute',
+    top: '67%',
+  },
+  cont: {},
 });

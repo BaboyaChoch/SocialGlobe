@@ -47,6 +47,26 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
+        name="Bookmarks"
+        component={Bookmarks}
+        options={{
+          tabBarIcon: () => {
+            return (
+              <IconButton icon="bookmark" color={ICON_COLOR} size={ICON_SIZE} />
+            );
+          },
+          tabBarLabel: () => {
+            return null;
+          },
+          headerShown: false,
+          tabBarLabelStyle: {
+            color: '#F9F9F9',
+            fontSize: 13,
+          },
+          unmountOnBlur: true,
+        }}
+      />
+      <Tab.Screen
         name="Create Event"
         component={createEventOverlay}
         options={{
@@ -70,26 +90,7 @@ const Tabs = () => {
           unmountOnBlur: true,
         }}
       />
-      <Tab.Screen
-        name="Bookmarks"
-        component={Bookmarks}
-        options={{
-          tabBarIcon: () => {
-            return (
-              <IconButton icon="bookmark" color={ICON_COLOR} size={ICON_SIZE} />
-            );
-          },
-          tabBarLabel: () => {
-            return null;
-          },
-          headerShown: false,
-          tabBarLabelStyle: {
-            color: '#F9F9F9',
-            fontSize: 13,
-          },
-          unmountOnBlur: true,
-        }}
-      />
+
       <Tab.Screen
         name="Agenda"
         component={agenda}

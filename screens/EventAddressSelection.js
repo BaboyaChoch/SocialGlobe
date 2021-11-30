@@ -72,13 +72,8 @@ export default function EventAddressSelection({route, navigation}) {
     setShowAddressMissingSnackbar(false);
   };
   useEffect(() => {
-    console.log('current event details: ', eventDetails);
     getUserLocation();
   }, [screenIsFocused]);
-
-  useEffect(() => {
-    console.log({address: address, coordinates: coordinates});
-  }, [address]);
 
   return (
     <>

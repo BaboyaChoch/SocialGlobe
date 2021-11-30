@@ -22,7 +22,7 @@ import getEventPhoto from '../api/imagesApi';
 export default function EventDetailsPage({route, navigation}) {
   const user = firebase.auth().currentUser;
   const {eventDetails} = route.params;
-  console.log('Details Page: ', eventDetails);
+
   const [state, setState] = useState({});
   const [reportVisible, setReportVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -36,7 +36,6 @@ export default function EventDetailsPage({route, navigation}) {
   const desc_icon = props => <Avatar.Icon {...props} icon="folder" />;
 
   const onImageRecieved = image => {
-    console.log('Image Recieved: ', image);
     setImages([image]);
   };
   const handleDismissSnackbar = () => {
@@ -101,9 +100,7 @@ export default function EventDetailsPage({route, navigation}) {
               icon="navigation"
               color={ORANGE}
               size={40}
-              onPress={() => {
-                console.log('reported');
-              }}
+              onPress={() => {}}
             />
             <IconButton
               icon="bookmark"

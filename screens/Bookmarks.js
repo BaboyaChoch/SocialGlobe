@@ -12,8 +12,10 @@ import {getAllBookmarkEvents, getUserBookmarks} from '../api/bookmarksApi';
 import InfoCard from './InfoCard';
 import {firebase} from '@react-native-firebase/auth';
 import {getAnEvent} from '../api/mapsApi';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {addToUserBookmarks} from '../api/bookmarksApi';
+import {Colors} from 'react-native-paper';
+import AppColors from '../components/AppColors';
 
 export default function Bookmarks() {
   const [userBookmarks, setUserBookmarks] = useState();
@@ -28,8 +30,15 @@ export default function Bookmarks() {
   };
 
   const onEventInfoRecieved = events => {
-    setEventsInfo(events);
-    setIsBookmarkReady(true);
+    if (
+      events[0] != null &&
+      events != null &&
+      events != undefined &&
+      events.length > 0
+    ) {
+      setIsBookmarkReady(true);
+      setEventsInfo(events);
+    }
   };
 
   useEffect(() => {
@@ -39,7 +48,7 @@ export default function Bookmarks() {
   return (
     <SafeAreaView>
       <ScrollView>
-        {isBookmarkReady &&
+        {isBookmarkReady ? (
           eventsInfo.map(
             (details, index) => (
               console.log(details),
@@ -51,7 +60,30 @@ export default function Bookmarks() {
                 />
               )
             ),
-          )}
+          )
+        ) : (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '50%',
+            }}>
+            <Icon
+              name="bookmark"
+              style={styles.bookmarkIcon}
+              size={300}
+              color={Colors.grey400}
+            />
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 15,
+                color: AppColors.BLUE,
+              }}>
+              No Bookmarks!
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -80,4 +112,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     height: 44,
   },
+  bookmarkIcon: {},
 });

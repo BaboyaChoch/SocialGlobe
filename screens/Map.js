@@ -26,7 +26,7 @@ import {State} from 'react-native-gesture-handler';
 
 export default function Map({route, navigation}) {
   const eventToAdd = route.params;
-  //console.log('Maps Pags: ', eventToAdd);
+
   const [currentUserLocation, setCurrentUserLocation] = useState({
     latitude: 30.4077484,
     longitude: -91.1794054,

@@ -22,8 +22,6 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
   const [showBookmarkAddedSnackbar, setShowBookmarkAddedSnackbar] =
     useState(false);
 
-  console.log('event details: ', eventDetails);
-
   const onImageRecieved = image => {
     setEventImage({uri: image});
   };
@@ -57,13 +55,15 @@ export default function InfoCard({eventDetails, isBookmark = false}) {
               <Paragraph style={styles.date}>
                 {eventDetails.event_start_datetime.date}
               </Paragraph>
-              <Card.Content style={{flexDirection:"column"}}>
-              <Paragraph style={styles.subDate}>Start time: 
-                {' ' + eventDetails.event_start_datetime.time}
-              </Paragraph>
-              <Paragraph style={styles.subDate}>End time: 
-                {' ' + eventDetails.event_end_datetime.time}
-              </Paragraph>
+              <Card.Content style={{flexDirection: 'column'}}>
+                <Paragraph style={styles.subDate}>
+                  Start time:
+                  {' ' + eventDetails.event_start_datetime.time}
+                </Paragraph>
+                <Paragraph style={styles.subDate}>
+                  End time:
+                  {' ' + eventDetails.event_end_datetime.time}
+                </Paragraph>
               </Card.Content>
               <Paragraph style={styles.address}>
                 {eventDetails.event_address.main_text}

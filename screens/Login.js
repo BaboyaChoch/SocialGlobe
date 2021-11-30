@@ -98,13 +98,6 @@ export default function Login({navigation}) {
     requestLocationPermission();
   });
 
-  // useEffect(() => {
-  //   console.log(locationPermissionGranted, locationPermissionResult);
-  //   if (!locationPermissionGranted) {
-  //     locationPermissionMissingAlert();
-  //   }
-  // }, [locationPermissionResult]);
-
   return (
     <SafeAreaView style={styles.container}>
       {isLoadingUser && <ActivityIndicator color={ORANGE} size="large" />}

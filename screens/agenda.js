@@ -73,10 +73,11 @@ export default function agenda({route, navigation}) {
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
+              height: 60,
             }}>
             <IconButton
               icon="arrow-left"
-              color={BLUE}
+              color='#3366ff'
               size={40}
               onPress={() => {
                 navigation.navigate('Map');

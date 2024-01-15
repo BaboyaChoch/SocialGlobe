@@ -17,7 +17,7 @@ if (Platform.OS == 'ios') {
 
 const BORDER_COLOR = '#000000';
 const TEXT_COLOR = '#142E45';
-const API_KEY = 'AIzaSyB22w34wSffOSsP9oFAiXl1_-8ryYfZyJc';
+const API_KEY = 'api_key_here';
 
 export default function createEventOverlay() {
   const navigation = useNavigation();
